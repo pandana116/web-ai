@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rajin Belajar Jadi Pintar</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--tx:#1b2433;--mut:#64708a;--pr:#3b6cf6;--ok:#16a34a;--no:#dc2626;--bd:#dde3ef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141c;--card:#1a2030;--tx:#e8ecf5;--mut:#9aa6bf;--pr:#6b8dff;--bd:#2b3448}}
+:root[data-theme="dark"]{--bg:#10141c;--card:#1a2030;--tx:#e8ecf5;--mut:#9aa6bf;--pr:#6b8dff;--bd:#2b3448}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:16px}
+.hero{position:relative;overflow:hidden;border-radius:18px;padding:20px;margin-bottom:14px;background:linear-gradient(135deg,#6366f1,#ec4899 60%,#f59e0b);color:#fff}
+.hero h1{font-size:24px;margin:0 0 4px}.hero p{margin:0;font-size:14px;opacity:.95}
+.f{position:absolute;font-size:28px;opacity:.35}.f1{right:14px;bottom:8px}.f2{right:56px;bottom:6px;font-size:22px}.f3{right:140px;bottom:10px;font-size:18px}
+p.s{color:var(--mut);margin:0 0 12px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:12px;text-align:left}
+button.sel{border-color:var(--c,var(--pr));background:var(--c,var(--pr));color:#fff;font-weight:600;transform:scale(1.02)}
+.mp{display:flex;align-items:center;gap:8px;border-left:5px solid var(--c)}.mp.sel{border-left-width:5px}
+.em{font-size:22px}.ct{text-align:center}
+button.go{width:100%;text-align:center;background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;border:0;font-weight:700;margin-top:10px}
+button:disabled{opacity:.6}
+label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:14px 0 6px}
+.opt{display:block;width:100%;margin-bottom:8px}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.15)}.opt.no{border-color:var(--no);background:rgba(220,38,38,.15)}
+.bar{height:6px;background:var(--bd);border-radius:9px;overflow:hidden;margin-bottom:12px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#ec4899)}
+.score{font-size:64px;font-weight:800;text-align:center;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bahas{font-size:14px;line-height:1.6;white-space:pre-line;color:var(--mut);margin-top:10px}.bahas b{color:var(--tx)}
+.h{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;border-bottom:1px solid var(--bd)}
+textarea{width:100%;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);resize:vertical}
+.cf{position:fixed;top:-30px;font-size:22px;animation:jatuh linear forwards;pointer-events:none;z-index:9}
+@keyframes jatuh{to{transform:translateY(115vh) rotate(360deg)}}
+.win{background:linear-gradient(160deg,rgba(99,102,241,.14),rgba(236,72,153,.14),rgba(245,158,11,.14));border-color:#a78bfa}
+.medal{font-size:64px;animation:pop .8s ease}@keyframes pop{0%{transform:scale(.2) rotate(-20deg)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.judul{font-size:20px;font-weight:800;margin:4px 0}
+.top{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:12px;padding:10px;margin:10px 0;font-size:26px}.top small{font-size:12px;color:var(--mut)}.top b{font-size:16px}.pt{margin-left:auto;font-size:26px;font-weight:800;color:var(--pr)}
+.rw{display:flex;align-items:center;gap:8px;font-size:13px;margin:6px 0}.rw>span{width:42%}.pb{flex:1;height:8px;background:var(--bd);border-radius:9px;overflow:hidden}.pb i{display:block;height:100%}
+.kk{background:var(--bg);border-radius:10px;padding:10px;font-size:14px;line-height:1.6}input[type=number]{width:90px;font:inherit;padding:8px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5;margin-bottom:10px}
+.tabs button{text-align:center;padding:7px 1px;font-size:10.5px}.tabs button span{display:block;font-size:20px}.tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+.xb{height:6px;background:rgba(255,255,255,.35);border-radius:9px;margin-top:10px;max-width:70%}.xb i{display:block;height:100%;background:#fff;border-radius:9px}
+.gb{display:block;max-width:100%;margin:12px auto 0;border-radius:10px;border:1px solid var(--bd);background:#fff}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.st div{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:10px 4px;text-align:center;font-size:11px}.st .e{font-size:34px}.st .lk{filter:grayscale(1);opacity:.4}
+.rx{display:flex;justify-content:center;gap:10px;font-size:34px;margin:6px 0}.rx span{animation:pop .8s ease backwards}
+.rtb{position:fixed;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:8;background:var(--card);border:1px solid var(--bd);border-radius:999px;padding:4px 10px;font-size:11px;color:var(--mut);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.rtb>span:first-child{cursor:pointer;color:var(--tx);font-weight:600}.rtp{position:absolute;right:0;bottom:30px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;white-space:nowrap;font-size:12px;text-align:center}.rtp b{font-size:26px;cursor:pointer}
+main{padding-bottom:60px}
+input[type=text],input[type=password]{width:100%;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+.pf{position:absolute;top:10px;right:10px;padding:5px 12px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.28);color:#fff;border:0;z-index:2}
+</style></head><body><main id="app"></main><div id="rt"></div>
+<script>
+let nl="";const PER=["prog","riwayat","best","kkm","myR"];
+const gS=k=>localStorage.getItem(PER.includes(k)?k+":"+nl:k),sS=(k,v)=>localStorage.setItem(PER.includes(k)?k+":"+nl:k,v);
+const MAPEL=[["Matematika","🔢","#ef4444"],["IPA","🔬","#10b981"],["IPS","🌏","#f59e0b"],["Bahasa Indonesia","📖","#ec4899"],["Bahasa Inggris","🔤","#8b5cf6"],["Informatika","💻","#3b6cf6"],["PPKn","🇮🇩","#b91c1c"],["Bahasa Mandarin","🇨🇳","#e11d48"],["Seni Budaya","🎨","#f97316"]];
+const MULOK=[["Bahasa Sasak","🌴","#0ea5e9"],["Bahasa Jawa","🏯","#a16207"],["Bahasa Sunda","🎋","#16a34a"],["Bahasa Bali","🌺","#e11d48"],["Bahasa Madura","🐂","#7c3aed"],["Bahasa Minangkabau","🏠","#dc2626"],["Lainnya","➕","#64748b"]];
+const KHUSUS=[["TKA Matematika","🧮","#ef4444","Matematika","Gaya soal TKA (Tes Kemampuan Akademik): numerasi, penalaran, dan pemecahan masalah kontekstual."],["TKA Bahasa Indonesia","📘","#ec4899","Bahasa Indonesia","Gaya soal TKA: literasi, teks bacaan pendek lalu pertanyaan pemahaman, kaidah kebahasaan."],["TKA Bahasa Inggris","🌐","#8b5cf6","Bahasa Inggris","Gaya soal TKA: reading comprehension, vocabulary, dan grammar dalam konteks."],["OSN Matematika","🏅","#dc2626","Matematika","Gaya olimpiade matematika (OSN): tingkat sulit, logika, teori bilangan, kombinatorika, geometri."],["OSN IPA","🧪","#10b981","IPA","Gaya OSN IPA: konsep mendalam, analisis data dan eksperimen, tingkat sulit."],["OSN IPS","🗺️","#f59e0b","IPS","Gaya OSN IPS: analisis peristiwa, peta, ekonomi dan sosial, tingkat sulit."],["OSN Informatika","🤖","#3b6cf6","Informatika","Gaya olimpiade informatika: berpikir komputasional, pola, logika algoritma, pseudocode, tingkat sulit."],["Olimpiade Bahasa Inggris","🏆","#7c3aed","Bahasa Inggris","Olympiad-style English: tricky grammar, vocabulary, and reading, tingkat sulit."],["HSK Mandarin","🀄","#e11d48","Bahasa Mandarin","Gaya ujian HSK: kosakata hanzi dengan pinyin dan arti, pola kalimat, membaca singkat."],["TOEFL / English Test","📝","#6366f1","Bahasa Inggris","Gaya TOEFL: structure, vocabulary, dan reading comprehension; soal berbahasa Inggris."]];
+const ALL={};MAPEL.concat(MULOK,KHUSUS).forEach(([n,e,c])=>ALL[n]=[e,c]);
+const ico=n=>(ALL[n]||["📌"])[0],col=n=>(ALL[n]||[0,"#6366f1"])[1];
+const JENJANG={SD:[1,2,3,4,5,6],SMP:[7,8,9],SMA:[10,11,12]};
+const ICON={SD:"🎒",SMP:"🏫",SMA:"🎓"};
+const TIPE=[["pg","📝 Pilihan Ganda"],["uraian","✍️ Uraian"],["campur","🎲 Campuran"]];
+const PESAN={
+100:["GILA SIH, SEMPURNA! 🔥 Seratus persen, nggak ada celah. Otakmu lagi on fire banget, pertahanin ya. Kamu itu bukti kalau belajar yang rajin tuh nggak pernah bohong!","Perfect score! 💯 Auto jadi bintang kelas nih. Bangga banget sama usahamu, sekarang tantang dirimu ke level yang lebih susah yuk!"],
+80:["Keren banget! 😎 Dikit lagi menuju sempurna. Kamu udah paham materinya dengan baik, tinggal rapiin bagian yang kelewat dan kamu bakal nembus 100!","Mantul parah! 🚀 Hasil belajarmu kelihatan banget. Cek lagi soal yang salah, dijamin next time bisa lebih tinggi lagi."],
+60:["Lumayan oke nih! 💪 Fondasinya udah ada, tinggal diperkuat dikit. Baca pembahasannya, terus coba lagi, nilaimu pasti naik!","Not bad sama sekali! 👍 Setiap soal yang salah itu tanda kamu lagi tumbuh. Terus gas, kamu di jalur yang tepat!"],
+40:["Santai aja, proses belajar emang gitu. 🌱 Baca pembahasannya pelan-pelan, habis itu coba lagi. Percaya deh, kamu bisa lebih baik dari ini!","Dikit lagi kok! ✨ Yang penting kamu mau nyoba, itu udah langkah paling keren. Ulang lagi yuk, bareng pembahasannya!"],
+0:["Eh, jangan down dulu ya! 🤗 Nilai bukan ukuran pinter atau enggak. Yang penting kamu berani nyoba, dan itu keren. Ayo ulang lagi, pelan-pelan pasti bisa!","Semua orang mulai dari nol! 🌟 Baca kunci dan pembahasannya, terus coba lagi. Kamu bakal kaget lihat kemajuanmu sendiri!"]};
+let st={sk:[],tab:"belajar",tag:"",img:true,m:"Informatika",mc:"",kkm:68,j:"SMP",k:7,req:"",n:5,t:"pg",soal:[],i:0,res:[],err:""};
+let prog={kuis:0,tot:0,tuntas:0,xp:0,streak:0,last:"",maps:[],stik:[]},rtOpen=false,myR=0,avg=null,cnt=0,uid=null,db=null;
+try{Object.assign(prog,JSON.parse(gS("prog")||"{}"))}catch(e){}
+try{myR=Number(gS("myR"))||0}catch(e){}
+const saveProg=()=>{try{sS("prog",JSON.stringify(prog))}catch(e){}};
+const ds=x=>x.getFullYear()+"-"+(x.getMonth()+1)+"-"+x.getDate();
+const stk=()=>{const n=new Date();return prog.last==ds(n)||prog.last==ds(new Date(n.getTime()-864e5))?prog.streak:0};
+const STIKER=[["🌟","Langkah Pertama","Selesaikan 1 kuis",p=>p.kuis>=1],["🥇","Tuntas Perdana","Capai nilai di atas KKM",p=>p.tuntas>=1],["💯","Seratus!","Raih nilai 100",p=>p.perfect],["🔥","Rajin Banget","Belajar 3 hari berturut-turut",p=>p.streak>=3],["🚀","Konsisten","Selesaikan 10 kuis",p=>p.kuis>=10],["🧠","Otak Encer","Rata-rata 80+ (min. 3 kuis)",p=>p.kuis>=3&&p.tot/p.kuis>=80],["🌈","Petualang","Coba 3 mapel berbeda",p=>p.maps.length>=3],["🏝️","Anak Nusantara","Kerjakan soal mulok",p=>p.mulok],["🎯","Pejuang Khusus","Kerjakan mode TKA/Olimpiade",p=>p.khusus],["🖼️","Mata Jeli","Kerjakan soal bergambar",p=>p.gambar],["✍️","Penulis Handal","Skor uraian 70%+",p=>p.uraian],["👑","Raja Level","Capai Level 5",p=>p.xp>=400]];
+function okSvg(v){return typeof v=="string"&&v.trim().startsWith("<svg")&&v.length<7000&&!/<script|onload|onerror|foreignObject|href|<style/i.test(v)?v.trim():""}
+let riwayat=[],best={};
+try{best=JSON.parse(gS("best")||"{}")}catch(e){}
+try{st.kkm=Number(gS("kkm"))||68}catch(e){}
+const nm=()=>st.tag?st.tag:st.m=="Lainnya"?(st.mc.trim()||"Muatan Lokal"):st.m;
+let AC;
+function nada(a){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const t0=AC.currentTime;a.forEach(([f,d,t])=>{const o=AC.createOscillator(),g=AC.createGain();o.type="triangle";o.frequency.value=f;o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(0,t0+t);g.gain.linearRampToValueAtTime(.25,t0+t+.03);g.gain.exponentialRampToValueAtTime(.001,t0+t+d);o.start(t0+t);o.stop(t0+t+d+.05)})}catch(e){}}
+const FANS=[[[523,.18,0],[659,.18,.16],[784,.18,.32],[1047,.7,.5],[784,.7,.5]],[[392,.15,0],[523,.15,.14],[659,.15,.28],[784,.15,.42],[1047,.7,.56]],[[659,.12,0],[659,.12,.14],[784,.12,.3],[1047,.9,.5],[1319,.9,.5]],[[784,.1,0],[988,.1,.1],[1175,.1,.2],[1568,.5,.3],[1175,.1,.65],[1568,.8,.78]]];let lastF=-1;
+function pesta(){let i;do{i=Math.floor(Math.random()*FANS.length)}while(i==lastF);lastF=i;nada(FANS[i])}
+const _old=[[523,.18,0],[659,.18,.16],[784,.18,.32],[1047,.7,.5],[784,.7,.5],[659,.7,.5],[1047,.2,1.05],[1319,.9,1.2],[1047,.9,1.2]];
+function confetti(a){for(let i=0;i<24;i++){const e=document.createElement("span");e.className="cf";e.textContent=a[i%a.length];e.style.left=Math.random()*95+"vw";e.style.animationDuration=(2.5+Math.random()*2.5)+"s";e.style.animationDelay=Math.random()*1.2+"s";document.body.appendChild(e);setTimeout(()=>e.remove(),7000)}}
+function profil(){const e=Object.entries(best);if(!e.length)return"";e.sort((a,b)=>b[1].s-a[1].s);const[tn,tv]=e[0];
+ return `<div class="card"><b>🌟 Profil Keahlian</b><div class="top">${ico(tn)}<div><small>Paling jago di</small><br><b>${esc(tn)}</b></div><span class="pt">${tv.s}</span></div>${e.map(([n,v])=>`<div class="rw"><span>${ico(n)} ${esc(n)}</span><div class="pb"><i style="width:${v.s}%;background:${col(n)}"></i></div><b>${v.s}</b></div>`).join("")}<p class="s" style="margin:8px 0 0">Nilai tertinggi tiap mapel</p></div>`}
+try{riwayat=JSON.parse(gS("riwayat")||"[]")}catch(e){}
+const $=s=>document.getElementById(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const L="abcd";
+
+function home(){
+ const T=[["belajar","🎓","Belajar"],["nilai","📊","Nilai"],["khusus","🎯","Khusus"],["tugas","✅","Tugas"],["peringkat","🏆","Peringkat"]];
+ const pg={belajar:pBelajar,nilai:pNilai,khusus:pKhusus,tugas:pTugas,peringkat:pPeringkat,profil:pProfil}[st.tab]();
+ $("app").innerHTML=`<div class="hero"><span class="f f1">⭐</span><span class="f f2">📚</span><span class="f f3">✏️</span><button class="pf" onclick="st.tab='profil';home()">👤 ${esc(nick)}</button><h1 style="font-size:20px;margin-top:22px">Rajin Belajar Jadi Pintar</h1><p>Level ${Math.floor(prog.xp/100)+1} • ${prog.xp} XP • 🔥 ${stk()} hari • 🏆 ${prog.poin||0}</p><div class="xb"><i style="width:${prog.xp%100}%"></i></div></div>
+ <div class="tabs">${T.map(([k,e,n])=>`<button class="${k==st.tab?"on":""}" onclick="st.tab='${k}';home()"><span>${e}</span>${n}</button>`).join("")}</div>${pg}`;
+}
+function pBelajar(){return `${st.tag?`<div class="card" style="border-color:var(--pr)">🎯 <b>Mode khusus: ${esc(st.tag)}</b> <button onclick="st.tag='';st.req='';home()" style="padding:3px 10px;margin-left:6px">✖ batal</button></div>`:""}<div class="card"><label style="margin-top:0">📚 Mata pelajaran umum</label><div class="grid">${MAPEL.map(([m,e,c])=>`<button class="mp ${m==st.m?"sel":""}" style="--c:${c}" onclick="st.m='${m}';st.tag='';home()"><span class="em">${e}</span>${m}</button>`).join("")}</div>
+ <label>🏝️ Muatan lokal (mulok)</label><div class="grid">${MULOK.map(([m,e,c])=>`<button class="mp ${m==st.m?"sel":""}" style="--c:${c}" onclick="st.m='${m}';st.tag='';home()"><span class="em">${e}</span>${m}</button>`).join("")}</div>
+ ${st.m=="Lainnya"?`<input id="mc" type="text" placeholder="Tulis mulok kamu, mis. Bahasa Bugis" value="${esc(st.mc)}" oninput="st.mc=this.value" style="width:100%;margin-top:8px;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)">`:""}
+ <label>${ICON[st.j]} Jenjang</label><div class="grid g3">${Object.keys(JENJANG).map(j=>`<button class="ct ${j==st.j?"sel":""}" onclick="st.j='${j}';st.k=JENJANG['${j}'][0];home()">${ICON[j]} ${j}</button>`).join("")}</div>
+ <label>⭐ Kelas</label><div class="grid g3">${JENJANG[st.j].map(k=>`<button class="ct ${k==st.k?"sel":""}" onclick="st.k=${k};home()">Kelas ${k}</button>`).join("")}</div>
+ <label>🎯 Jenis soal</label><div class="grid g3">${TIPE.map(([t,n])=>`<button class="ct ${t==st.t?"sel":""}" style="padding:10px 4px;font-size:13px" onclick="st.t='${t}';home()">${n}</button>`).join("")}</div>
+ <label>🔢 Jumlah soal <small style="font-weight:400">(di atas 10 soal ada soal bergambar 🖼️)</small></label><div class="grid g4">${[5,10,15,20].map(n=>`<button class="ct ${n==st.n?"sel":""}" onclick="st.n=${n};home()">${n}</button>`).join("")}</div>
+ <label>🎯 KKM (nilai minimal agar tuntas)</label><input type="number" min="0" max="100" value="${st.kkm}" oninput="st.kkm=Math.min(100,Math.max(0,Number(this.value)||0));try{sS('kkm',st.kkm)}catch(e){}">
+ <label>📝 Request soal / kisi-kisi (opsional)</label><textarea id="req" rows="4" placeholder="Contoh: Bab Aljabar, persamaan linear satu variabel. Soal cerita dan hitungan." oninput="st.req=this.value">${esc(st.req)}</textarea>
+ ${st.err?`<p style="color:var(--no);font-size:14px">${esc(st.err)}</p>`:""}
+ <button class="go" id="mulai" onclick="mulai()">🚀 Mulai Kuis</button></div>`}
+function pNilai(){
+ const n=prog.kuis;
+ return `<div class="card"><b>📈 Ringkasan belajar</b><div class="st" style="margin-top:8px"><div><div class="e">📝</div>${n} kuis</div><div><div class="e">⭐</div>Rata-rata ${n?Math.round(prog.tot/n):0}</div><div><div class="e">✅</div>Tuntas ${n?Math.round(prog.tuntas/n*100):0}%</div></div></div>${profil()||'<div class="card ct">Belum ada nilai. Yuk mulai kuis pertamamu! 🚀</div>'}
+ ${riwayat.length?`<div class="card"><b>🕘 Riwayat terakhir</b>${riwayat.slice(0,10).map(r=>`<div class="h"><span>${ico(r.m)} ${esc(r.m)} (Kelas ${esc(r.k)})</span><b>${r.s>=st.kkm?"✅":"📖"} ${r.s}</b></div>`).join("")}</div>`:""}`}
+function pKhusus(){
+ const kt=(a,b)=>KHUSUS.slice(a,b).map(([n,e,c],k)=>`<button class="mp" style="--c:${c}" onclick="pilihK(${a+k})"><span class="em">${e}</span>${n}</button>`).join("");
+ return `<div class="card"><b>🎯 Latihan khusus</b><p class="s">Pilih jenis latihan, lalu atur kelas dan mulai di tab Belajar.</p><label style="margin-top:0">📋 TKA</label><div class="grid">${kt(0,3)}</div><label>🏆 Olimpiade</label><div class="grid">${kt(3,8)}</div><label>🌏 Tes Bahasa</label><div class="grid">${kt(8,10)}</div></div>`}
+function rollPer(){const n=new Date(),dk=ds(n),mo=new Date(n);mo.setDate(n.getDate()-((n.getDay()+6)%7));const wk=ds(mo),mk=n.getFullYear()+"-"+(n.getMonth()+1);
+ if(!prog.per)prog.per={};const P=prog.per;
+ if(!P.d||P.d.k!=dk)P.d={k:dk,kuis:0,tuntas:0,perfect:0};if(!P.w||P.w.k!=wk)P.w={k:wk,kuis:0,days:[],maps:[],s90:0};if(!P.m||P.m.k!=mk)P.m={k:mk,kuis:0,perfect:0,tot:0,days:[]};
+ if(!prog.claim)prog.claim={};prog.poin=prog.poin||0;if(prog.pmk!=mk){prog.pm=0;prog.pmk=mk}}
+const TUGAS=[["h1","h","Selesaikan 1 kuis",10,1,P=>P.d.kuis],["h2","h","Capai nilai di atas KKM",15,1,P=>P.d.tuntas],["h3","h","Raih nilai 100",40,1,P=>P.d.perfect],
+["w1","w","Selesaikan 5 kuis",50,5,P=>P.w.kuis],["w2","w","Belajar di 4 hari berbeda",60,4,P=>P.w.days.length],["w3","w","Coba 3 mapel berbeda",50,3,P=>P.w.maps.length],["w4","w","Nilai 90+ sebanyak 2 kali",80,2,P=>P.w.s90],
+["m1","m","Selesaikan 20 kuis",200,20,P=>P.m.kuis],["m2","m","Belajar di 15 hari berbeda",250,15,P=>P.m.days.length],["m3","m","Raih nilai 100 sebanyak 3 kali",300,3,P=>P.m.perfect],["m4","m","Rata-rata 80+ (min. 10 kuis)",250,10,P=>P.m.kuis>=10&&P.m.tot/P.m.kuis>=80?10:Math.min(P.m.kuis,9)]];
+function pTugas(){rollPer();const P=prog.per,sec=[["h","📅 Harian","reset tiap hari"],["w","🗓️ Mingguan","reset tiap Senin"],["m","🏆 Bulanan","reset awal bulan"]];
+ return `<div class="card ct"><div class="score" style="font-size:44px">${prog.poin||0}</div><small>total poin • bulan ini ${prog.pm||0}</small><p class="s" style="margin:6px 0 0">Selesaikan tugas untuk dapat poin leaderboard!</p></div>`+sec.map(([g,jd,ket])=>`<div class="card"><b>${jd}</b> <small style="color:var(--mut)">${ket}</small>${TUGAS.filter(t=>t[1]==g).map(([,,nama,pt,tg,fn])=>{const c=Math.min(tg,fn(P)),ok=c>=tg;return `<div style="margin-top:10px"><div class="h" style="border:0;padding:0 0 4px"><span>${ok?"✅":"⬜"} ${nama}</span><b>+${pt}</b></div><div class="pb"><i style="width:${c/tg*100}%;background:${ok?"var(--ok)":"var(--pr)"}"></i></div><small style="color:var(--mut)">${c}/${tg}${ok?" • poin sudah diterima":""}</small></div>`}).join("")}</div>`).join("")}
+let lbRows=[],lbMode="bulan",nick="";try{nick=gS("nick")||""}catch(e){}
+function lbList(){let r=lbRows.filter(x=>lbMode=="semua"||x.mk==prog.pmk).map(x=>({...x,v:lbMode=="semua"?x.p:x.pm})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,20);
+ if(!db)return `<p class="s">Peringkat bersama belum tersedia di tampilan ini. Poinmu: <b>${prog.poin||0}</b></p>`;
+ return (r.length?r.map((x,i)=>`<div class="h" ${x.id&&x.id==nl?'style="background:rgba(99,102,241,.12);border-radius:8px;padding:7px 6px"':""}><span>${["🥇","🥈","🥉"][i]||(i+1)+"."} ${esc(x.n)}${x.id&&x.id==nl?" (kamu)":""}</span><b>${x.v}</b></div>`).join(""):`<p class="s ct">Belum ada peringkat. Selesaikan tugas untuk jadi yang pertama! 🚀</p>`)}
+function pPeringkat(){return `<div class="card"><b>🏆 Leaderboard</b><p class="s">Poin didapat dari menyelesaikan tugas. Rajin belajar = naik peringkat!</p><div class="grid" style="margin:10px 0"><button class="ct ${lbMode=="bulan"?"sel":""}" onclick="lbMode='bulan';home()">Bulan ini</button><button class="ct ${lbMode=="semua"?"sel":""}" onclick="lbMode='semua';home()">Sepanjang waktu</button></div><div id="lbl">${lbList()}</div></div>`}
+function setNick(v){nick=v.trim().slice(0,16);try{sS("nick",nick)}catch(e){}pushLb();const e=$("lbl");if(e)e.innerHTML=lbList()}
+async function pushLb(){try{if(db&&nl)await db.collection("lb").doc(nl).set({n:nick,p:prog.poin||0,pm:prog.pm||0,mk:prog.pmk||""})}catch(e){}}
+let calcOpen=false,skOpen=false,cx="",skC="#111",skW=3;
+const needC=()=>["Matematika","IPA"].includes(st.m),needS=()=>["Matematika","IPA","IPS","Seni Budaya","Informatika"].includes(st.m);
+function renderTools(){const e=$("tp");if(!e)return;const C=needC(),S=needS();if(!C&&!S){e.innerHTML="";return}
+ e.innerHTML=`<div class="grid" style="margin-bottom:10px">${C?`<button class="ct ${calcOpen?"sel":""}" onclick="calcOpen=!calcOpen;renderTools()">🧮 Kalkulator</button>`:""}${S?`<button class="ct ${skOpen?"sel":""}" onclick="skOpen=!skOpen;renderTools()">✏️ Sketsa</button>`:""}</div>${C&&calcOpen?calcHTML():""}${S&&skOpen?skHTML():""}`;if(S&&skOpen)initSk()}
+function calcHTML(){const K=["C","⌫","(",")","7","8","9","÷","4","5","6","×","1","2","3","-","0",".","^","+","√("];
+ return `<div class="card"><div id="cd" class="kk" style="text-align:right;font-size:20px;min-height:48px;word-break:break-all">${esc(cx)||"0"}</div><div class="grid g4" style="margin-top:8px">${K.map(k=>`<button class="ct" style="padding:10px 0" onclick="ck('${k}')">${k}</button>`).join("")}<button class="ct sel" style="grid-column:span 3;padding:10px 0" onclick="ck('=')">=</button></div></div>`}
+function calc(s){let i=0;const ex=()=>{let v=tm();while(s[i]=="+"||s[i]=="-"){const o=s[i++],y=tm();v=o=="+"?v+y:v-y}return v},tm=()=>{let v=pw();while(s[i]=="×"||s[i]=="÷"){const o=s[i++],y=pw();v=o=="×"?v*y:v/y}return v},pw=()=>{const b=un();if(s[i]=="^"){i++;return Math.pow(b,pw())}return b},un=()=>{if(s[i]=="-"){i++;return -un()}if(s[i]=="√"){i++;return Math.sqrt(un())}return at()},at=()=>{if(s[i]=="("){i++;const v=ex();if(s[i]!=")")throw 0;i++;return v}const m=/^\d*\.?\d+/.exec(s.slice(i));if(!m)throw 0;i+=m[0].length;return parseFloat(m[0])};const v=ex();if(i<s.length||!isFinite(v))throw 0;return v}
+function ck(k){if(cx=="Error")cx="";if(k=="C")cx="";else if(k=="⌫")cx=cx.slice(0,-1);else if(k=="="){try{cx=String(Math.round(calc(cx)*1e9)/1e9)}catch(e){cx="Error"}}else cx+=k;const d=$("cd");if(d)d.textContent=cx||"0"}
+function skHTML(){return `<div class="card"><canvas id="sk" width="600" height="360" style="width:100%;border:1px solid var(--bd);border-radius:10px;background:#fff;touch-action:none"></canvas><div class="grid g3" style="margin-top:8px">${[["#111","⚫"],["#dc2626","🔴"],["#2563eb","🔵"],["#16a34a","🟢"]].map(([c,e])=>`<button class="ct" onclick="skC='${c}';skW=3">${e}</button>`).join("")}<button class="ct" onclick="skC='#fff';skW=18">🧽 Hapus</button><button class="ct" onclick="skClear()">🗑️ Bersihkan</button></div></div>`}
+function skClear(){const c=$("sk");if(!c)return;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);st.sk[st.i]=""}
+function initSk(){const c=$("sk");if(!c)return;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);const im=st.sk[st.i];if(im){const m=new Image();m.onload=()=>g.drawImage(m,0,0);m.src=im}
+ let d=false;const ps=e=>{const b=c.getBoundingClientRect();return[(e.clientX-b.left)*c.width/b.width,(e.clientY-b.top)*c.height/b.height]};
+ c.onpointerdown=e=>{d=true;c.setPointerCapture(e.pointerId);const[x,y]=ps(e);g.beginPath();g.moveTo(x,y);g.lineWidth=skW;g.lineCap="round";g.strokeStyle=skC};
+ c.onpointermove=e=>{if(!d)return;const[x,y]=ps(e);g.lineTo(x,y);g.stroke()};c.onpointerup=c.onpointerleave=()=>{if(d){d=false;st.sk[st.i]=c.toDataURL()}}}
+let gm="masuk";
+async function hash(n,p){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("rbjp:"+n.toLowerCase()+":"+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(e){let h=5381;for(const c of n.toLowerCase()+p)h=(h*33^c.charCodeAt(0))>>>0;return"x"+h}}
+async function getAk(l){await ready;if(db){try{const d=await db.collection("akun").doc(l).get();return d.exists?d.data():null}catch(e){}}let a={};try{a=JSON.parse(localStorage.getItem("akunlocal")||"{}")}catch(e){}return a[l]||null}
+async function setAk(l,o){await ready;if(db){try{await db.collection("akun").doc(l).set(o);return true}catch(e){}}try{const a=JSON.parse(localStorage.getItem("akunlocal")||"{}");a[l]=o;localStorage.setItem("akunlocal",JSON.stringify(a));return true}catch(e){return false}}
+function loadUser(n){nick=n;nl=n.toLowerCase();prog={kuis:0,tot:0,tuntas:0,xp:0,streak:0,last:"",maps:[],stik:[]};try{Object.assign(prog,JSON.parse(gS("prog")||"{}"))}catch(e){}riwayat=[];try{riwayat=JSON.parse(gS("riwayat")||"[]")}catch(e){}best={};try{best=JSON.parse(gS("best")||"{}")}catch(e){}st.kkm=Number(gS("kkm"))||68;myR=Number(gS("myR"))||0;rtRender()}
+function gate(msg){const keep=$("gn")?$("gn").value:"";
+ $("app").innerHTML=`<div class="hero"><span class="f f1">⭐</span><span class="f f2">📚</span><h1 style="font-size:22px">Rajin Belajar Jadi Pintar</h1><p>Masuk dulu ya! Cukup nama panggilan dan kata sandi.</p></div>
+ <div class="card"><div class="grid"><button class="ct ${gm=="masuk"?"sel":""}" onclick="gm='masuk';gate()">Masuk</button><button class="ct ${gm=="daftar"?"sel":""}" onclick="gm='daftar';gate()">Daftar baru</button></div>
+ <label>Nama panggilan</label><input id="gn" type="text" maxlength="16" autocapitalize="off" placeholder="mis. budi_pintar" value="${esc(keep)}">
+ <label>Kata sandi</label><input id="gp" type="password" placeholder="minimal 4 karakter">
+ ${gm=="daftar"?`<label>Ulangi kata sandi</label><input id="gp2" type="password">`:""}
+ <p style="color:var(--no);font-size:14px;min-height:20px">${esc(msg||"")}</p>
+ <button class="go" id="gb" onclick="gsubmit()" style="margin-top:0">${gm=="masuk"?"Masuk":"Daftar & Mulai"}</button>
+ <p class="s" style="margin:10px 0 0">Tanpa email. Sekali masuk, besok otomatis langsung masuk lagi di HP ini. Jangan pakai sandi yang sama dengan akun pentingmu ya.</p></div>`}
+async function gsubmit(){let n=$("gn").value.trim();const p=$("gp").value;
+ if(!/^[A-Za-z0-9_]{3,16}$/.test(n))return gate("Nama panggilan 3-16 karakter: huruf, angka, atau _");
+ if(p.length<4)return gate("Kata sandi minimal 4 karakter");
+ if(gm=="daftar"&&$("gp2").value!==p)return gate("Ulangi kata sandi belum sama");
+ $("gb").disabled=true;$("gb").textContent="⏳ Tunggu ya...";
+ const l=n.toLowerCase(),h=await hash(n,p),a=await getAk(l);
+ if(gm=="daftar"){if(a)return gate("Nama itu sudah dipakai, coba nama lain.");if(!await setAk(l,{n,h,t:Date.now()}))return gate("Gagal mendaftar, coba lagi.")}
+ else{if(!a||a.h!==h)return gate("Nama atau kata sandi salah.");n=a.n||n}
+ try{localStorage.setItem("sess",JSON.stringify({n,h}))}catch(e){}
+ loadUser(n);rollPer();st.tab="belajar";home();pushLb()}
+function logout(msg){try{localStorage.removeItem("sess")}catch(e){}nl="";nick="";gate(msg)}
+const say=(id,t,ok)=>{const e=$(id);if(e){e.textContent=t;e.style.color=ok?"var(--ok)":"var(--no)"}};
+async function gantiPw(){const o=$("po").value,nw=$("pn").value;if(nw.length<4)return say("pm","Sandi baru minimal 4 karakter");
+ const a=await getAk(nl);if(!a||a.h!==await hash(nick,o))return say("pm","Sandi lama salah");
+ const h=await hash(nick,nw);if(await setAk(nl,{...a,h})){try{localStorage.setItem("sess",JSON.stringify({n:nick,h}))}catch(e){}$("po").value="";$("pn").value="";say("pm","✅ Sandi berhasil diganti",1)}else say("pm","Gagal menyimpan, coba lagi")}
+async function kirimSaran(){const t=$("sr").value.trim();if(t.length<3)return say("sm","Tulis dulu sarannya ya");await ready;if(!db)return say("sm","Kirim saran belum tersedia di tampilan ini.");
+ try{await db.collection("saran").doc(Date.now()+"-"+nl).set({n:nick,t:t.slice(0,500),ts:Date.now()});$("sr").value="";say("sm","✅ Terkirim, makasih ya!",1)}catch(e){say("sm","Gagal terkirim, coba lagi.")}}
+function pProfil(){return `<button onclick="st.tab='belajar';home()" style="margin-bottom:10px">⬅️ Kembali</button>
+ <div class="card ct"><div style="font-size:56px">🧑‍🎓</div><b style="font-size:18px">${esc(nick)}</b><p class="s" style="margin:4px 0 0">Level ${Math.floor(prog.xp/100)+1} • ${prog.xp} XP • 🏆 ${prog.poin||0} poin</p></div>
+ <div class="card"><b>🔑 Ganti kata sandi</b><label>Sandi lama</label><input id="po" type="password"><label>Sandi baru</label><input id="pn" type="password"><p id="pm" class="s" style="min-height:18px"></p><button class="go" style="margin-top:0" onclick="gantiPw()">Simpan sandi baru</button></div>
+ <div class="card"><b>💬 Saran untuk pembuat web</b><p class="s">Ada yang mau ditambah atau diperbaiki? Tulis di sini, nanti dibaca pembuatnya.</p><textarea id="sr" rows="4" maxlength="500" placeholder="Contoh: tolong tambah mapel Agama..."></textarea><p id="sm" class="s" style="min-height:18px"></p><button class="go" style="margin-top:0" onclick="kirimSaran()">Kirim saran</button></div>
+ <button class="go" style="background:var(--card);color:var(--no);border:1px solid var(--bd)" onclick="logout()">🚪 Keluar</button>`}
+function pilihK(i){const k=KHUSUS[i];st.tag=k[0];st.m=k[3];st.req=k[4];st.t="campur";st.n=10;st.tab="belajar";home()}
+function pStiker(){
+ return `<div class="card"><b>🎁 Koleksi Stiker</b> <small style="color:var(--mut)">${prog.stik.length}/${STIKER.length}</small><p class="s">Selesaikan tantangan untuk membuka stiker!</p><div class="st">${STIKER.map(([e,n,d])=>{const o=prog.stik.includes(e);return `<div class="${o?"":"lk"}"><div class="e">${o?e:"🔒"}</div><b>${n}</b><br>${d}</div>`}).join("")}</div></div>`}
+async function mulai(){
+ st.err="";
+ const b=$("mulai");b.disabled=true;b.textContent="⏳ AI lagi bikin soal...";
+ const n=st.n,pg=Math.ceil(n*.6);
+ const jenis=st.t=="pg"?`${n} soal pilihan ganda (tipe "pg")`:st.t=="uraian"?`${n} soal uraian (tipe "uraian")`:`${n} soal campuran: ${pg} pilihan ganda (tipe "pg") lalu ${n-pg} uraian (tipe "uraian")`;
+ try{
+  const sample=await claude.use("sample");
+  if(!sample)throw new Error("Fitur AI belum tersedia di tampilan ini.");
+  const r=await sample.json(`Buatkan ${jenis} mata pelajaran ${nm()}${st.m=="Lainnya"||MULOK.some(x=>x[0]==st.m)?" (muatan lokal; soal tentang bahasa, aksara, tata bahasa, tradisi, dan budaya daerah tersebut sesuai jenjang; boleh memakai bahasa daerah dengan terjemahan Indonesia, pembahasan tetap Bahasa Indonesia)":""}${st.m=="Bahasa Mandarin"?" (soal memakai hanzi disertai pinyin dan arti Indonesia; pembahasan Bahasa Indonesia)":""} untuk ${st.j} kelas ${st.k} di Indonesia (Kurikulum Merdeka). Bahasa Indonesia, soal bervariasi dan jelas.${st.req.trim()?` Ikuti kisi-kisi/permintaan siswa berikut dan buat soal hanya sesuai materi ini: """${st.req.trim().slice(0,800)}""".`:""} Balas HANYA JSON tanpa teks lain: {"soal":[{"tipe":"pg","q":"pertanyaan","opsi":["isi opsi a","isi opsi b","isi opsi c","isi opsi d"],"jawab":0,"bahas":"..."},{"tipe":"uraian","q":"pertanyaan","kunci":"jawaban model ringkas","bahas":"..."}]}. Untuk pg: opsi tepat 4 TANPA awalan huruf, "jawab" = indeks 0-3 jawaban benar, acak posisinya. ${st.n>10?` Untuk sekitar sepertiga soal yang memang butuh ilustrasi (bangun datar/ruang, diagram, rangkaian, peta sederhana, siklus, pola), tambahkan field "svg": kode SVG sederhana lengkap diawali <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200"> dengan latar putih (rect fill #fff), bentuk berwarna jelas, label teks pendek, tanpa script dan tanpa gambar eksternal. Soal tanpa gambar tidak perlu field svg.`:""} Pembahasan wajib rinci 4-6 kalimat: konsep, langkah/alasan jawaban benar, dan kenapa opsi lain kurang tepat (untuk uraian: langkah menjawab yang benar).`);
+  const s=(r.soal||[]).filter(x=>x.q&&(x.tipe=="uraian"?x.kunci:(Array.isArray(x.opsi)&&x.opsi.length==4&&x.jawab>=0&&x.jawab<4))).map(x=>x.tipe=="uraian"?x:{...x,tipe:"pg",opsi:x.opsi.map(o=>String(o).replace(/^\s*[a-dA-D][\.\)]\s+/,""))}).map(x=>({...x,svg:okSvg(x.svg)}));
+  if(!s.length)throw new Error("Soal gagal dibuat, coba lagi.");
+  st.soal=s;st.i=0;st.res=[];st.sk=[];soal();
+ }catch(e){st.err=e.message||"Terjadi kesalahan, coba lagi.";home()}
+}
+
+function soal(){
+ const q=st.soal[st.i],r=st.res[st.i],done=r&&r.skor!==null;
+ let body="";
+ if(q.tipe=="pg"){
+  body=q.opsi.map((o,k)=>`<button class="opt ${r?(k==q.jawab?"ok":(k==r.jwb?"no":"")):""}" ${r?"disabled":""} onclick="jwb(${k})"><b>${L[k]}.</b> ${esc(o)}</button>`).join("");
+  if(r)body+=`<div class="bahas">${r.skor?"✅ <b>Benar!</b>":`❌ <b>Belum tepat.</b> Jawaban yang benar: <b>${L[q.jawab]}. ${esc(q.opsi[q.jawab])}</b>`}\n\n${esc(q.bahas)}</div>`;
+ }else if(!r){
+  body=`<textarea id="ans" rows="5" placeholder="Tulis jawabanmu di sini..."></textarea><button class="go" id="cek" onclick="cek()">Periksa Jawaban</button>`;
+ }else{
+  body=`<div class="bahas" style="margin-top:0"><b>Jawabanmu:</b> ${esc(r.jwb)}\n\n`+(r.manual?`<b>Kunci:</b> ${esc(q.kunci)}\n\nBandingkan jawabanmu dengan kunci, sudah tepat?</div><div class="grid" style="margin-top:8px"><button class="ct" onclick="manual(1)">✅ Sudah tepat</button><button class="ct" onclick="manual(0)">❌ Belum</button></div>`:`${r.skor>=.7?"✅":"❌"} <b>Skor: ${Math.round(r.skor*100)}%</b> ${esc(r.fb)}\n\n<b>Jawaban yang benar:</b> ${esc(q.kunci)}\n\n${esc(q.bahas)}</div>`);
+ }
+ $("app").innerHTML=`<div class="bar"><i style="width:${(st.i+(done?1:0))/st.soal.length*100}%"></i></div>
+ <p class="s">${esc(nm())} • Kelas ${st.k} • Soal ${st.i+1}/${st.soal.length} • ${q.tipe=="pg"?"Pilihan ganda":"Uraian"}</p>
+ <div class="card"><b>${esc(q.q)}</b>${q.svg?`<img class="gb" alt="gambar soal" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(q.svg)}">`:""}<div style="margin-top:14px">${body}</div></div>
+ <div id="tp"></div>
+ ${done?`<button class="go" onclick="lanjut()">${st.i+1==st.soal.length?"🏁 Lihat Nilai":"Soal Berikutnya ➜"}</button>`:""}`;renderTools();
+}
+function jwb(k){st.res[st.i]={skor:k==st.soal[st.i].jawab?1:0,jwb:k};soal()}
+async function cek(){
+ const t=$("ans").value.trim();if(!t)return;
+ const b=$("cek");b.disabled=true;b.textContent="⏳ Lagi diperiksa...";
+ const q=st.soal[st.i];
+ try{
+  const sample=await claude.use("sample");
+  const r=await sample.json(`Kamu guru yang adil. Nilai jawaban siswa. Soal: ${q.q}\nKunci/jawaban model: ${q.kunci}\nJawaban siswa: """${t.slice(0,1500)}"""\nBalas HANYA JSON: {"skor":0-100,"fb":"umpan balik 1-3 kalimat, ramah: bagian yang sudah benar dan yang kurang"}. Terima jawaban yang maknanya benar walau kata-katanya beda.`);
+  st.res[st.i]={skor:Math.max(0,Math.min(100,Number(r.skor)||0))/100,jwb:t,fb:r.fb||""};
+ }catch(e){st.res[st.i]={skor:null,jwb:t,manual:true}}
+ soal();
+}
+function manual(v){st.res[st.i].skor=v;st.res[st.i].manual=false;st.res[st.i].fb="";soal()}
+function lanjut(){if(st.i+1<st.soal.length){st.i++;soal()}else hasil()}
+
+function hasil(){
+ const tot=st.res.reduce((a,r)=>a+(r?r.skor:0),0),n=Math.round(tot/st.soal.length*100),nama=nm();
+ const prev=(best[nama]||{}).s||0,rekor=n>prev&&n>0;
+ if(n>prev||!best[nama])best[nama]={s:n,k:st.k};
+ try{sS("best",JSON.stringify(best))}catch(e){}
+ riwayat.unshift({m:nama,j:st.j,k:st.k,s:n});riwayat=riwayat.slice(0,20);
+ try{sS("riwayat",JSON.stringify(riwayat))}catch(e){}
+ const kkm=st.kkm,lulus=n>=kkm,d=Math.abs(n-kkm);
+ const now=new Date();if(prog.last!=ds(now)){prog.streak=prog.last==ds(new Date(now.getTime()-864e5))?prog.streak+1:1;prog.last=ds(now)}
+ prog.kuis++;prog.tot+=n;if(lulus)prog.tuntas++;prog.xp+=10+Math.round(n/2);if(!prog.maps.includes(nama))prog.maps.push(nama);
+ if(MULOK.some(x=>x[0]==st.m))prog.mulok=1;if(st.tag)prog.khusus=1;if(st.soal.some(q=>q.svg))prog.gambar=1;if(n==100)prog.perfect=1;
+ if(st.soal.some((q,i)=>q.tipe=="uraian"&&st.res[i].skor>=.7))prog.uraian=1;
+ rollPer();const P=prog.per,dk=P.d.k;
+ P.d.kuis++;if(lulus)P.d.tuntas++;if(n==100)P.d.perfect++;
+ P.w.kuis++;if(!P.w.days.includes(dk))P.w.days.push(dk);if(!P.w.maps.includes(nama))P.w.maps.push(nama);if(n>=90)P.w.s90++;
+ P.m.kuis++;P.m.tot+=n;if(n==100)P.m.perfect++;if(!P.m.days.includes(dk))P.m.days.push(dk);
+ const selesai=[];TUGAS.forEach(([id,g,nt,pt,tg,fn])=>{const key=id+":"+P[g].k;if(fn(P)>=tg&&!prog.claim[key]){prog.claim[key]=1;prog.poin+=pt;prog.pm=(prog.pm||0)+pt;selesai.push([nt,pt])}});
+ saveProg();pushLb();
+ const RX=(lulus?["🥳","🎉","😎","🔥","🤩","🙌","🚀","👏"]:["💪","🤗","🌱","✨","💙","🙏"]).sort(()=>Math.random()-.5).slice(0,3);
+ const tier=n==100?100:n>=80?80:n>=60?60:n>=40?40:0,ps=PESAN[tier],msg=ps[Math.floor(Math.random()*ps.length)];
+ const kunci=st.soal.map((q,i)=>{const r=st.res[i];
+  if(q.tipe=="pg")return `<div class="h"><span>${i+1}. <b>${L[q.jawab]}</b>${r.skor?"":` <small>(jawabanmu: ${L[r.jwb]})</small>`}</span><span>${r.skor?"✅":"❌"}</span></div>`;
+  return `<div class="h" style="display:block"><div>${i+1}. Uraian • ${Math.round(r.skor*100)}% ${r.skor>=.7?"✅":"❌"}</div><small style="color:var(--mut)">Kunci: ${esc(q.kunci)}</small></div>`}).join("");
+ $("app").innerHTML=`<div class="card ct ${lulus?"win":""}"><div class="medal">${n>=90?"🏆":lulus?"🥇":"🌱"}</div>
+ <div class="judul">${lulus?"TUNTAS! Selamat ya! 🎉":"Belum tuntas, tapi kamu keren udah berani nyoba! 💙"}</div>
+ <div class="rx">${RX.map((e,k)=>`<span style="animation-delay:${k*.2}s">${e}</span>`).join("")}</div><div class="score">${n}</div><p class="s">Skor ${Math.round(tot*10)/10} dari ${st.soal.length} soal • ${esc(nama)} Kelas ${st.k}</p>
+ <p style="line-height:1.6"><b>${msg}</b></p></div>
+ <div class="card"><b>ℹ️ Tentang KKM</b><div class="kk" style="margin-top:8px">KKM (Kriteria Ketuntasan Minimal) adalah nilai minimal yang harus dicapai supaya dianggap tuntas. KKM yang dipakai sekarang: <b>${kkm}</b>.<br>${lulus?(d==0?`Nilaimu <b>${n}</b> pas di garis KKM. Tuntas, mantap! 🎊`:`Nilaimu <b>${n}</b>, berarti <b>${d} poin di atas KKM</b>. Selamat, kamu tuntas! 🎊`):`Nilaimu <b>${n}</b>, kurang <b>${d} poin</b> lagi dari KKM. Dikit lagi, pelajari pembahasannya lalu coba lagi ya! 💪`}</div></div>
+ ${selesai.length?`<div class="card win"><b>🏆 Tugas selesai!</b>${selesai.map(([a,b])=>`<div class="h"><span>✅ ${esc(a)}</span><b>+${b} poin</b></div>`).join("")}</div>`:""}
+ ${rekor?`<div class="card ct">🏅 <b>Rekor baru di ${esc(nama)}!</b> Nilai tertinggimu sekarang ${n}.</div>`:""}
+ ${profil()}
+ <div class="card"><b>🔑 Kunci Jawaban</b>${kunci}</div>
+ ${lulus?`<button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--bd)" onclick="pesta()">🔊 Putar suara selamat lagi</button>`:""}
+ <button class="go" onclick="mulai()">🔁 Ulangi dengan soal baru</button>
+ <button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--bd)" onclick="home()">🏠 Kembali ke menu</button>`;
+ confetti(lulus?["🎉","🎊","⭐","✨","💫"]:["🌟","💪","🌱","💙"]);
+ if(lulus)pesta();
+}
+function rtRender(){$("rt").innerHTML=`<div class="rtb"><span onclick="rtOpen=!rtOpen;rtRender()">⭐ ${avg?avg.toFixed(1):(myR||"Nilai")}${cnt?` <small>(${cnt})</small>`:""}</span> · by Pandana${rtOpen?`<div class="rtp">Kasih bintang buat web ini<div>${[1,2,3,4,5].map(i=>`<b onclick="rate(${i})" style="opacity:${i<=myR?1:.35}">⭐</b>`).join("")}</div></div>`:""}</div>`}
+async function rate(v){myR=v;try{sS("myR",v)}catch(e){}try{if(db&&nl)await db.collection("ratings").doc(nl).set({r:v})}catch(e){}rtOpen=false;rtRender()}
+const ready=(async()=>{try{if(typeof claude=="undefined")return;const u=await claude.use("user");uid=u?await u.id():null;db=await claude.use("db")}catch(e){}})();
+async function rtInit(){rtRender();await ready;if(!db)return;try{
+ db.collection("lb").onSnapshot(sn=>{lbRows=sn.docs.map(x=>({id:x.id,...(x.data()||{})}));const e=$("lbl");if(e)e.innerHTML=lbList()},()=>{});
+ db.collection("ratings").onSnapshot(sn=>{const d=sn.docs.map(x=>Number((x.data()||{}).r)||0).filter(Boolean);cnt=d.length;avg=cnt?d.reduce((a,b)=>a+b,0)/cnt:null;rtRender()},()=>{});pushLb()}catch(e){}}
+async function boot(){rtInit();let x=null;try{x=JSON.parse(localStorage.getItem("sess")||"null")}catch(e){}
+ if(x&&x.n){loadUser(x.n);rollPer();home();const a=await getAk(nl);if(a&&a.h!==x.h)logout("Kata sandi akunmu sudah diganti. Silakan masuk lagi.")}else gate()}
+boot();
+</script></body></html>
