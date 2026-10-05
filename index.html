@@ -264,7 +264,7 @@ function hasil(){
  P.d.kuis++;if(lulus)P.d.tuntas++;if(n==100)P.d.perfect++;
  P.w.kuis++;if(!P.w.days.includes(dk))P.w.days.push(dk);if(!P.w.maps.includes(nama))P.w.maps.push(nama);if(n>=90)P.w.s90++;
  P.m.kuis++;P.m.tot+=n;if(n==100)P.m.perfect++;if(!P.m.days.includes(dk))P.m.days.push(dk);
- const selesai=[];TUGAS.forEach(([id,g,nt,pt,tg,fn])=>{const key=id+":"+P[g].k;if(fn(P)>=tg&&!prog.claim[key]){prog.claim[key]=1;prog.poin+=pt;prog.pm=(prog.pm||0)+pt;selesai.push([nt,pt])}});
+ const selesai=[];TUGAS.forEach(([id,g,nt,pt,tg,fn])=>{const key=id+":"+P[g=="h"?"d":g].k;if(fn(P)>=tg&&!prog.claim[key]){prog.claim[key]=1;prog.poin+=pt;prog.pm=(prog.pm||0)+pt;selesai.push([nt,pt])}});
  saveProg();pushLb();
  const RX=(lulus?["🥳","🎉","😎","🔥","🤩","🙌","🚀","👏"]:["💪","🤗","🌱","✨","💙","🙏"]).sort(()=>Math.random()-.5).slice(0,3);
  const tier=n==100?100:n>=80?80:n>=60?60:n>=40?40:0,ps=PESAN[tier],msg=ps[Math.floor(Math.random()*ps.length)];
