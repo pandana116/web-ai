@@ -203,7 +203,7 @@ function pStiker(){
  return `<div class="card"><b>🎁 Koleksi Stiker</b> <small style="color:var(--mut)">${prog.stik.length}/${STIKER.length}</small><p class="s">Selesaikan tantangan untuk membuka stiker!</p><div class="st">${STIKER.map(([e,n,d])=>{const o=prog.stik.includes(e);return `<div class="${o?"":"lk"}"><div class="e">${o?e:"🔒"}</div><b>${n}</b><br>${d}</div>`}).join("")}</div></div>`}
 async function mulai(){
  st.err="";
- const b=$("mulai");b.disabled=true;b.textContent="⏳ AI lagi bikin soal...";
+ const b=$("mulai");if(b){b.disabled=true;b.textContent="⏳ AI lagi bikin soal..."}else $("app").innerHTML=`<div class="card ct"><div class="medal">⏳</div><div class="judul">AI lagi bikin soal baru...</div><p class="s">Tunggu sebentar ya</p></div>`;
  const n=st.n,pg=Math.ceil(n*.6);
  const jenis=st.t=="pg"?`${n} soal pilihan ganda (tipe "pg")`:st.t=="uraian"?`${n} soal uraian (tipe "uraian")`:`${n} soal campuran: ${pg} pilihan ganda (tipe "pg") lalu ${n-pg} uraian (tipe "uraian")`;
  try{
