@@ -50,7 +50,11 @@ input[type=text],input[type=password]{width:100%;font:inherit;padding:10px;borde
 </style></head><body><main id="app"></main><div id="rt"></div>
 <script>
 async function aiSample(){return{json:async(prompt)=>{
-const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})});
+const sys="Kamu hanya membalas JSON valid tanpa teks lain. Di dalam nilai teks JANGAN pakai tanda kutip ganda (\"), pakai tanda kutip tunggal ('). Jangan pakai baris baru di dalam nilai teks dan jangan pakai backslash.";
+let lastErr;
+for(let k=0;k<3;k++){
+try{
+const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:sys},{role:"user",content:prompt}]})});
 let d;try{d=await r.json()}catch(e){throw new Error("Server AI tidak merespons, coba lagi.")}
 if(!r.ok)throw new Error((d&&d.error&&(d.error.message||d.error))||"AI gagal merespons, coba lagi.");
 let t=(d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||"";
@@ -58,6 +62,9 @@ t=t.replace(/```json|```/g,"").trim();
 const a=t.indexOf("{"),b=t.lastIndexOf("}");
 if(a<0||b<a)throw new Error("Jawaban AI tidak terbaca, coba lagi.");
 return JSON.parse(t.slice(a,b+1));
+}catch(e){lastErr=e}
+}
+throw new Error("AI lagi error format jawabannya. Coba tekan Mulai Kuis sekali lagi, atau kurangi jumlah soal.");
 }}}
 let nl="";const PER=["prog","riwayat","best","kkm","myR"];
 const gS=k=>localStorage.getItem(PER.includes(k)?k+":"+nl:k),sS=(k,v)=>localStorage.setItem(PER.includes(k)?k+":"+nl:k,v);
@@ -157,8 +164,8 @@ function initSk(){const c=$("sk");if(!c)return;const g=c.getContext("2d");g.fill
  c.onpointermove=e=>{if(!d)return;const[x,y]=ps(e);g.lineTo(x,y);g.stroke()};c.onpointerup=c.onpointerleave=()=>{if(d){d=false;st.sk[st.i]=c.toDataURL()}}}
 let gm="masuk";
 async function hash(n,p){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("rbjp:"+n.toLowerCase()+":"+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(e){let h=5381;for(const c of n.toLowerCase()+p)h=(h*33^c.charCodeAt(0))>>>0;return"x"+h}}
-async function getAk(l){await ready;if(db){try{const d=await db.collection("akun").doc(l).get();return d.exists?d.data():null}catch(e){}}let a={};try{a=JSON.parse(localStorage.getItem("akunlocal")||"{}")}catch(e){}return a[l]||null}
-async function setAk(l,o){await ready;if(db){try{await db.collection("akun").doc(l).set(o);return true}catch(e){}}try{const a=JSON.parse(localStorage.getItem("akunlocal")||"{}");a[l]=o;localStorage.setItem("akunlocal",JSON.stringify(a));return true}catch(e){return false}}
+async function getAk(l,h){await ready;if(db){try{const d=await db.collection("akun").doc(l).get(h);return d.exists?d.data():null}catch(e){}}let a={};try{a=JSON.parse(localStorage.getItem("akunlocal")||"{}")}catch(e){}return a[l]||null}
+async function setAk(l,o,au){await ready;if(db){try{await db.collection("akun").doc(l).set(o,au);return true}catch(e){if(/dipakai|diizinkan/.test(e.message))return false}}try{const a=JSON.parse(localStorage.getItem("akunlocal")||"{}");a[l]=o;localStorage.setItem("akunlocal",JSON.stringify(a));return true}catch(e){return false}}
 function loadUser(n){nick=n;nl=n.toLowerCase();prog={kuis:0,tot:0,tuntas:0,xp:0,streak:0,last:"",maps:[],stik:[]};try{Object.assign(prog,JSON.parse(gS("prog")||"{}"))}catch(e){}riwayat=[];try{riwayat=JSON.parse(gS("riwayat")||"[]")}catch(e){}best={};try{best=JSON.parse(gS("best")||"{}")}catch(e){}st.kkm=Number(gS("kkm"))||68;myR=Number(gS("myR"))||0;rtRender()}
 function gate(msg){const keep=$("gn")?$("gn").value:"";
  $("app").innerHTML=`<div class="hero"><span class="f f1">⭐</span><span class="f f2">📚</span><h1 style="font-size:22px">Rajin Belajar Jadi Pintar</h1><p>Masuk dulu ya! Cukup nama panggilan dan kata sandi.</p></div>
@@ -174,7 +181,7 @@ async function gsubmit(){let n=$("gn").value.trim();const p=$("gp").value;
  if(p.length<4)return gate("Kata sandi minimal 4 karakter");
  if(gm=="daftar"&&$("gp2").value!==p)return gate("Ulangi kata sandi belum sama");
  $("gb").disabled=true;$("gb").textContent="⏳ Tunggu ya...";
- const l=n.toLowerCase(),h=await hash(n,p),a=await getAk(l);
+ const l=n.toLowerCase(),h=await hash(n,p),a=await getAk(l,h);
  if(gm=="daftar"){if(a)return gate("Nama itu sudah dipakai, coba nama lain.");if(!await setAk(l,{n,h,t:Date.now()}))return gate("Gagal mendaftar, coba lagi.")}
  else{if(!a||a.h!==h)return gate("Nama atau kata sandi salah.");n=a.n||n}
  try{localStorage.setItem("sess",JSON.stringify({n,h}))}catch(e){}
@@ -182,9 +189,9 @@ async function gsubmit(){let n=$("gn").value.trim();const p=$("gp").value;
 function logout(msg){try{localStorage.removeItem("sess")}catch(e){}nl="";nick="";gate(msg)}
 const say=(id,t,ok)=>{const e=$(id);if(e){e.textContent=t;e.style.color=ok?"var(--ok)":"var(--no)"}};
 async function gantiPw(){const o=$("po").value,nw=$("pn").value;if(nw.length<4)return say("pm","Sandi baru minimal 4 karakter");
- const a=await getAk(nl);if(!a||a.h!==await hash(nick,o))return say("pm","Sandi lama salah");
- const h=await hash(nick,nw);if(await setAk(nl,{...a,h})){try{localStorage.setItem("sess",JSON.stringify({n:nick,h}))}catch(e){}$("po").value="";$("pn").value="";say("pm","✅ Sandi berhasil diganti",1)}else say("pm","Gagal menyimpan, coba lagi")}
-async function kirimSaran(){const t=$("sr").value.trim();if(t.length<3)return say("sm","Tulis dulu sarannya ya");await ready;if(!db)return say("sm","Kirim saran belum tersedia di tampilan ini.");
+ const oh=await hash(nick,o),a=await getAk(nl,oh);if(!a||a.h!==oh)return say("pm","Sandi lama salah");
+ const h=await hash(nick,nw);if(await setAk(nl,{...a,h},oh)){try{localStorage.setItem("sess",JSON.stringify({n:nick,h}))}catch(e){}$("po").value="";$("pn").value="";say("pm","✅ Sandi berhasil diganti",1)}else say("pm","Gagal menyimpan, coba lagi")}
+async function kirimSaran(){const t=$("sr").value.trim();if(t.length<3)return say("sm","Tulis dulu sarannya ya");await ready;
  try{await db.collection("saran").doc(Date.now()+"-"+nl).set({n:nick,t:t.slice(0,500),ts:Date.now()});$("sr").value="";say("sm","✅ Terkirim, makasih ya!",1)}catch(e){say("sm","Gagal terkirim, coba lagi.")}}
 function pProfil(){return `<button onclick="st.tab='belajar';home()" style="margin-bottom:10px">⬅️ Kembali</button>
  <div class="card ct"><div style="font-size:56px">🧑‍🎓</div><b style="font-size:18px">${esc(nick)}</b><p class="s" style="margin:4px 0 0">Level ${Math.floor(prog.xp/100)+1} • ${prog.xp} XP • 🏆 ${prog.poin||0} poin</p></div>
@@ -281,11 +288,19 @@ function hasil(){
 }
 function rtRender(){$("rt").innerHTML=`<div class="rtb"><span onclick="rtOpen=!rtOpen;rtRender()">⭐ ${avg?avg.toFixed(1):(myR||"Nilai")}${cnt?` <small>(${cnt})</small>`:""}</span> · by Pandana${rtOpen?`<div class="rtp">Kasih bintang buat web ini<div>${[1,2,3,4,5].map(i=>`<b onclick="rate(${i})" style="opacity:${i<=myR?1:.35}">⭐</b>`).join("")}</div></div>`:""}</div>`}
 async function rate(v){myR=v;try{sS("myR",v)}catch(e){}try{if(db&&nl)await db.collection("ratings").doc(nl).set({r:v})}catch(e){}rtOpen=false;rtRender()}
-const ready=(async()=>{try{if(typeof claude=="undefined")return;const u=await claude.use("user");uid=u?await u.id():null;db=await claude.use("db")}catch(e){}})();
+function mkDb(){
+const sess=()=>{try{return JSON.parse(localStorage.getItem("sess")||"null")||{}}catch(e){return{}}};
+const call=async(body)=>{const x=sess();const r=await fetch("/api/db",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...body,u:x.n?String(x.n).toLowerCase():"",h:body.h||x.h||""})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"db error");return d};
+return{collection:c=>({
+doc:id=>({
+get:async(h)=>{const d=await call({op:"get",col:c,id,h});return{exists:!!d.exists,data:()=>d.data}},
+set:async(data,auth)=>{await call({op:"set",col:c,id,data,auth});return true}}),
+onSnapshot:(ok,err)=>{const run=async()=>{try{const d=await call({op:"list",col:c});ok({docs:(d.docs||[]).map(x=>({id:x.id,data:()=>x.data}))})}catch(e){err&&err(e)}};run();setInterval(run,20000)}})}}
+const ready=(async()=>{db=mkDb()})();
 async function rtInit(){rtRender();await ready;if(!db)return;try{
  db.collection("lb").onSnapshot(sn=>{lbRows=sn.docs.map(x=>({id:x.id,...(x.data()||{})}));const e=$("lbl");if(e)e.innerHTML=lbList()},()=>{});
  db.collection("ratings").onSnapshot(sn=>{const d=sn.docs.map(x=>Number((x.data()||{}).r)||0).filter(Boolean);cnt=d.length;avg=cnt?d.reduce((a,b)=>a+b,0)/cnt:null;rtRender()},()=>{});pushLb()}catch(e){}}
 async function boot(){rtInit();let x=null;try{x=JSON.parse(localStorage.getItem("sess")||"null")}catch(e){}
- if(x&&x.n){loadUser(x.n);rollPer();home();const a=await getAk(nl);if(a&&a.h!==x.h)logout("Kata sandi akunmu sudah diganti. Silakan masuk lagi.")}else gate()}
+ if(x&&x.n){loadUser(x.n);rollPer();home();const a=await getAk(nl,x.h);if(a&&a.h!==x.h)logout("Kata sandi akunmu sudah diganti. Silakan masuk lagi.")}else gate()}
 boot();
 </script></body></html>
