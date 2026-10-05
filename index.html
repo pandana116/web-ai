@@ -49,6 +49,16 @@ input[type=text],input[type=password]{width:100%;font:inherit;padding:10px;borde
 .pf{position:absolute;top:10px;right:10px;padding:5px 12px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.28);color:#fff;border:0;z-index:2}
 </style></head><body><main id="app"></main><div id="rt"></div>
 <script>
+async function aiSample(){return{json:async(prompt)=>{
+const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"user",content:prompt}]})});
+let d;try{d=await r.json()}catch(e){throw new Error("Server AI tidak merespons, coba lagi.")}
+if(!r.ok)throw new Error((d&&d.error&&(d.error.message||d.error))||"AI gagal merespons, coba lagi.");
+let t=(d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||"";
+t=t.replace(/```json|```/g,"").trim();
+const a=t.indexOf("{"),b=t.lastIndexOf("}");
+if(a<0||b<a)throw new Error("Jawaban AI tidak terbaca, coba lagi.");
+return JSON.parse(t.slice(a,b+1));
+}}}
 let nl="";const PER=["prog","riwayat","best","kkm","myR"];
 const gS=k=>localStorage.getItem(PER.includes(k)?k+":"+nl:k),sS=(k,v)=>localStorage.setItem(PER.includes(k)?k+":"+nl:k,v);
 const MAPEL=[["Matematika","🔢","#ef4444"],["IPA","🔬","#10b981"],["IPS","🌏","#f59e0b"],["Bahasa Indonesia","📖","#ec4899"],["Bahasa Inggris","🔤","#8b5cf6"],["Informatika","💻","#3b6cf6"],["PPKn","🇮🇩","#b91c1c"],["Bahasa Mandarin","🇨🇳","#e11d48"],["Seni Budaya","🎨","#f97316"]];
@@ -190,7 +200,7 @@ async function mulai(){
  const n=st.n,pg=Math.ceil(n*.6);
  const jenis=st.t=="pg"?`${n} soal pilihan ganda (tipe "pg")`:st.t=="uraian"?`${n} soal uraian (tipe "uraian")`:`${n} soal campuran: ${pg} pilihan ganda (tipe "pg") lalu ${n-pg} uraian (tipe "uraian")`;
  try{
-  const sample=await claude.use("sample");
+  const sample=await aiSample();
   if(!sample)throw new Error("Fitur AI belum tersedia di tampilan ini.");
   const r=await sample.json(`Buatkan ${jenis} mata pelajaran ${nm()}${st.m=="Lainnya"||MULOK.some(x=>x[0]==st.m)?" (muatan lokal; soal tentang bahasa, aksara, tata bahasa, tradisi, dan budaya daerah tersebut sesuai jenjang; boleh memakai bahasa daerah dengan terjemahan Indonesia, pembahasan tetap Bahasa Indonesia)":""}${st.m=="Bahasa Mandarin"?" (soal memakai hanzi disertai pinyin dan arti Indonesia; pembahasan Bahasa Indonesia)":""} untuk ${st.j} kelas ${st.k} di Indonesia (Kurikulum Merdeka). Bahasa Indonesia, soal bervariasi dan jelas.${st.req.trim()?` Ikuti kisi-kisi/permintaan siswa berikut dan buat soal hanya sesuai materi ini: """${st.req.trim().slice(0,800)}""".`:""} Balas HANYA JSON tanpa teks lain: {"soal":[{"tipe":"pg","q":"pertanyaan","opsi":["isi opsi a","isi opsi b","isi opsi c","isi opsi d"],"jawab":0,"bahas":"..."},{"tipe":"uraian","q":"pertanyaan","kunci":"jawaban model ringkas","bahas":"..."}]}. Untuk pg: opsi tepat 4 TANPA awalan huruf, "jawab" = indeks 0-3 jawaban benar, acak posisinya. ${st.n>10?` Untuk sekitar sepertiga soal yang memang butuh ilustrasi (bangun datar/ruang, diagram, rangkaian, peta sederhana, siklus, pola), tambahkan field "svg": kode SVG sederhana lengkap diawali <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200"> dengan latar putih (rect fill #fff), bentuk berwarna jelas, label teks pendek, tanpa script dan tanpa gambar eksternal. Soal tanpa gambar tidak perlu field svg.`:""} Pembahasan wajib rinci 4-6 kalimat: konsep, langkah/alasan jawaban benar, dan kenapa opsi lain kurang tepat (untuk uraian: langkah menjawab yang benar).`);
   const s=(r.soal||[]).filter(x=>x.q&&(x.tipe=="uraian"?x.kunci:(Array.isArray(x.opsi)&&x.opsi.length==4&&x.jawab>=0&&x.jawab<4))).map(x=>x.tipe=="uraian"?x:{...x,tipe:"pg",opsi:x.opsi.map(o=>String(o).replace(/^\s*[a-dA-D][\.\)]\s+/,""))}).map(x=>({...x,svg:okSvg(x.svg)}));
@@ -222,7 +232,7 @@ async function cek(){
  const b=$("cek");b.disabled=true;b.textContent="⏳ Lagi diperiksa...";
  const q=st.soal[st.i];
  try{
-  const sample=await claude.use("sample");
+  const sample=await aiSample();
   const r=await sample.json(`Kamu guru yang adil. Nilai jawaban siswa. Soal: ${q.q}\nKunci/jawaban model: ${q.kunci}\nJawaban siswa: """${t.slice(0,1500)}"""\nBalas HANYA JSON: {"skor":0-100,"fb":"umpan balik 1-3 kalimat, ramah: bagian yang sudah benar dan yang kurang"}. Terima jawaban yang maknanya benar walau kata-katanya beda.`);
   st.res[st.i]={skor:Math.max(0,Math.min(100,Number(r.skor)||0))/100,jwb:t,fb:r.fb||""};
  }catch(e){st.res[st.i]={skor:null,jwb:t,manual:true}}
