@@ -2,115 +2,122 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#6c5ce7">
-<title>Panda Learn — Belajar Jadi Seru</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#5b4de8">
+<title>Rajin Belajar Jadi Pintar</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f6f7fb;color:#20223a}
-button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
-.app{display:flex;min-height:100vh}.side{width:245px;background:#fff;border-right:1px solid #e8e9f0;padding:22px 15px;position:sticky;top:0;height:100vh}
-.logo{font-weight:900;font-size:22px;padding:8px 12px 25px}.logo span{color:#6c5ce7}
-.nav button{width:100%;background:transparent;text-align:left;padding:13px 14px;border-radius:13px;margin:3px 0;color:#555b72;font-weight:700}.nav button.active,.nav button:hover{background:#eeeaff;color:#5b4bdc}
-.main{flex:1;max-width:1250px;margin:auto;padding:20px 24px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.hello{font-size:14px;color:#7c8094}.top h2{margin:2px 0}.top-actions{display:flex;gap:9px}.pill{background:#fff;border:1px solid #e5e6ef;border-radius:13px;padding:10px 13px;font-weight:800}
-.hero{background:linear-gradient(125deg,#6c5ce7,#8b79ff);color:white;border-radius:25px;padding:27px;display:flex;justify-content:space-between;gap:20px;box-shadow:0 15px 35px #6c5ce725}
-.hero h1{font-size:30px;margin:5px 0 8px}.hero p{opacity:.9;margin:0 0 18px}.hero button{background:white;color:#5748d5;padding:12px 18px;border-radius:12px;font-weight:900}.hero-art{font-size:75px;display:flex;align-items:center}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:16px 0}.stat,.card{background:white;border:1px solid #e8e9f0;border-radius:18px;padding:17px}.stat b{font-size:22px;display:block}.muted{color:#81869a;font-size:13px}
-.section-title{display:flex;justify-content:space-between;align-items:center;margin:24px 0 10px}.section-title h3{margin:0}.link{background:none;color:#6353dc;font-weight:800}
-.features{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.feature{padding:18px;border-radius:18px;background:#fff;border:1px solid #e8e9f0;transition:.2s}.feature:hover{transform:translateY(-3px);box-shadow:0 10px 25px #0000000b}.ico{font-size:30px}.feature h4{margin:9px 0 4px}.feature p{font-size:13px;color:#777c90;margin:0 0 12px}.smallbtn{padding:9px 11px;border-radius:10px;background:#f0efff;color:#5b4bdc;font-weight:800}
-.grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}.missions .mission{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #eee}.mission:last-child{border:0}.check{width:35px;height:35px;border-radius:11px;background:#eeeaff;display:grid;place-items:center}.bar{height:7px;background:#eeeef5;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;width:68%;background:#6c5ce7;border-radius:10px}
-.page{display:none}.page.active{display:block}.back{margin-bottom:15px}.back button{background:white;padding:10px 14px;border-radius:11px;border:1px solid #e5e6ef;font-weight:800}
-.modal{position:fixed;inset:0;background:#11152a88;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modal.show{display:flex}.box{background:#fff;border-radius:22px;max-width:600px;width:100%;padding:22px;max-height:88vh;overflow:auto}.box h2{margin-top:0}.close{float:right;background:#f0f0f5;border-radius:10px;padding:7px 10px}.option{width:100%;text-align:left;padding:13px;margin:7px 0;background:#f7f7fb;border:1px solid #e5e5ee;border-radius:12px;font-weight:700}.option:hover{background:#eeeaff;border-color:#8d80ed}
-textarea,input,select{width:100%;padding:12px;border:1px solid #dddfea;border-radius:12px;outline:none;background:#fff;margin:7px 0 12px}textarea{min-height:110px;resize:vertical}.primary{background:#6c5ce7;color:#fff;padding:12px 16px;border-radius:12px;font-weight:900}.secondary{background:#eeeaff;color:#594bd2;padding:12px 16px;border-radius:12px;font-weight:900}
-.chat{height:320px;overflow:auto;background:#f7f7fb;padding:13px;border-radius:15px}.msg{padding:10px 12px;border-radius:13px;margin:7px 0;max-width:85%}.ai{background:#fff}.me{background:#6c5ce7;color:#fff;margin-left:auto}.row{display:flex;gap:8px}.row input{margin:0}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#24263b;color:#fff;padding:12px 18px;border-radius:13px;display:none;z-index:20}
-@media(max-width:900px){.side{width:72px;padding:15px 8px}.logo{font-size:0;text-align:center}.logo:after{content:"🐼";font-size:25px}.nav button{font-size:0;text-align:center}.nav button:first-letter{font-size:20px}.main{padding:15px}.stats{grid-template-columns:repeat(2,1fr)}.features{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.hero-art{font-size:50px}}
-@media(max-width:520px){.hero h1{font-size:23px}.hero-art{display:none}.features{grid-template-columns:1fr 1fr}.top h2{font-size:18px}.stat{padding:13px}}
+:root{--p:#5b4de8;--p2:#7769f4;--ink:#202238;--muted:#74788c;--bg:#f6f7fb;--card:#fff;--line:#e9eaf1;--green:#21b77a;--yellow:#ffb72b;--red:#ef6262}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}button{border:0;cursor:pointer}button:active{transform:scale(.98)}
+.app{min-height:100vh}.topbar{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100% - 1120px)/2));position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px}.brandmark{width:39px;height:39px;border-radius:12px;background:linear-gradient(135deg,var(--p),#9186ff);display:grid;place-items:center;color:#fff;font-size:21px}
+.topright{display:flex;align-items:center;gap:8px}.coin{background:#fff6d9;color:#8a6200;padding:9px 12px;border-radius:12px;font-weight:800}.iconbtn{width:40px;height:40px;border:1px solid var(--line);background:#fff;border-radius:12px}
+.wrap{max-width:1120px;margin:auto;padding:22px 18px 95px}.hello{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:18px}.hello small{color:var(--muted)}.hello h1{font-size:25px;margin:3px 0}
+.hero{background:linear-gradient(120deg,#5648df,#8174f8);color:#fff;border-radius:24px;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden;box-shadow:0 12px 30px #5b4de826}.hero h2{font-size:29px;line-height:1.12;margin:7px 0}.hero p{margin:0 0 17px;color:#eee}.hero .mascot{font-size:76px;filter:drop-shadow(0 8px 5px #0002)}.primary{background:var(--p);color:#fff;padding:11px 15px;border-radius:12px;font-weight:850}.hero .primary{background:#fff;color:#5144ce}.secondary{background:#efedff;color:#5144ce;padding:10px 13px;border-radius:11px;font-weight:800}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:15px 0}.quick .q{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px;display:flex;align-items:center;gap:11px;text-align:left}.qicon{width:42px;height:42px;border-radius:13px;background:#f0eeff;display:grid;place-items:center;font-size:22px}.q b{display:block}.q small{color:var(--muted)}
+.section{margin-top:22px}.sectitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.sectitle h2{font-size:19px;margin:0}.see{background:none;color:var(--p);font-weight:800}
+.features{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}.feature{background:#fff;border:1px solid var(--line);border-radius:17px;padding:15px;min-height:150px;transition:.18s}.feature:hover{transform:translateY(-2px);box-shadow:0 8px 22px #2022380a}.feature .fi{font-size:29px}.feature h3{font-size:15px;margin:9px 0 5px}.feature p{font-size:12px;line-height:1.4;color:var(--muted);margin:0}.feature button{margin-top:11px}
+.two{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:18px}.mission{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.mission:last-child{border-bottom:0}.mi{width:39px;height:39px;border-radius:12px;background:#f0eeff;display:grid;place-items:center}.mission main{flex:1}.mission b{font-size:14px}.bar{height:7px;background:#ededf3;border-radius:10px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--p);border-radius:10px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:#f8f8fc;border-radius:14px;padding:12px}.stat b{font-size:19px;display:block}.muted{color:var(--muted);font-size:12px}
+.bottom{display:none}
+.page{display:none}.page.active{display:block}.back{margin-bottom:13px}.back button{background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:10px;font-weight:800}
+.modal{display:none;position:fixed;inset:0;background:#16182c99;z-index:50;align-items:flex-end;justify-content:center;padding:12px}.modal.show{display:flex}.modalbox{background:#fff;width:min(650px,100%);border-radius:24px 24px 16px 16px;padding:20px;max-height:88vh;overflow:auto}.close{float:right;background:#f0f0f5;width:34px;height:34px;border-radius:10px;font-weight:900}.modal h2{margin:2px 45px 8px 0}.option{width:100%;background:#f7f7fa;border:1px solid var(--line);padding:13px;border-radius:12px;text-align:left;margin:5px 0;font-weight:750}.option:hover{background:#efedff;border-color:#bbb3ff}
+input,textarea,select{width:100%;border:1px solid #dfe0e9;border-radius:12px;padding:12px;background:#fff;outline:0;margin:5px 0 10px}textarea{min-height:100px}.row{display:flex;gap:8px}.chat{height:300px;overflow:auto;background:#f6f6fa;border-radius:15px;padding:12px}.bubble{max-width:86%;padding:10px 12px;border-radius:13px;margin:6px 0;font-size:14px;line-height:1.45}.bot{background:#fff}.user{background:var(--p);color:#fff;margin-left:auto}.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:4px}.tab{white-space:nowrap;padding:9px 12px;border-radius:11px;background:#fff;border:1px solid var(--line);font-weight:750}.tab.active{background:#eeecff;color:var(--p);border-color:#d6d1ff}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#25263a;color:#fff;padding:11px 16px;border-radius:12px;z-index:70;display:none;white-space:nowrap}
+.quizq{font-size:20px;font-weight:850;line-height:1.35;margin:18px 0}.result{text-align:center;padding:10px}.result .big{font-size:55px}
+@media(max-width:900px){.features{grid-template-columns:repeat(3,1fr)}.quick{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.topbar{height:62px}.wrap{padding:16px 14px 85px}.brand{font-size:15px}.hero{padding:20px}.hero h2{font-size:23px}.hero .mascot{font-size:54px}.quick{grid-template-columns:repeat(2,1fr)}.features{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.bottom{position:fixed;display:grid;grid-template-columns:repeat(5,1fr);bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:30;padding:7px 5px calc(7px + env(safe-area-inset-bottom))}.bottom button{background:none;color:#777;font-size:10px;font-weight:750;padding:4px}.bottom button span{display:block;font-size:20px;margin-bottom:2px}.bottom button.active{color:var(--p)}.hello h1{font-size:22px}.hello{align-items:flex-start}.coin{font-size:12px;padding:8px}.topright .iconbtn{display:none}}
 </style>
 </head>
 <body>
-<div class="app">
-<aside class="side">
-<div class="logo">PANDA <span>LEARN</span></div>
-<div class="nav">
-<button class="active" data-page="home">🏠 Beranda</button>
-<button data-page="learn">📚 Belajar</button>
-<button data-page="challenge">⚔️ Tantangan</button>
-<button data-page="tutor">🤖 Tutor AI</button>
-<button data-page="rank">🏆 Ranking</button>
-<button data-page="profile">👤 Profil</button>
-<button id="guideBtn">❔ Panduan</button>
-</div>
-</aside>
+<header class="topbar">
+<div class="brand"><div class="brandmark">RB</div><span>Rajin Belajar Jadi Pintar</span></div>
+<div class="topright"><div class="coin">⭐ 1.240 XP</div><button class="iconbtn" onclick="toast('Belum ada notifikasi baru 🔔')">🔔</button></div>
+</header>
 
-<main class="main">
-<div class="top"><div><div class="hello">Selamat datang kembali 👋</div><h2>Rajin Belajar Jadi Pintar</h2></div><div class="top-actions"><button class="pill" id="streakBtn">🔥 7 hari</button><button class="pill" id="notifBtn">🔔</button></div></div>
-
+<main class="wrap">
 <section id="home" class="page active">
-<div class="hero"><div><div class="muted" style="color:#ddd">LEVEL 8 • 1.240 XP</div><h1>Siap menaklukkan materi hari ini?</h1><p>Pilih aktivitas. Belajar sedikit, konsisten setiap hari.</p><button onclick="openQuick()">⚡ Mulai Belajar 10 Menit</button></div><div class="hero-art">🐼</div></div>
-<div class="stats"><div class="stat">🔥 <b>7 hari</b><span class="muted">Streak aktif</span></div><div class="stat">⭐ <b>1.240</b><span class="muted">Total XP</span></div><div class="stat">🎯 <b>82%</b><span class="muted">Akurasi</span></div><div class="stat">🏅 <b>12</b><span class="muted">Lencana</span></div></div>
-<div class="section-title"><h3>Fitur Unggulan</h3><button class="link" onclick="showPage('learn')">Lihat semua →</button></div>
+<div class="hello"><div><small>Selamat datang kembali!</small><h1>Yuk, belajar hari ini 👋</h1></div><button class="secondary" onclick="openGuide()">❔ Panduan</button></div>
+
+<div class="hero"><div><small>LEVEL 8 • 1.240 XP</small><h2>Belajar sedikit,<br>jadi makin pintar.</h2><p>Pilih aktivitas yang kamu suka dan mulai dari yang paling gampang.</p><button class="primary" onclick="quickStudy()">⚡ Mulai Belajar</button></div><div class="mascot">📚</div></div>
+
+<div class="quick">
+<button class="q" onclick="openQuiz()"><span class="qicon">🎯</span><span><b>Latihan Soal</b><small>AI menyesuaikan</small></span></button>
+<button class="q" onclick="openTutor()"><span class="qicon">🤖</span><span><b>Tutor AI</b><small>Tanya apa saja</small></span></button>
+<button class="q" onclick="openFocus()"><span class="qicon">⏱️</span><span><b>Fokus 10 Menit</b><small>Belajar cepat</small></span></button>
+<button class="q" onclick="openQuest()"><span class="qicon">🔥</span><span><b>Misi Hari Ini</b><small>+120 XP</small></span></button>
+</div>
+
+<div class="section"><div class="sectitle"><h2>✨ Semua Fitur</h2><button class="see" onclick="showPage('features')">Lihat semua</button></div>
 <div class="features">
-<div class="feature"><div class="ico">🤖</div><h4>Tutor AI</h4><p>Tanya materi dan minta penjelasan sampai paham.</p><button class="smallbtn" onclick="showPage('tutor')">Buka Tutor</button></div>
-<div class="feature"><div class="ico">🎯</div><h4>Soal AI</h4><p>Soal otomatis sesuai kelas, mapel, dan kisi-kisi.</p><button class="smallbtn" onclick="startQuiz()">Mulai Soal</button></div>
-<div class="feature"><div class="ico">⚔️</div><h4>Duel Teman</h4><p>Adu cepat dan skor dengan kode room.</p><button class="smallbtn" onclick="duel()">Duel</button></div>
-<div class="feature"><div class="ico">🔥</div><h4>Daily Quest</h4><p>Selesaikan misi dan kumpulkan XP tambahan.</p><button class="smallbtn" onclick="claimQuest()">Ambil Misi</button></div>
+<div class="feature"><div class="fi">🎯</div><h3>Soal AI</h3><p>Soal berdasarkan kelas, mapel, dan materi.</p><button class="secondary" onclick="openQuiz()">Mulai</button></div>
+<div class="feature"><div class="fi">🤖</div><h3>Tutor AI</h3><p>Penjelasan sampai kamu benar-benar paham.</p><button class="secondary" onclick="openTutor()">Buka</button></div>
+<div class="feature"><div class="fi">⚔️</div><h3>Duel Teman</h3><p>Adu skor memakai kode room.</p><button class="secondary" onclick="openDuel()">Main</button></div>
+<div class="feature"><div class="fi">🏆</div><h3>Ranking</h3><p>Lihat posisi kamu minggu ini.</p><button class="secondary" onclick="showPage('rank')">Lihat</button></div>
+<div class="feature"><div class="fi">🔥</div><h3>Streak</h3><p>Jaga konsistensi belajar setiap hari.</p><button class="secondary" onclick="toast('Streak kamu: 7 hari!')">Cek</button></div>
+</div></div>
+
+<div class="section"><div class="sectitle"><h2>🎮 Misi & Progres</h2><button class="see" onclick="openQuest()">Lihat misi</button></div>
+<div class="two"><div class="card">
+<div class="mission"><div class="mi">📖</div><main><b>Kerjakan 10 soal</b><div class="bar"><i style="width:70%"></i></div><small class="muted">7/10 • +60 XP</small></main></div>
+<div class="mission"><div class="mi">🤖</div><main><b>Tanya Tutor AI</b><div class="bar"><i style="width:100%"></i></div><small class="muted">Selesai • +30 XP</small></main></div>
+<div class="mission"><div class="mi">🔥</div><main><b>Jaga streak</b><div class="bar"><i style="width:100%"></i></div><small class="muted">Selesai • +30 XP</small></main></div>
 </div>
-<div class="section-title"><h3>Misi Hari Ini</h3><span class="muted">+120 XP tersedia</span></div>
-<div class="grid2"><div class="card missions">
-<div class="mission"><div class="check">📖</div><div style="flex:1"><b>Kerjakan 10 soal</b><div class="bar"><i></i></div><small class="muted">7 / 10</small></div></div>
-<div class="mission"><div class="check">🤖</div><div style="flex:1"><b>Tanya Tutor AI</b><div class="bar"><i style="width:100%"></i></div><small class="muted">Selesai ✓</small></div></div>
-<div class="mission"><div class="check">🔥</div><div style="flex:1"><b>Jaga streak hari ini</b><div class="bar"><i style="width:100%"></i></div><small class="muted">Selesai ✓</small></div></div>
+<div class="card"><h3 style="margin-top:0">📊 Performa</h3><div class="stats"><div class="stat"><b>82%</b><span class="muted">Akurasi</span></div><div class="stat"><b>146</b><span class="muted">Soal</span></div><div class="stat"><b>12</b><span class="muted">Badge</span></div></div><p class="muted">Materi yang paling perlu dilatih</p><b>Matematika — SPLDV</b><div class="bar"><i style="width:55%"></i></div><button class="primary" style="margin-top:12px" onclick="openQuiz()">Latihan Sekarang</button></div></div>
 </div>
-<div class="card"><h3 style="margin-top:0">📊 Perkembangan</h3><p class="muted">Matematika</p><div class="bar"><i style="width:82%"></i></div><p class="muted">Bahasa Indonesia</p><div class="bar"><i style="width:74%"></i></div><p class="muted">IPA</p><div class="bar"><i style="width:65%"></i></div><button class="secondary" style="margin-top:12px" onclick="showPage('profile')">Lihat Statistik</button></div></div>
 </section>
 
-<section id="learn" class="page">
-<div class="back"><button onclick="showPage('home')">← Beranda</button></div><h1>📚 Pusat Belajar</h1><p class="muted">Belajar sesuai kebutuhanmu. AI akan menyesuaikan tingkat kesulitan.</p>
+<section id="features" class="page"><div class="back"><button onclick="showPage('home')">← Kembali</button></div><h1>✨ Fitur Rajin Belajar</h1><p class="muted">Semua fitur dikumpulkan di satu tempat supaya gampang dicari.</p>
 <div class="features">
-<div class="feature"><div class="ico">⚡</div><h4>Belajar 5 Menit</h4><p>Sesi super singkat untuk tetap konsisten.</p><button class="smallbtn" onclick="openQuick(5)">Mulai</button></div>
-<div class="feature"><div class="ico">🧠</div><h4>Latihan Adaptif</h4><p>Soal berikutnya menyesuaikan jawabanmu.</p><button class="smallbtn" onclick="startQuiz()">Mulai</button></div>
-<div class="feature"><div class="ico">📋</div><h4>Kisi-kisi Saya</h4><p>Masukkan materi ujian sekolahmu.</p><button class="smallbtn" onclick="openKisi()">Buat Latihan</button></div>
-<div class="feature"><div class="ico">📸</div><h4>Foto Jadi Latihan</h4><p>Masukkan materi/soal untuk dibuat latihan.</p><button class="smallbtn" onclick="toast('Fitur foto siap disambungkan ke AI.')">Coba</button></div>
-</div>
-<div class="card" style="margin-top:15px"><h3>🎮 Pilih Mode</h3><div class="row"><select id="subject"><option>Matematika</option><option>IPA</option><option>Bahasa Indonesia</option><option>Bahasa Inggris</option><option>Informatika</option></select><select id="grade"><option>Kelas 8</option><option>Kelas 7</option><option>Kelas 9</option></select></div><button class="primary" onclick="startQuiz()">🚀 Buat Soal Sekarang</button></div>
-</section>
-
-<section id="challenge" class="page"><div class="back"><button onclick="showPage('home')">← Beranda</button></div><h1>⚔️ Tantangan</h1><div class="features">
-<div class="feature"><div class="ico">👥</div><h4>Duel Teman</h4><p>Buat room dan tantang teman.</p><button class="smallbtn" onclick="duel()">Buat Duel</button></div>
-<div class="feature"><div class="ico">👑</div><h4>Boss Battle</h4><p>10 soal sulit. Kalahkan boss untuk bonus XP.</p><button class="smallbtn" onclick="startQuiz(true)">Lawan Boss</button></div>
-<div class="feature"><div class="ico">⏱️</div><h4>Speed Run</h4><p>Berapa banyak soal yang bisa kamu jawab?</p><button class="smallbtn" onclick="openQuick(3)">Mulai</button></div>
-<div class="feature"><div class="ico">🎁</div><h4>Hadiah Misteri</h4><p>Selesaikan misi untuk membuka hadiah.</p><button class="smallbtn" onclick="claimQuest()">Buka</button></div>
+<div class="feature"><div class="fi">🎯</div><h3>Latihan Soal AI</h3><p>Soal otomatis sesuai kebutuhan.</p><button class="secondary" onclick="openQuiz()">Buka</button></div>
+<div class="feature"><div class="fi">🤖</div><h3>Tutor AI</h3><p>Chat untuk memahami materi.</p><button class="secondary" onclick="openTutor()">Buka</button></div>
+<div class="feature"><div class="fi">⚔️</div><h3>Duel Teman</h3><p>Kompetisi dengan kode room.</p><button class="secondary" onclick="openDuel()">Buka</button></div>
+<div class="feature"><div class="fi">🏆</div><h3>Leaderboard</h3><p>Ranking mingguan.</p><button class="secondary" onclick="showPage('rank')">Buka</button></div>
+<div class="feature"><div class="fi">🔥</div><h3>Daily Streak</h3><p>Bonus untuk konsisten.</p><button class="secondary" onclick="toast('+10 XP streak hari ini!')">Cek</button></div>
+<div class="feature"><div class="fi">🎁</div><h3>Daily Reward</h3><p>Hadiah kejutan harian.</p><button class="secondary" onclick="openReward()">Buka</button></div>
+<div class="feature"><div class="fi">🧠</div><h3>Flashcard</h3><p>Hafalkan materi lebih cepat.</p><button class="secondary" onclick="openFlash()">Coba</button></div>
+<div class="feature"><div class="fi">⏱️</div><h3>Focus Timer</h3><p>Belajar tanpa terdistraksi.</p><button class="secondary" onclick="openFocus()">Mulai</button></div>
+<div class="feature"><div class="fi">📋</div><h3>Kisi-kisi Ujian</h3><p>Masukkan kisi-kisi sekolah.</p><button class="secondary" onclick="openKisi()">Buat</button></div>
+<div class="feature"><div class="fi">📷</div><h3>Foto ke Soal</h3><p>Konsep untuk membuat latihan dari foto.</p><button class="secondary" onclick="toast('Bagian ini siap dihubungkan ke AI vision.')">Coba</button></div>
+<div class="feature"><div class="fi">🏅</div><h3>Achievement</h3><p>Kumpulkan lencana spesial.</p><button class="secondary" onclick="openBadge()">Lihat</button></div>
+<div class="feature"><div class="fi">📈</div><h3>Statistik</h3><p>Lihat perkembangan belajarmu.</p><button class="secondary" onclick="showPage('profile')">Lihat</button></div>
+<div class="feature"><div class="fi">📝</div><h3>Catatan Pintar</h3><p>Simpan rangkuman materi.</p><button class="secondary" onclick="openNotes()">Buka</button></div>
+<div class="feature"><div class="fi">🎮</div><h3>Boss Battle</h3><p>Hadapi soal level sulit.</p><button class="secondary" onclick="openQuiz(true)">Lawan</button></div>
+<div class="feature"><div class="fi">🎓</div><h3>Rekomendasi Belajar</h3><p>AI menentukan materi berikutnya.</p><button class="secondary" onclick="openRecommend()">Lihat</button></div>
 </div></section>
 
-<section id="tutor" class="page"><div class="back"><button onclick="showPage('home')">← Beranda</button></div><h1>🤖 Tutor AI</h1><p class="muted">Tanya seperti bertanya ke guru. Minta contoh, cara cepat, atau penjelasan dari awal.</p>
-<div class="card"><div class="chat" id="chat"><div class="msg ai">Halo! Aku Tutor AI. Mau belajar apa hari ini?</div></div><div class="row" style="margin-top:10px"><input id="chatInput" placeholder="Contoh: jelaskan SPLDV dengan cara mudah..."><button class="primary" onclick="sendChat()">Kirim</button></div><div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap"><button class="smallbtn" onclick="quickChat('Jelaskan dengan bahasa paling sederhana')">Bahasa sederhana</button><button class="smallbtn" onclick="quickChat('Berikan contoh soal dan caranya')">Contoh soal</button><button class="smallbtn" onclick="quickChat('Ajari aku cara cepat')">Cara cepat</button></div></div></section>
+<section id="rank" class="page"><div class="back"><button onclick="showPage('home')">← Kembali</button></div><h1>🏆 Ranking Mingguan</h1><div class="card"><div class="mission"><div class="mi">🥇</div><main><b>Raka</b><small class="muted">Level 12</small></main><b>2.840 XP</b></div><div class="mission"><div class="mi">🥈</div><main><b>Naya</b><small class="muted">Level 11</small></main><b>2.510 XP</b></div><div class="mission"><div class="mi">🥉</div><main><b>Kamu</b><small class="muted">Level 8</small></main><b>2.340 XP</b></div><div class="mission"><div class="mi">4</div><main><b>Dimas</b></main><b>2.190 XP</b></div></div></section>
 
-<section id="rank" class="page"><div class="back"><button onclick="showPage('home')">← Beranda</button></div><h1>🏆 Ranking Mingguan</h1><div class="card"><div class="mission"><b>🥇 1. Raka</b><span style="margin-left:auto">2.840 XP</span></div><div class="mission"><b>🥈 2. Naya</b><span style="margin-left:auto">2.510 XP</span></div><div class="mission"><b>🥉 3. Kamu</b><span style="margin-left:auto">2.340 XP</span></div><div class="mission"><b>4. Dimas</b><span style="margin-left:auto">2.190 XP</span></div><div class="mission"><b>5. Salsa</b><span style="margin-left:auto">1.980 XP</span></div></div></section>
+<section id="profile" class="page"><div class="back"><button onclick="showPage('home')">← Kembali</button></div><h1>👤 Profil & Statistik</h1><div class="card"><h2>Pejuang Belajar</h2><p class="muted">Level 8 • 1.240 XP • Streak 7 hari</p><div class="bar"><i style="width:68%"></i></div><p class="muted">Menuju Level 9 — 680/1000 XP</p></div><div class="stats" style="margin-top:12px"><div class="stat"><b>146</b><span class="muted">Soal</span></div><div class="stat"><b>82%</b><span class="muted">Akurasi</span></div><div class="stat"><b>12</b><span class="muted">Badge</span></div></div></section>
+</main>
 
-<section id="profile" class="page"><div class="back"><button onclick="showPage('home')">← Beranda</button></div><h1>👤 Profil Belajar</h1><div class="card" style="display:flex;gap:18px;align-items:center"><div style="font-size:65px">🐼</div><div><h2 style="margin:0">Pejuang Belajar</h2><p class="muted">Level 8 • 1.240 XP</p><div class="bar" style="width:250px"><i style="width:68%"></i></div></div></div><div class="stats"><div class="stat">📚 <b>146</b><span class="muted">Soal dikerjakan</span></div><div class="stat">✅ <b>82%</b><span class="muted">Akurasi</span></div><div class="stat">🏅 <b>12</b><span class="muted">Lencana</span></div><div class="stat">🔥 <b>7</b><span class="muted">Streak terbaik</span></div></div></section>
-</main></div>
+<nav class="bottom"><button class="active" onclick="showPage('home')"><span>🏠</span>Beranda</button><button onclick="showPage('features')"><span>✨</span>Fitur</button><button onclick="openQuiz()"><span>🎯</span>Latihan</button><button onclick="openTutor()"><span>🤖</span>Tutor</button><button onclick="showPage('profile')"><span>👤</span>Profil</button></nav>
 
-<div class="modal" id="modal"><div class="box"><button class="close" onclick="closeModal()">✕</button><div id="modalContent"></div></div></div>
-<div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">✕</button><div id="modalContent"></div></div></div><div id="toast" class="toast"></div>
 
 <script>
 const pages=document.querySelectorAll('.page');
-document.querySelectorAll('.nav button[data-page]').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
-function showPage(id){pages.forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo(0,0)}
-function modal(html){document.getElementById('modalContent').innerHTML=html;document.getElementById('modal').classList.add('show')}
+function showPage(id){pages.forEach(x=>x.classList.toggle('active',x.id===id));window.scrollTo(0,0)}
+function modal(x){document.getElementById('modalContent').innerHTML=x;document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show')}
-function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',2200)}
-document.getElementById('guideBtn').onclick=()=>modal(`<h2>👋 Cara Pakai Panda Learn</h2><p><b>1.</b> Pilih aktivitas dari Beranda.</p><p><b>2.</b> Pilih kelas dan mapel.</p><p><b>3.</b> Kerjakan soal atau tanya Tutor AI.</p><p><b>4.</b> Kumpulkan XP, selesaikan misi, dan jaga streak.</p><p><b>5.</b> Coba Tantangan untuk naik ranking.</p><button class="primary" onclick="closeModal()">Siap, mulai!</button>`);
-function openQuick(min=10){modal(`<h2>⚡ Belajar ${min} Menit</h2><p>Pilih fokus belajarmu:</p><button class="option" onclick="startQuiz();closeModal()">🎯 Latihan soal</button><button class="option" onclick="showPage('tutor');closeModal()">🤖 Tanya Tutor AI</button><button class="option" onclick="openKisi()">📋 Latihan dari kisi-kisi</button>`)}
-function openKisi(){modal(`<h2>📋 Buat Latihan dari Kisi-kisi</h2><p class="muted">Tulis materi yang akan keluar di ujian.</p><textarea id="kisi" placeholder="Contoh: SPLDV, teorema Pythagoras, bangun ruang..."></textarea><button class="primary" onclick="makeKisi()">✨ Buat Latihan</button>`)}
-function makeKisi(){let v=document.getElementById('kisi').value.trim();if(!v)return toast('Isi kisi-kisinya dulu.');closeModal();toast('AI sedang menyiapkan latihan dari kisi-kisimu!');setTimeout(startQuiz,600)}
-function startQuiz(boss=false){modal(`<h2>${boss?'👑 Boss Battle':'🎯 Latihan AI'}</h2><p>Berapa banyak faktor positif dari 36?</p><button class="option" onclick="answer(false)">A. 6</button><button class="option" onclick="answer(true)">B. 9</button><button class="option" onclick="answer(false)">C. 12</button><button class="option" onclick="answer(false)">D. 18</button><p class="muted">Soal 1 dari ${boss?10:5} • +20 XP</p>`)}
-function answer(ok){if(ok){modal(`<h2>🎉 Benar!</h2><p>36 = 2² × 3², jadi banyak faktornya = (2+1)(2+1) = <b>9</b>.</p><p>⭐ +20 XP</p><button class="primary" onclick="closeModal();toast('+20 XP! Mantap!')">Lanjut</button>`)}else modal(`<h2>Belum tepat 😄</h2><p>Jawaban yang benar adalah <b>9</b>. Jangan berhenti—coba soal berikutnya!</p><button class="primary" onclick="startQuiz()">Coba Lagi</button>`)}
-function duel(){modal(`<h2>⚔️ Duel Teman</h2><p>Buat kode duel lalu kirim ke temanmu.</p><div class="card" style="text-align:center;font-size:30px;font-weight:900;letter-spacing:6px">PANDA-728</div><button class="primary" onclick="navigator.clipboard?.writeText('PANDA-728');toast('Kode disalin!');closeModal()">📋 Salin Kode</button>`)}
-function claimQuest(){modal(`<h2>🎁 Daily Quest</h2><p>Selesaikan 3 aktivitas hari ini untuk membuka bonus.</p><div class="bar"><i style="width:66%"></i></div><p><b>2/3 selesai</b></p><button class="primary" onclick="closeModal();toast('Misi baru: kerjakan 10 soal +60 XP')">Ambil Misi</button>`)}
-function sendChat(){let i=document.getElementById('chatInput'),v=i.value.trim();if(!v)return;i.value='';let c=document.getElementById('chat');c.innerHTML+=`<div class="msg me">${v}</div>`;setTimeout(()=>{c.innerHTML+=`<div class="msg ai">Tentu! Aku bantu dari dasar dulu. Kita pecah materi menjadi langkah kecil supaya lebih mudah dipahami. Untuk jawaban yang lebih spesifik, sambungkan API AI-mu pada bagian tutor ini.</div>`;c.scrollTop=c.scrollHeight},500);c.scrollTop=c.scrollHeight}
-function quickChat(t){document.getElementById('chatInput').value=t;sendChat()}
-document.getElementById('notifBtn').onclick=()=>toast('Tidak ada notifikasi baru. Tetap semangat belajar!');
-document.getElementById('streakBtn').onclick=()=>toast('🔥 Streak 7 hari! Jangan putus hari ini.');
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>x.style.display='none',2200)}
+function openGuide(){modal(`<h2>❔ Panduan</h2><p><b>1.</b> Pilih aktivitas dari halaman utama.</p><p><b>2.</b> Pilih kelas, mapel, dan materi.</p><p><b>3.</b> Kerjakan soal atau tanyakan materi ke Tutor AI.</p><p><b>4.</b> Dapatkan XP, selesaikan misi, dan jaga streak.</p><p><b>5.</b> Coba duel dan naikkan ranking.</p><button class="primary" onclick="closeModal()">Mengerti!</button>`)}
+function quickStudy(){modal(`<h2>⚡ Mulai Belajar</h2><p>Pilih sesi yang cocok.</p><button class="option" onclick="openQuiz()">🎯 Latihan soal 10 menit</button><button class="option" onclick="openTutor()">🤖 Tanya Tutor AI</button><button class="option" onclick="openFlash()">🧠 Flashcard cepat</button>`)}
+function openQuiz(boss=false){modal(`<h2>${boss?'👑 Boss Battle':'🎯 Latihan Soal AI'}</h2><div class="tabs"><button class="tab active">Matematika</button><button class="tab">IPA</button><button class="tab">Bahasa Indonesia</button></div><p class="muted">Kelas 8 • ${boss?'Mode sulit':'Mode adaptif'}</p><div class="quizq">Berapakah banyak faktor positif dari 36?</div><button class="option" onclick="answerQuiz(false)">A. 6</button><button class="option" onclick="answerQuiz(true)">B. 9</button><button class="option" onclick="answerQuiz(false)">C. 12</button><button class="option" onclick="answerQuiz(false)">D. 18</button><p class="muted">Soal 1 dari ${boss?10:5} • +20 XP</p>`)}
+function answerQuiz(ok){if(ok){modal(`<div class="result"><div class="big">🎉</div><h2>Jawaban benar!</h2><p>36 = 2² × 3², sehingga banyak faktornya adalah (2+1)(2+1) = <b>9</b>.</p><p>⭐ Kamu mendapat <b>+20 XP</b></p><button class="primary" onclick="openQuiz()">Soal Berikutnya</button></div>`)}else{modal(`<div class="result"><div class="big">💪</div><h2>Belum tepat</h2><p>Jawaban yang benar adalah <b>9</b>. Tenang, kita pelajari caranya lalu coba lagi.</p><button class="primary" onclick="openQuiz()">Coba Lagi</button></div>`)}}
+function openTutor(){modal(`<h2>🤖 Tutor AI</h2><p class="muted">Tanya materi dengan bahasa sehari-hari.</p><div class="chat" id="chat"><div class="bubble bot">Halo! Aku siap bantu. Mau belajar apa?</div></div><div class="row" style="margin-top:8px"><input id="chatIn" placeholder="Contoh: jelaskan SPLDV dari awal"><button class="primary" onclick="sendChat()">Kirim</button></div><div style="margin-top:7px"><button class="secondary" onclick="quickChat('Jelaskan dengan bahasa sederhana')">Bahasa sederhana</button> <button class="secondary" onclick="quickChat('Kasih contoh soal dan cara')">Contoh soal</button></div>`)}
+function sendChat(){let i=document.getElementById('chatIn'),v=i?.value.trim();if(!v)return;let c=document.getElementById('chat');c.innerHTML+=`<div class="bubble user">${v}</div>`;i.value='';setTimeout(()=>{c.innerHTML+=`<div class="bubble bot">Siap! Aku akan menjelaskannya dari dasar, langkah demi langkah. Untuk versi produksi, bagian ini tinggal disambungkan ke API AI yang kamu punya.</div>`;c.scrollTop=c.scrollHeight},450);c.scrollTop=c.scrollHeight}
+function quickChat(t){document.getElementById('chatIn').value=t;sendChat()}
+function openDuel(){modal(`<h2>⚔️ Duel Teman</h2><p>Buat kode room dan kirim ke teman.</p><div style="font-size:28px;text-align:center;font-weight:900;letter-spacing:5px;background:#f5f4ff;padding:20px;border-radius:15px">RB-7284</div><button class="primary" style="margin-top:12px" onclick="toast('Kode duel disalin!');closeModal()">📋 Salin Kode</button>`)}
+function openQuest(){modal(`<h2>🔥 Daily Quest</h2><p>Selesaikan semua misi untuk bonus <b>+120 XP</b>.</p><p>☑ Tanya Tutor AI — selesai</p><p>☑ Jaga streak — selesai</p><p>☐ Kerjakan 10 soal — 7/10</p><div class="bar"><i style="width:66%"></i></div><button class="primary" style="margin-top:12px" onclick="openQuiz()">Lanjutkan Misi</button>`)}
+function openReward(){modal(`<div class="result"><div class="big">🎁</div><h2>Hadiah Harian</h2><p>Kamu mendapatkan <b>+30 XP</b> dan 1 Mystery Coin!</p><button class="primary" onclick="closeModal();toast('+30 XP masuk!')">Ambil Hadiah</button></div>`)}
+function openFlash(){modal(`<h2>🧠 Flashcard</h2><div class="card" style="text-align:center;padding:35px"><small class="muted">Kartu 1/10</small><h2>Apa itu SPLDV?</h2><p class="muted">Klik untuk melihat jawaban.</p><button class="secondary" onclick="this.parentElement.querySelector('p').textContent='Sistem Persamaan Linear Dua Variabel.'">Lihat Jawaban</button></div><button class="primary" style="margin-top:10px" onclick="toast('Kartu berikutnya!')">Berikutnya →</button>`)}
+function openFocus(){modal(`<h2>⏱️ Focus Timer</h2><div class="result"><div id="timer" style="font-size:58px;font-weight:900">10:00</div><p class="muted">Jauhkan distraksi dan fokus satu materi.</p><button class="primary" onclick="startTimer()">Mulai Fokus</button></div>`)}
+function startTimer(){let n=600,x=document.getElementById('timer');clearInterval(window.tm);window.tm=setInterval(()=>{n--;x.textContent=Math.floor(n/60)+':'+String(n%60).padStart(2,'0');if(n<=0){clearInterval(window.tm);toast('Sesi fokus selesai! +30 XP')}} ,1000)}
+function openKisi(){modal(`<h2>📋 Kisi-kisi Ujian</h2><p class="muted">Tulis materi yang akan keluar.</p><textarea id="kisi" placeholder="Contoh: SPLDV, Pythagoras, bangun ruang, statistika..."></textarea><select><option>Kelas 8</option><option>Kelas 7</option><option>Kelas 9</option></select><button class="primary" onclick="makeKisi()">✨ Buat Latihan AI</button>`)}
+function makeKisi(){if(!document.getElementById('kisi').value.trim())return toast('Isi kisi-kisinya dulu.');closeModal();toast('Latihan dari kisi-kisi siap dibuat!');setTimeout(openQuiz,500)}
+function openBadge(){modal(`<h2>🏅 Achievement</h2><p>🔥 Streak 7 Hari — Terbuka</p><p>🎯 100 Soal — Terbuka</p><p>📚 Rajin Belajar — Terbuka</p><p>👑 Top 10 Mingguan — Belum terbuka</p>`)}
+function openNotes(){modal(`<h2>📝 Catatan Pintar</h2><textarea id="notes" placeholder="Tulis rangkumanmu di sini..."></textarea><button class="primary" onclick="localStorage.setItem('notes',document.getElementById('notes').value);toast('Catatan tersimpan!');closeModal()">Simpan Catatan</button>`)}
+function openRecommend(){modal(`<h2>🎓 Rekomendasi Belajar</h2><p>AI melihat hasil belajarmu dan menyarankan:</p><div class="card"><b>1. SPLDV</b><p class="muted">Akurasi 55% • Prioritas tinggi</p></div><div class="card" style="margin-top:8px"><b>2. Bangun Ruang</b><p class="muted">Akurasi 68% • Latihan ringan</p></div><button class="primary" style="margin-top:10px" onclick="openQuiz()">Mulai Rekomendasi</button>`)}
 </script>
 </body>
 </html>
