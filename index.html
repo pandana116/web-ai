@@ -2191,4 +2191,449 @@ function makeChimes(ctx) {
   var play = function() {
     if (!music.playing) return;
     try {
-      var o = ctx.createO
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = notes[Math.floor(Math.random() * notes.length)];
+      var t = ctx.currentTime;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.08, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 3);
+      o.connect(g);
+      g.connect(music.masterGain);
+      o.start(t);
+      o.stop(t + 3);
+    } catch(e) {}
+    setTimeout(play, 900 + Math.random() * 2200);
+  };
+  play();
+}
+
+function makeZen(ctx) {
+  var drone = ctx.createOscillator();
+  drone.type = 'sine';
+  drone.frequency.value = 110;
+  var dg = ctx.createGain();
+  dg.gain.value = 0.15;
+  drone.connect(dg);
+  dg.connect(music.masterGain);
+  drone.start();
+  music.nodes.push(drone);
+
+  var notes = [220, 261.63, 329.63];
+  var play = function() {
+    if (!music.playing) return;
+    try {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = notes[Math.floor(Math.random() * notes.length)];
+      var t = ctx.currentTime;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.06, t + 0.5);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 4);
+      o.connect(g);
+      g.connect(music.masterGain);
+      o.start(t);
+      o.stop(t + 4);
+    } catch(e) {}
+    setTimeout(play, 2000 + Math.random() * 3000);
+  };
+  play();
+}
+
+function openMusicApp(app) {
+  var q = $id('ytQuery') ? $id('ytQuery').value.trim() : '';
+  if (!q) return toast('Ketik lagu yang dicari dulu');
+  var url;
+  if (app === 'spotify') url = 'https://open.spotify.com/search/' + encodeURIComponent(q);
+  else if (app === 'ytmusic') url = 'https://music.youtube.com/search?q=' + encodeURIComponent(q);
+  else url = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+  window.open(url, '_blank');
+}
+
+function aiFindMusic() {
+  var q = $id('aiMusicIn') ? $id('aiMusicIn').value.trim() : '';
+  if (!q) return toast('Ceritakan mood kamu dulu');
+  var el = $id('aiMusicRes');
+  if (!el) return;
+  el.innerHTML = '<div class="ket">AI sedang mencari lagu...</div>';
+
+  callAIJSON(
+    'User: "' + q + '"\n\nRekomendasikan 5 lagu Indonesia atau internasional yang cocok. Bahasa Indonesia.\n\nBalas HANYA JSON:\n{"pesan":"pembuka singkat 1-2 kalimat","lagu":[{"judul":"Judul Lagu","artis":"Artis","alasan":"alasan singkat 1 kalimat"}]}',
+    'Kurator musik ramah. JSON valid.'
+  ).then(function(data) {
+    var lagu = data.lagu || [];
+    var html = '<div class="ket" style="margin-bottom:10px">\uD83D\uDCA1 ' + esc(data.pesan || '') + '</div>';
+    for (var i = 0; i < lagu.length; i++) {
+      var l = lagu[i];
+      html += '<div class="track">';
+      html += '<div class="ic">\uD83C\uDFB5</div>';
+      html += '<div class="info"><b>' + esc(l.judul) + '</b><small>' + esc(l.artis) + ' \u2022 ' + esc(l.alasan) + '</small></div>';
+      html += '</div>';
+      html += '<div class="grid grid-3" style="margin:-4px 0 12px">';
+      html += '<a href="https://open.spotify.com/search/' + encodeURIComponent(l.judul + ' ' + l.artis) + '" target="_blank" class="btn btn-sm" style="background:rgba(22,163,74,.1);color:#16a34a;text-align:center;font-size:11px;font-weight:700;text-decoration:none;padding:8px;border-radius:9px">Spotify</a>';
+      html += '<a href="https://www.youtube.com/results?search_query=' + encodeURIComponent(l.judul + ' ' + l.artis) + '" target="_blank" class="btn btn-sm" style="background:rgba(220,38,38,.1);color:#dc2626;text-align:center;font-size:11px;font-weight:700;text-decoration:none;padding:8px;border-radius:9px">YouTube</a>';
+      html += '<a href="https://music.youtube.com/search?q=' + encodeURIComponent(l.judul + ' ' + l.artis) + '" target="_blank" class="btn btn-sm" style="background:rgba(220,38,38,.1);color:#dc2626;text-align:center;font-size:11px;font-weight:700;text-decoration:none;padding:8px;border-radius:9px">YT Music</a>';
+      html += '</div>';
+    }
+    el.innerHTML = html;
+    S.xp += 5;
+    saveS();
+    scheduleSync();
+  }).catch(function(e) {
+    el.innerHTML = '<div class="ket">Gagal: ' + esc(e.message) + '</div>';
+  });
+}
+
+var pomo = { int: null, sisa: 0, total: 0 };
+function startPomodoro(m) {
+  if (pomo.int) clearInterval(pomo.int);
+  pomo.total = m * 60;
+  pomo.sisa = pomo.total;
+  if (m >= 15) playSound('rain');
+
+  var el = $id('pomodoroArea');
+  var render = function() {
+    if (!el) return;
+    var mm = Math.floor(pomo.sisa / 60);
+    var ss = pomo.sisa % 60;
+    var icon = m >= 15 ? '\uD83D\uDCDA' : '\u2615';
+    var label = m >= 15 ? 'Sesi Fokus' : 'Istirahat';
+    el.innerHTML = '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px">'
+      + '<div style="font-size:26px">' + icon + '</div>'
+      + '<div style="flex:1">'
+      + '<b style="font-size:26px;font-variant-numeric:tabular-nums">' + mm + ':' + String(ss).padStart(2, '0') + '</b>'
+      + '<div style="font-size:11px;color:var(--mut)">' + label + '</div>'
+      + '</div>'
+      + '<button class="btn btn-secondary btn-sm" onclick="stopPomodoro()">\u23F9</button>'
+      + '</div>';
+  };
+  render();
+
+  pomo.int = setInterval(function() {
+    pomo.sisa--;
+    render();
+    if (pomo.sisa <= 0) {
+      clearInterval(pomo.int);
+      pomo.int = null;
+      sfx('naik');
+      S.xp += Math.round(pomo.total / 60) * 2;
+      S.menitFokus += Math.round(pomo.total / 60);
+      saveS();
+      scheduleSync();
+      toast('\uD83C\uDF89 Selesai! +' + (Math.round(pomo.total / 60) * 2) + ' XP');
+      stopSound();
+      if (el) el.innerHTML = '<div class="ket" style="text-align:center">\uD83C\uDF89 Sesi selesai!</div>';
+    }
+  }, 1000);
+
+  toast('\u25B6\uFE0F Mulai ' + m + ' menit');
+}
+
+function stopPomodoro() {
+  if (pomo.int) { clearInterval(pomo.int); pomo.int = null; }
+  var el = $id('pomodoroArea');
+  if (el) el.innerHTML = '';
+}
+
+function pMusik() {
+  var html = '';
+  html += '<div class="card music-card">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:flex-start">';
+  html += '<div><b style="font-size:14px">\uD83C\uDFB5 Now Playing</b>';
+  html += '<p id="nowPlaying" style="margin:4px 0 0;font-size:12px;opacity:.9">Tidak ada musik</p></div>';
+  html += '<div style="font-size:18px">\uD83D\uDD0A</div>';
+  html += '</div>';
+  html += '<div class="music-visual ' + (music.playing ? '' : 'paused') + '" id="visual">';
+  for (var i = 0; i < 22; i++) {
+    html += '<span style="animation-delay:' + (i * 0.08).toFixed(2) + 's"></span>';
+  }
+  html += '</div>';
+  html += '<div class="vol-row">';
+  html += '<span>\uD83D\uDD09</span>';
+  html += '<input type="range" min="0" max="1" step="0.05" value="' + music.volume + '" oninput="music.volume=+this.value;musicSetVol()">';
+  html += '<span>\uD83D\uDD0A</span>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83C\uDFA7 Suara Ambience</h3></div>';
+  html += '<p style="color:var(--mut);font-size:11.5px;margin-bottom:10px">Dibuat langsung dari browser, tanpa internet.</p>';
+  html += '<div class="grid grid-3">';
+  for (var j = 0; j < SOUNDS.length; j++) {
+    var s = SOUNDS[j];
+    html += '<button class="btn btn-secondary btn-sm" onclick="playSound(\'' + s.id + '\')" style="text-align:center;padding:12px 6px;flex-direction:column;height:auto">';
+    html += '<span style="font-size:22px">' + s.emo + '</span>';
+    html += '<span style="font-size:10.5px;margin-top:4px">' + s.name + '</span>';
+    html += '</button>';
+  }
+  html += '</div>';
+  html += '<button class="btn btn-danger btn-block" style="margin-top:10px" onclick="stopSound()">\u23F9 Stop Semua Musik</button>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83C\uDFB5 Cari Lagu</h3></div>';
+  html += '<p style="color:var(--mut);font-size:11.5px;margin-bottom:10px">Buka di aplikasi favoritmu.</p>';
+  html += '<input id="ytQuery" placeholder="Contoh: lagu galau Indonesia">';
+  html += '<div class="grid grid-3" style="margin-top:8px">';
+  html += '<button class="btn btn-sm" onclick="openMusicApp(\'youtube\')" style="background:#dc2626;color:#fff;text-align:center;font-size:12px;font-weight:700">\u25B6\uFE0F YouTube</button>';
+  html += '<button class="btn btn-sm" onclick="openMusicApp(\'spotify\')" style="background:#16a34a;color:#fff;text-align:center;font-size:12px;font-weight:700">\uD83D\uDFE2 Spotify</button>';
+  html += '<button class="btn btn-sm" onclick="openMusicApp(\'ytmusic\')" style="background:#dc2626;color:#fff;text-align:center;font-size:12px;font-weight:700">\uD83C\uDFB5 YT Music</button>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83E\uDD16 AI Song Finder</h3></div>';
+  html += '<p style="color:var(--mut);font-size:11.5px;margin-bottom:10px">Ceritakan mood, AI carikan lagu yang cocok.</p>';
+  html += '<textarea id="aiMusicIn" placeholder="Contoh: Aku lagi sedih, cariin lagu yang cocok" style="min-height:70px"></textarea>';
+  html += '<div class="pill-row">';
+  for (var k = 0; k < MOODS.length; k++) {
+    var m = MOODS[k];
+    html += '<button onclick="pickMood(\'' + m.id + '\')">' + m.emo + ' ' + m.name + '</button>';
+  }
+  html += '</div>';
+  html += '<button class="btn btn-primary btn-block" style="margin-top:10px" onclick="aiFindMusic()">\uD83C\uDFA7 Carikan Lagu</button>';
+  html += '<div id="aiMusicRes" style="margin-top:12px"></div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<div class="card-header"><h3>\u23F1\uFE0F Pomodoro + Musik</h3></div>';
+  html += '<p style="color:var(--mut);font-size:11.5px;margin-bottom:10px">Belajar fokus dengan musik ambience otomatis.</p>';
+  html += '<div class="grid grid-3">';
+  html += '<button class="btn btn-secondary btn-sm" onclick="startPomodoro(25)">25 menit</button>';
+  html += '<button class="btn btn-secondary btn-sm" onclick="startPomodoro(15)">15 menit</button>';
+  html += '<button class="btn btn-secondary btn-sm" onclick="startPomodoro(45)">45 menit</button>';
+  html += '</div>';
+  html += '<div class="grid grid-3" style="margin-top:6px">';
+  html += '<button class="btn btn-secondary btn-sm" onclick="startPomodoro(5)">5 menit</button>';
+  html += '<button class="btn btn-secondary btn-sm" onclick="startPomodoro(10)">10 menit</button>';
+  html += '<button class="btn btn-danger btn-sm" onclick="stopPomodoro()">Stop</button>';
+  html += '</div>';
+  html += '<div id="pomodoroArea" style="margin-top:12px"></div>';
+  html += '</div>';
+
+  return html;
+}
+
+function pickMood(id) {
+  var m = null;
+  for (var i = 0; i < MOODS.length; i++) {
+    if (MOODS[i].id === id) { m = MOODS[i]; break; }
+  }
+  if (!m) return;
+  var el = $id('aiMusicIn');
+  if (el) el.value = 'Aku sedang ' + m.name.toLowerCase() + ', cariin lagu yang cocok';
+  aiFindMusic();
+}
+
+/* ==== ALAT ==== */
+var alatTab = 'notes';
+
+function pAlat() {
+  var html = '';
+  html += '<div class="card">';
+  html += '<div class="grid grid-4">';
+  html += '<button class="btn btn-sm ' + (alatTab === 'notes' ? 'sel' : '') + '" onclick="alatTab=\'notes\';render()" style="text-align:center;padding:12px 4px;flex-direction:column;height:auto">';
+  html += '<span style="font-size:22px">\uD83D\uDCDD</span><span style="font-size:10px;margin-top:4px">Catatan</span>';
+  html += '</button>';
+  html += '<button class="btn btn-sm ' + (alatTab === 'calc' ? 'sel' : '') + '" onclick="alatTab=\'calc\';render()" style="text-align:center;padding:12px 4px;flex-direction:column;height:auto">';
+  html += '<span style="font-size:22px">\uD83E\uDDEE</span><span style="font-size:10px;margin-top:4px">Kalkulator</span>';
+  html += '</button>';
+  html += '<button class="btn btn-sm ' + (alatTab === 'planner' ? 'sel' : '') + '" onclick="alatTab=\'planner\';render()" style="text-align:center;padding:12px 4px;flex-direction:column;height:auto">';
+  html += '<span style="font-size:22px">\uD83D\uDCC5</span><span style="font-size:10px;margin-top:4px">Jadwal</span>';
+  html += '</button>';
+  html += '<button class="btn btn-sm ' + (alatTab === 'mood' ? 'sel' : '') + '" onclick="alatTab=\'mood\';render()" style="text-align:center;padding:12px 4px;flex-direction:column;height:auto">';
+  html += '<span style="font-size:22px">\uD83D\uDE0A</span><span style="font-size:10px;margin-top:4px">Mood</span>';
+  html += '</button>';
+  html += '</div>';
+  html += '</div>';
+  html += '<div id="alatContent"></div>';
+  return html;
+}
+
+function alatInit() {
+  var el = $id('alatContent');
+  if (!el) return;
+
+  if (alatTab === 'notes') el.innerHTML = alatNotes();
+  else if (alatTab === 'calc') el.innerHTML = alatCalc();
+  else if (alatTab === 'planner') el.innerHTML = alatPlanner();
+  else if (alatTab === 'mood') el.innerHTML = alatMood();
+
+  if (alatTab === 'planner') {
+    setTimeout(function() {
+      var d = $id('plTgl');
+      if (d) d.value = today();
+      renderPlanner();
+    }, 60);
+  }
+}
+
+function alatNotes() {
+  var html = '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83D\uDCDD Catatan Belajar</h3></div>';
+  html += '<p style="color:var(--mut);font-size:11.5px;margin-bottom:10px">Otomatis tersimpan di perangkatmu.</p>';
+  html += '<textarea id="notesTxt" placeholder="Tulis rangkuman atau catatan penting di sini..." style="min-height:260px" oninput="S.notes=this.value;saveS()">' + esc(S.notes || '') + '</textarea>';
+  html += '<div class="grid grid-3" style="margin-top:8px">';
+  html += '<button class="btn btn-primary btn-sm" onclick="notesSave()">\uD83D\uDCBE Simpan</button>';
+  html += '<button class="btn btn-secondary btn-sm" onclick="notesCopy()">\uD83D\uDCCB Copy</button>';
+  html += '<button class="btn btn-danger btn-sm" onclick="notesClear()">\uD83D\uDDD1\uFE0F Hapus</button>';
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+function notesSave() {
+  var el = $id('notesTxt');
+  if (el) S.notes = el.value;
+  saveS();
+  toast('\uD83D\uDCBE Catatan tersimpan');
+}
+
+function notesCopy() {
+  var el = $id('notesTxt');
+  if (!el) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(el.value).then(function() {
+      toast('\uD83D\uDCCB Tercopy!');
+    }, function() {
+      toast('Gagal copy');
+    });
+  } else {
+    toast('Browser tidak mendukung');
+  }
+}
+
+function notesClear() {
+  if (!confirm('Hapus semua catatan?')) return;
+  S.notes = '';
+  saveS();
+  alatInit();
+  toast('\uD83D\uDDD1\uFE0F Catatan dihapus');
+}
+
+function alatCalc() {
+  var html = '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83E\uDDEE Kalkulator</h3></div>';
+  html += '<div class="calc-display" id="cd">' + (calcExpr || '0') + '</div>';
+  html += '<div class="calc-grid">';
+  for (var i = 0; i < CALC_KEYS.length; i++) {
+    var k = CALC_KEYS[i];
+    var isOp = ['/', 'x', '-', '+', '^', 'sqrt('].indexOf(k) >= 0;
+    var disp = k === 'DEL' ? '\u232B' : (k === 'sqrt(' ? '\u221A' : k);
+    html += '<button class="' + (isOp ? 'op' : '') + '" onclick="ckey(\'' + k + '\')">' + disp + '</button>';
+  }
+  html += '<button class="eq" onclick="ckey(\'=\')">=</button>';
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+function alatPlanner() {
+  var html = '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83D\uDCC5 Jadwal Belajar</h3></div>';
+  html += '<label style="margin-top:0">Kegiatan</label>';
+  html += '<input id="plNama" placeholder="Contoh: Belajar SPLDV bab 3">';
+  html += '<label>Tanggal</label>';
+  html += '<input id="plTgl" type="date">';
+  html += '<label>Jam</label>';
+  html += '<input id="plJam" type="time">';
+  html += '<button class="btn btn-primary btn-block" style="margin-top:12px" onclick="plAdd()">\u2795 Tambah Jadwal</button>';
+  html += '</div>';
+  html += '<div id="plList"></div>';
+  return html;
+}
+
+function plAdd() {
+  var n = $id('plNama').value.trim();
+  var t = $id('plTgl').value;
+  var j = $id('plJam').value;
+  if (!n) return toast('Isi kegiatannya dulu');
+  S.planner.push({
+    id: Date.now(),
+    nama: n,
+    tgl: t || today(),
+    jam: j || '--:--',
+    done: false
+  });
+  S.planner.sort(function(a, b) {
+    return (a.tgl + a.jam).localeCompare(b.tgl + b.jam);
+  });
+  saveS();
+  renderPlanner();
+  $id('plNama').value = '';
+  sfx('klik');
+  toast('\uD83D\uDCC5 Jadwal ditambahkan');
+}
+
+function renderPlanner() {
+  var el = $id('plList');
+  if (!el) return;
+  if (!S.planner.length) {
+    el.innerHTML = '<div class="card" style="text-align:center;padding:24px"><div style="font-size:38px">\uD83D\uDCED</div><p style="color:var(--mut);font-size:12.5px;margin-top:6px">Belum ada jadwal.</p></div>';
+    return;
+  }
+  var html = '<div class="card">';
+  html += '<b style="font-size:14px;display:block;margin-bottom:10px">\uD83D\uDCCB Daftar Jadwal (' + S.planner.length + ')</b>';
+  for (var i = 0; i < S.planner.length; i++) {
+    var p = S.planner[i];
+    html += '<div class="plan-item ' + (p.done ? 'done' : '') + '">';
+    html += '<div class="plan-dot">' + (p.done ? '\u2705' : '\uD83D\uDCCC') + '</div>';
+    html += '<div class="plan-txt"><b>' + esc(p.nama) + '</b><small>' + p.tgl + ' \u2022 ' + p.jam + '</small></div>';
+    html += '<button class="btn btn-ghost btn-sm" onclick="plToggle(' + p.id + ')">' + (p.done ? '\u21A9' : '\u2714') + '</button>';
+    html += '<button class="btn btn-ghost btn-sm" style="color:#fca5a5" onclick="plDel(' + p.id + ')">\u2715</button>';
+    html += '</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function plToggle(id) {
+  for (var i = 0; i < S.planner.length; i++) {
+    if (S.planner[i].id === id) {
+      S.planner[i].done = !S.planner[i].done;
+      if (S.planner[i].done) {
+        S.xp += 10;
+        sfx('benar');
+        toast('\u2714\uFE0F Selesai! +10 XP');
+      }
+      break;
+    }
+  }
+  saveS();
+  scheduleSync();
+  renderPlanner();
+}
+
+function plDel(id) {
+  S.planner = S.planner.filter(function(x) { return x.id !== id; });
+  saveS();
+  renderPlanner();
+}
+
+function alatMood() {
+  var emo = [
+    ['\uD83D\uDE04', 'Senang'],
+    ['\uD83D\uDE42', 'Baik'],
+    ['\uD83D\uDE10', 'Biasa'],
+    ['\uD83D\uDE14', 'Sedih'],
+    ['\uD83D\uDE30', 'Cemas'],
+    ['\uD83D\uDE34', 'Lelah'],
+    ['\uD83D\uDE21', 'Marah'],
+    ['\uD83E\uDD29', 'Semangat'],
+    ['\uD83D\uDE0C', 'Tenang']
+  ];
+  var html = '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83D\uDE0A Mood Tracker</h3></div>';
+  html += '<p style="color:var(--mut);font-size:11.5px;margin-bottom:12px">Bagaimana perasaanmu hari ini?</p>';
+  html += '<div class="mood-grid">';
+  for (var i = 0; i < emo.length; i++) {
+    var e = emo[i];
+    html += '<button class="mood-btn" onclick="setMood(\'' + e[0] + '\',\'' + e[1] + '\')">';
+    html += '<span class="em">' + e[0] + '</span>' + e[1];
+    html += '</button>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<b style
