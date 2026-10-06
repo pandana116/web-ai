@@ -2,1613 +2,852 @@
 <html lang="id" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#6366f1">
-<meta name="description" content="Rajin Belajar Jadi Pintar - Latihan soal AI, tutor, kalkulator, TTS baca soal. Gratis tanpa email.">
 <title>Rajin Belajar Jadi Pintar</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
-:root{--p:#6366f1;--p2:#8b5cf6;--pdeep:#4f46e5;--psoft:#1e1b4b;--ink:#e8ecf5;--muted:#9aa6bf;--bg:#0f1117;--card:#1a1d29;--line:#2b3145;--green:#16a34a;--yellow:#f59e0b;--red:#dc2626;--blue:#3b82f6;--shadow:0 10px 30px rgba(0,0,0,.35)}
-html[data-theme="light"]{--p:#6366f1;--p2:#8b5cf6;--pdeep:#4f46e5;--psoft:#eef2ff;--ink:#1b2433;--muted:#64708a;--bg:#f5f7fb;--card:#fff;--line:#dde3ef;--shadow:0 10px 30px rgba(32,34,56,.08)}
+:root{--bg:#0f1117;--card:#1a1d29;--tx:#e8ecf5;--mut:#9aa6bf;--pr:#6366f1;--pr2:#8b5cf6;--ok:#16a34a;--no:#dc2626;--bd:#2b3145}
+html[data-theme=light]{--bg:#f5f7fb;--card:#fff;--tx:#1b2433;--mut:#64708a;--bd:#dde3ef}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;transition:background .25s,color .25s;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
-button,input,textarea,select{font:inherit;color:inherit}
-button{border:0;cursor:pointer;background:none}
-button:active{transform:scale(.97)}
-::-webkit-scrollbar{width:8px;height:8px}
-::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
-#splash{position:fixed;inset:0;z-index:999;display:grid;place-items:center;background:linear-gradient(150deg,var(--p),var(--p2));color:#fff;transition:opacity .5s,visibility .5s}
-#splash.hide{opacity:0;visibility:hidden}
-.splash-in{text-align:center;animation:pop .6s}
-.splash-logo{width:100px;height:100px;border-radius:30px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:54px;margin:0 auto 16px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);animation:float 2.4s ease-in-out infinite}
-.splash-in h1{margin:0;font-size:22px}
-.splash-in p{margin:6px 0 0;opacity:.85;font-size:13px}
-.loadbar{width:180px;height:5px;background:rgba(255,255,255,.25);border-radius:9px;margin:22px auto 0;overflow:hidden}
-.loadbar i{display:block;height:100%;width:0;background:#fff;border-radius:9px;animation:load 1.5s ease forwards}
-.byline{margin-top:18px;font-size:11px;opacity:.75}
-@keyframes load{to{width:100%}}
-@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-.topbar{height:64px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(14px,calc((100% - 1100px)/2));position:sticky;top:0;z-index:40}
-.brand{display:flex;align-items:center;gap:9px;font-weight:900;font-size:15px;letter-spacing:-.3px}
-.brandmark{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--p),var(--p2));display:grid;place-items:center;color:#fff;font-size:17px;font-weight:900;box-shadow:0 4px 12px rgba(99,102,241,.4)}
-.topright{display:flex;align-items:center;gap:6px}
-.pill{background:var(--psoft);color:var(--p);padding:7px 11px;border-radius:11px;font-weight:800;font-size:12px;white-space:nowrap;border:1px solid var(--line)}
-html[data-theme="light"] .pill{background:#eef2ff;color:#4f46e5}
-.pill.gold{background:#3a3016;color:#fbbf24;border-color:#4a3d1c}
-html[data-theme="light"] .pill.gold{background:#fef3c7;color:#92400e;border-color:#fde68a}
-.iconbtn{width:38px;height:38px;border:1px solid var(--line);background:var(--card);border-radius:11px;display:grid;place-items:center;font-size:15px;transition:.15s}
-.iconbtn:hover{border-color:var(--p);color:var(--p)}
-.wrap{max-width:1100px;margin:auto;padding:18px 14px 100px}
-.page{display:none;animation:fade .3s}
-.page.active{display:block}
-@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-.section{margin-top:20px}
-.sectitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px}
-.sectitle h2{font-size:17px;margin:0}
-.see{color:var(--p);font-weight:800;font-size:12.5px}
-.muted{color:var(--muted);font-size:12.5px}
-.back{margin-bottom:12px}
-.back button{background:var(--card);border:1px solid var(--line);padding:8px 12px;border-radius:10px;font-weight:800;font-size:12.5px}
-h1.title{font-size:22px;margin:0 0 6px;letter-spacing:-.5px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;transition:background .25s}
-.hero{background:linear-gradient(120deg,#6366f1,#ec4899 60%,#f59e0b);color:#fff;border-radius:22px;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:16px;overflow:hidden;position:relative;box-shadow:0 14px 34px rgba(99,102,241,.3)}
-.hero::after{content:"";position:absolute;width:230px;height:230px;border-radius:50%;background:rgba(255,255,255,.1);right:-70px;top:-90px}
-.hero small{opacity:.95;font-weight:700;font-size:11px;letter-spacing:.5px}
-.hero h2{font-size:24px;line-height:1.15;margin:8px 0;letter-spacing:-.5px}
-.hero p{margin:0 0 14px;opacity:.95;font-size:13px;max-width:320px}
-.hero .mascot{font-size:68px;filter:drop-shadow(0 8px 5px rgba(0,0,0,.2));animation:float 3s ease-in-out infinite;z-index:1}
-.primary{background:var(--p);color:#fff;padding:11px 16px;border-radius:11px;font-weight:800;font-size:13px;transition:.15s}
-.primary:hover{background:var(--pdeep)}
-.hero .primary{background:#fff;color:#4f46e5}
-.secondary{background:var(--psoft);color:var(--p);padding:10px 14px;border-radius:10px;font-weight:800;font-size:12.5px}
-html[data-theme="light"] .secondary{background:#eef2ff;color:#4f46e5}
-.ghost{background:var(--card);border:1px solid var(--line);padding:10px 14px;border-radius:10px;font-weight:800;font-size:12.5px}
-.danger{background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;font-weight:800;font-size:12.5px}
-.block{display:block;width:100%;text-align:center}
-.btnrow{display:flex;gap:8px;flex-wrap:wrap}
-.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
-.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;display:flex;align-items:center;gap:10px;text-align:left;transition:.18s}
-.q:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--p)}
-.qicon{width:40px;height:40px;border-radius:12px;background:var(--psoft);display:grid;place-items:center;font-size:20px;flex:0 0 auto}
-html[data-theme="light"] .qicon{background:#eef2ff}
-.q b{display:block;font-size:13px}
-.q small{color:var(--muted);font-size:11px}
-.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
-.feature{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;min-height:145px;display:flex;flex-direction:column;transition:.18s}
-.feature:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--p)}
-.feature .fi{font-size:26px}
-.feature h3{font-size:13.5px;margin:8px 0 4px}
-.feature p{font-size:11.5px;line-height:1.45;color:var(--muted);margin:0;flex:1}
-.feature button{margin-top:10px;align-self:flex-start}
-.two{display:grid;grid-template-columns:1.15fr .85fr;gap:12px}
-.mission{display:flex;gap:11px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
-.mission:last-child{border-bottom:0}
-.mi{width:38px;height:38px;border-radius:11px;background:var(--psoft);display:grid;place-items:center;font-size:16px;flex:0 0 auto;font-weight:900;color:var(--p)}
-html[data-theme="light"] .mi{background:#eef2ff;color:#4f46e5}
-.mission main{flex:1;min-width:0}
-.mission b{font-size:13px}
-.bar{height:7px;background:var(--line);border-radius:10px;overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--p),var(--p2));border-radius:10px;transition:width .5s}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.stat{background:var(--psoft);border-radius:13px;padding:12px;text-align:center;border:1px solid var(--line)}
-html[data-theme="light"] .stat{background:#eef2ff}
-.stat b{font-size:18px;display:block;color:var(--p)}
-.stat span{font-size:11px}
-.tabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:5px;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{white-space:nowrap;padding:9px 13px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-weight:750;font-size:12.5px;transition:.15s}
-.tab.active{background:var(--psoft);color:var(--p);border-color:var(--p)}
-html[data-theme="light"] .tab.active{background:#eef2ff;color:#4f46e5}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:120;align-items:flex-end;justify-content:center;padding:12px;backdrop-filter:blur(3px)}
-.modal.show{display:flex;animation:fade .2s}
-.modalbox{background:var(--card);width:min(660px,100%);border-radius:24px 24px 16px 16px;padding:20px;max-height:88vh;overflow:auto;animation:slideUp .28s ease;border:1px solid var(--line)}
-@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
-.close{float:right;background:var(--psoft);color:var(--p);width:34px;height:34px;border-radius:10px;font-weight:900;font-size:15px}
-.modal h2{margin:2px 44px 10px 0;font-size:18px}
-input,textarea,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:var(--bg);outline:0;margin:5px 0 10px;transition:.15s;font-size:14px}
-input:focus,textarea:focus,select:focus{border-color:var(--p);background:var(--card)}
-textarea{min-height:100px;resize:vertical}
-label.lb{font-size:11.5px;font-weight:800;color:var(--muted);display:block;margin-top:6px}
-.row{display:flex;gap:8px}
-.row>*{flex:1}
-.option{width:100%;background:var(--bg);border:1px solid var(--line);padding:12px;border-radius:11px;text-align:left;margin:5px 0;font-weight:750;font-size:13px;transition:.15s}
-.option:hover{background:var(--psoft);border-color:var(--p)}
-.option.benar{background:#052e16;border-color:#16a34a;color:#4ade80}
-.option.salah{background:#450a0a;border-color:#dc2626;color:#fca5a5}
-html[data-theme="light"] .option.benar{background:#dcfce7;border-color:#16a34a;color:#166534}
-html[data-theme="light"] .option.salah{background:#fee2e2;border-color:#dc2626;color:#991b1b}
-.chat{height:340px;overflow-y:auto;background:var(--bg);border-radius:14px;padding:12px;border:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
-.bubble{max-width:86%;padding:10px 13px;border-radius:14px;margin:5px 0;font-size:13px;line-height:1.5;word-wrap:break-word;animation:fade .25s;white-space:pre-wrap}
-.bot{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}
-.user{background:var(--p);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
-.typing{display:flex;gap:4px;padding:12px 14px}
-.typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1s infinite}
-.typing i:nth-child(2){animation-delay:.18s}
-.typing i:nth-child(3){animation-delay:.36s}
-@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
-.flash{perspective:1100px;height:220px;margin:10px 0;cursor:pointer}
-.flash-in{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d}
-.flash.flipped .flash-in{transform:rotateY(180deg)}
-.flash-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;display:grid;place-items:center;padding:22px;text-align:center;border:1px solid var(--line);background:var(--card)}
-.flash-back{transform:rotateY(180deg);background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:0}
-.flash-face h3{margin:0;font-size:18px;line-height:1.35}
-.flash-face small{position:absolute;top:14px;left:16px;font-size:11px;opacity:.65}
-.timerbig{font-size:60px;font-weight:900;text-align:center;letter-spacing:-2px;font-variant-numeric:tabular-nums;margin:6px 0;color:var(--p)}
-.ring{width:200px;height:200px;margin:0 auto;position:relative}
-.ring svg{transform:rotate(-90deg)}
-.ring .txt{position:absolute;inset:0;display:grid;place-items:center;font-size:36px;font-weight:900;font-variant-numeric:tabular-nums}
-.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px);background:#25263a;color:#fff;padding:12px 18px;border-radius:12px;z-index:200;display:none;font-size:13px;font-weight:700;max-width:88vw;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.4)}
-.toast.show{display:block;animation:toastIn .3s forwards}
-@keyframes toastIn{to{transform:translateX(-50%) translateY(0)}}
-.bottom{display:none}
-@media(max-width:760px){.bottom{position:fixed;display:grid;grid-template-columns:repeat(5,1fr);bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);z-index:60;padding:7px 4px calc(7px + env(safe-area-inset-bottom))}.bottom button{color:var(--muted);font-size:9.5px;font-weight:800;padding:4px;border-radius:11px}.bottom button span{display:block;font-size:19px;margin-bottom:2px}.bottom button.active{color:var(--p);background:var(--psoft)}html[data-theme="light"] .bottom button.active{background:#eef2ff}}
-@media(max-width:900px){.quick{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
-@media(max-width:650px){.topbar{height:58px;padding:0 12px}.brand{font-size:13px}.brandmark{width:32px;height:32px;font-size:15px}.wrap{padding:14px 12px 92px}.hero{padding:18px;border-radius:18px}.hero h2{font-size:20px}.hero .mascot{font-size:48px}.hero p{font-size:12px}.quick{grid-template-columns:repeat(2,1fr);gap:8px}.q{padding:11px;gap:8px}.qicon{width:34px;height:34px;font-size:17px}.q b{font-size:12px}.features{grid-template-columns:repeat(2,1fr)}.timerbig{font-size:44px}.ring{width:170px;height:170px}.ring .txt{font-size:30px}.topright .pill.gold{display:none}}
-@media(max-width:360px){.features{grid-template-columns:1fr}}
-.shake{animation:shake .4s}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-.spin-anim{animation:spin 1.2s}
-@keyframes spin{to{transform:rotate(1440deg)}}
-canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:300}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.cal div{aspect-ratio:1;border-radius:9px;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--muted)}
-.cal div.on{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border-color:transparent}
-.cal div.today{outline:2px solid var(--yellow);outline-offset:1px}
-.memgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
-.memcard{aspect-ratio:1;border-radius:13px;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;font-size:24px;cursor:pointer;transition:.2s;user-select:none}
-.memcard.open{background:var(--psoft);border-color:var(--p)}
-html[data-theme="light"] .memcard.open{background:#eef2ff}
-.memcard.done{background:#052e16;border-color:var(--green);opacity:.6;cursor:default}
-.themes{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0}
-.themes button{width:42px;height:42px;border-radius:13px;border:3px solid transparent;transition:.15s}
-.themes button.sel{border-color:var(--ink);transform:scale(1.08)}
-.avatars{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:10px 0}
-.avatars button{aspect-ratio:1;border-radius:13px;background:var(--bg);border:2px solid var(--line);font-size:22px;display:grid;place-items:center;transition:.15s}
-.avatars button.sel{border-color:var(--p);background:var(--psoft);transform:scale(1.07)}
-@media(max-width:650px){.avatars{grid-template-columns:repeat(5,1fr)}}
-.shopitem{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--card);margin-bottom:9px}
-.shopitem .ic{font-size:25px;width:44px;height:44px;border-radius:12px;background:var(--psoft);display:grid;place-items:center;flex:0 0 auto}
-html[data-theme="light"] .shopitem .ic{background:#eef2ff}
-.shopitem main{flex:1;min-width:0}
-.shopitem b{font-size:13px;display:block}
-.shopitem small{color:var(--muted);font-size:11px}
-canvas.chart{width:100%;height:170px;display:block}
-.lb-row{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
-.lb-row:last-child{border-bottom:0}
-.lb-row.me{background:var(--psoft);border-radius:12px;padding:11px 12px;border:0;margin:5px 0}
-html[data-theme="light"] .lb-row.me{background:#eef2ff}
-.lb-rank{width:30px;font-weight:900;text-align:center;color:var(--muted);font-size:13px}
-.lb-av{width:36px;height:36px;border-radius:11px;background:var(--psoft);display:grid;place-items:center;font-size:18px}
-html[data-theme="light"] .lb-av{background:#eef2ff}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;transition:background .25s}
+main{max-width:560px;margin:0 auto;padding:14px 14px 90px}
+.hero{position:relative;overflow:hidden;border-radius:18px;padding:20px;margin-bottom:14px;background:linear-gradient(135deg,#6366f1,#ec4899 60%,#f59e0b);color:#fff}
+.hero h1{font-size:22px;margin:0 0 4px}.hero p{margin:0;font-size:13px;opacity:.95}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:12px;text-align:left;transition:.15s}
+button:active{transform:scale(.98)}
+button.sel{border-color:var(--pr);background:var(--pr);color:#fff;font-weight:700}
+button.go{width:100%;text-align:center;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:0;font-weight:700;margin-top:10px;padding:14px}
+button:disabled{opacity:.5;cursor:not-allowed}
+label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:14px 0 6px}
+.opt{display:block;width:100%;margin-bottom:8px;text-align:left}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.15)}
+.opt.no{border-color:var(--no);background:rgba(220,38,38,.15)}
+.bar{height:6px;background:var(--bd);border-radius:9px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#ec4899);transition:width .4s}
+.score{font-size:64px;font-weight:800;text-align:center;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bahas{font-size:13.5px;line-height:1.65;background:var(--bg);border-radius:12px;padding:13px;margin-top:12px;white-space:pre-wrap;border:1px solid var(--bd)}
+.bahas b{color:var(--pr)}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5;margin-bottom:10px}
+.tabs button{text-align:center;padding:7px 1px;font-size:10px;border-radius:10px}
+.tabs button span{display:block;font-size:19px;margin-bottom:2px}
+.tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+input,textarea,select{width:100%;font:inherit;padding:11px;border-radius:11px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);outline:0}
+input:focus,textarea:focus{border-color:var(--pr)}
+textarea{resize:vertical;min-height:90px}
+.chat{height:340px;overflow:auto;background:var(--bg);border-radius:14px;padding:12px;border:1px solid var(--bd);display:flex;flex-direction:column;gap:4px}
+.bub{max-width:86%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+.bub.bot{background:var(--card);border:1px solid var(--bd);border-bottom-left-radius:4px;align-self:flex-start}
+.bub.user{background:var(--pr);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.typ{display:flex;gap:4px;padding:12px 14px;align-self:flex-start;background:var(--card);border:1px solid var(--bd);border-radius:14px}
+.typ i{width:6px;height:6px;border-radius:50%;background:var(--mut);animation:bl 1s infinite}
+.typ i:nth-child(2){animation-delay:.18s}.typ i:nth-child(3){animation-delay:.36s}
+@keyframes bl{0%,60%,100%{opacity:.3}30%{opacity:1}}
+.lbrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.lbrow:last-child{border-bottom:0}
+.lbrow.me{background:rgba(99,102,241,.15);border-radius:10px;padding:10px 12px;border:0}
+.lbr{width:28px;font-weight:900;text-align:center;color:var(--mut);font-size:13px}
+.lba{width:36px;height:36px;border-radius:10px;background:rgba(99,102,241,.15);display:grid;place-items:center;font-size:18px}
+.lbb{flex:1;min-width:0}
+.lbb b{font-size:13.5px;display:block}
+.lbb small{color:var(--mut);font-size:11px}
+.lbp{font-weight:800;color:var(--pr);font-size:13px}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.st div{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:11px 4px;text-align:center;font-size:11px}
+.st .e{font-size:26px;display:block}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#25263a;color:#fff;padding:11px 16px;border-radius:12px;z-index:200;display:none;font-size:13px;font-weight:700;max-width:88vw;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.toast.show{display:block;animation:ti .3s forwards}
+@keyframes ti{to{transform:translateX(-50%) translateY(0)}}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:120;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.modal.show{display:flex}
+.mbox{background:var(--card);width:min(560px,100%);border-radius:18px;padding:20px;max-height:88vh;overflow:auto;border:1px solid var(--bd)}
+.mbox h2{margin:0 0 10px;font-size:18px}
+.mclose{float:right;background:var(--bd);color:var(--tx);width:32px;height:32px;border-radius:9px;font-weight:900;border:0}
+.reaction{display:flex;justify-content:center;gap:10px;font-size:34px;margin:6px 0}
+.reaction span{animation:pp .8s ease backwards}
+@keyframes pp{0%{transform:scale(.2)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
 .stars{display:flex;gap:4px;justify-content:center;font-size:32px;margin:10px 0;cursor:pointer}
 .stars span{opacity:.3;transition:.2s}
 .stars span.on{opacity:1;transform:scale(1.15)}
-.comment{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:8px}
-.comment .head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
-.comment .head b{color:var(--p)}
-.comment p{margin:0;font-size:12.5px;line-height:1.5}
-.comment .time{font-size:10px;color:var(--muted)}
-.calc-display{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:right;font-size:22px;font-weight:800;min-height:52px;word-break:break-all;font-variant-numeric:tabular-nums}
-.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
-.calc-grid button{padding:13px 0;border-radius:11px;background:var(--bg);border:1px solid var(--line);font-weight:800;font-size:15px}
-.calc-grid button.op{background:var(--psoft);color:var(--p)}
-.calc-grid button.eq{background:var(--p);color:#fff;grid-column:span 2}
-.sketchbox{background:#fff;border-radius:12px;border:1px solid var(--line);touch-action:none;width:100%;display:block}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.rec{animation:pulse 1.2s infinite;color:var(--red);font-weight:900}
-.tts-btn{background:var(--psoft);color:var(--p);padding:7px 11px;border-radius:9px;font-weight:800;font-size:11.5px;border:1px solid var(--line)}
-html[data-theme="light"] .tts-btn{background:#eef2ff;color:#4f46e5}
-.subj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.subj-grid button{padding:9px 4px;border-radius:11px;border:1px solid var(--line);background:var(--card);font-size:11.5px;font-weight:750;text-align:center;transition:.15s}
-.subj-grid button.sel{background:var(--p);color:#fff;border-color:var(--p)}
-.subj-grid button .em{display:block;font-size:22px;margin-bottom:3px}
-.pandana{position:fixed;right:8px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:35;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:10.5px;color:var(--muted);box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.pandana b{color:var(--p)}
-@media(max-width:760px){.pandana{bottom:calc(78px + env(safe-area-inset-bottom))}}
+.credit{text-align:center;padding:22px 0 8px;color:var(--mut);font-size:11.5px}
+.credit b{color:var(--pr)}
+.ai-badge{display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:800;margin-left:6px}
+.ai-ok{background:rgba(22,163,74,.2);color:#4ade80}
+.ai-err{background:rgba(220,38,38,.2);color:#fca5a5}
+.ai-wait{background:rgba(245,158,11,.2);color:#fbbf24}
+.sk{background:linear-gradient(90deg,var(--bd),rgba(99,102,241,.15),var(--bd));background-size:200% 100%;animation:sk 1.4s infinite;border-radius:9px;height:14px;margin:6px 0}
+@keyframes sk{to{background-position:-200% 0}}
+.badge{display:inline-block;background:var(--bd);padding:3px 9px;border-radius:8px;font-size:10.5px;font-weight:700;margin:2px 3px 0 0}
+.ket{background:var(--bg);border-radius:10px;padding:10px;font-size:12.5px;line-height:1.6;border:1px solid var(--bd);color:var(--mut)}
 </style>
 </head>
 <body>
 
-<div id="splash">
-  <div class="splash-in">
-    <div class="splash-logo">📚</div>
-    <h1>Rajin Belajar Jadi Pintar</h1>
-    <p>Belajar seru, naik level tiap hari</p>
-    <div class="loadbar"><i></i></div>
-    <div class="byline">by Pandana</div>
-  </div>
-</div>
-
-<header class="topbar">
-  <div class="brand"><div class="brandmark">RB</div><span>Rajin Belajar Jadi Pintar</span></div>
-  <div class="topright">
-    <div class="pill gold" id="pillXP">⭐ 0 XP</div>
-    <div class="pill" id="pillCoin">🪙 0</div>
-    <button class="iconbtn" onclick="openNotif()" title="Notifikasi">🔔</button>
-    <button class="iconbtn" onclick="openSettings()" title="Pengaturan">⚙️</button>
-  </div>
-</header>
-
-<main class="wrap">
-
-<section id="page-home" class="page active">
-  <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px">
-    <div>
-      <small class="muted" id="greetTime">Selamat datang!</small>
-      <h1 class="title" style="margin:3px 0" id="greetName">Yuk belajar 👋</h1>
-    </div>
-    <button class="secondary" onclick="openGuide()">❔ Panduan</button>
-  </div>
-
-  <div class="hero">
-    <div>
-      <small id="heroLevel">LEVEL 1 • 0 XP</small>
-      <h2>Belajar sedikit,<br>jadi makin pintar.</h2>
-      <p>AI siap bantu, kalkulator, baca soal, dan banyak lagi.</p>
-      <button class="primary" onclick="quickStudy()">⚡ Mulai Belajar</button>
-    </div>
-    <div class="mascot">📚</div>
-  </div>
-
-  <div class="quick">
-    <button class="q" onclick="openQuiz()"><span class="qicon">🎯</span><span><b>Latihan Soal</b><small>Semua mapel</small></span></button>
-    <button class="q" onclick="openTutor()"><span class="qicon">🤖</span><span><b>Tutor AI</b><small>Tanya apa saja</small></span></button>
-    <button class="q" onclick="openFocus()"><span class="qicon">⏱️</span><span><b>Fokus</b><small>Timer + musik</small></span></button>
-    <button class="q" onclick="openQuest()"><span class="qicon">🔥</span><span><b>Misi Hari Ini</b><small id="questXP">+120 XP</small></span></button>
-  </div>
-
-  <div class="card" style="display:flex;gap:12px;align-items:center">
-    <div style="font-size:28px">💡</div>
-    <div style="flex:1">
-      <b style="font-size:13px">Quote Hari Ini</b>
-      <p class="muted" style="margin:3px 0 0" id="quoteText">Memuat quote...</p>
-    </div>
-    <button class="ghost" onclick="nextQuote()" style="padding:8px 10px">🔄</button>
-  </div>
-
-  <div class="section">
-    <div class="sectitle"><h2>✨ Fitur Populer</h2><button class="see" onclick="showPage('fitur')">Lihat semua</button></div>
-    <div class="features">
-      <div class="feature"><div class="fi">🎯</div><h3>Soal AI</h3><p>Soal otomatis + pembahasan.</p><button class="secondary" onclick="openQuiz()">Mulai</button></div>
-      <div class="feature"><div class="fi">🤖</div><h3>Tutor AI</h3><p>Chat tanya materi.</p><button class="secondary" onclick="openTutor()">Buka</button></div>
-      <div class="feature"><div class="fi">🧮</div><h3>Kalkulator</h3><p>Hitung cepat di kuis.</p><button class="secondary" onclick="openCalc()">Buka</button></div>
-      <div class="feature"><div class="fi">🔊</div><h3>Baca Soal</h3><p>TTS baca soal otomatis.</p><button class="secondary" onclick="openSettings()">Atur</button></div>
-      <div class="feature"><div class="fi">🏆</div><h3>Ranking</h3><p>Posisi kamu mingguan.</p><button class="secondary" onclick="openRank()">Lihat</button></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sectitle"><h2>🎮 Misi & Progres</h2><button class="see" onclick="openQuest()">Lihat misi</button></div>
-    <div class="two">
-      <div class="card" id="homeMissions"></div>
-      <div class="card">
-        <h3 style="margin:0 0 10px">📊 Performa</h3>
-        <div class="stats">
-          <div class="stat"><b id="statAkurasi">0%</b><span class="muted">Akurasi</span></div>
-          <div class="stat"><b id="statSoal">0</b><span class="muted">Soal</span></div>
-          <div class="stat"><b id="statBadge">0</b><span class="muted">Badge</span></div>
-        </div>
-        <button class="primary block" style="margin-top:12px" onclick="openQuiz()">Latihan Sekarang</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sectitle"><h2>🔥 Streak 30 Hari</h2><button class="see" onclick="openStreak()">Detail</button></div>
-    <div class="card"><div class="cal" id="calMini"></div></div>
-  </div>
-
-  <div class="section">
-    <div class="sectitle"><h2>⭐ Rating & Komentar</h2><button class="see" onclick="openReview()">Beri rating</button></div>
-    <div class="card" id="homeReviewPreview"></div>
-  </div>
-</section>
-
-<section id="page-fitur" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <h1 class="title">✨ Semua Fitur</h1>
-  <p class="muted" style="margin-top:0">Semua fitur di satu tempat.</p>
-  <input id="fiturSearch" placeholder="🔍 Cari fitur..." oninput="filterFitur(this.value)" style="margin:12px 0">
-  <div class="features" id="fiturGrid"></div>
-</section>
-
-<section id="page-profil" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <div class="card" style="background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:0">
-    <div style="display:flex;gap:14px;align-items:center">
-      <div id="profAvatar" style="width:72px;height:72px;border-radius:22px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:36px;flex:0 0 auto;border:2px solid rgba(255,255,255,.35)">🦊</div>
-      <div style="flex:1;min-width:0">
-        <h2 style="margin:0;font-size:19px" id="profNama">Pejuang Belajar</h2>
-        <p style="margin:4px 0 0;opacity:.9;font-size:12px" id="profSub">Level 1 • 0 XP</p>
-        <p style="margin:2px 0 0;opacity:.85;font-size:11.5px" id="profStreak">🔥 Streak 0 hari</p>
-      </div>
-      <button class="secondary" style="background:rgba(255,255,255,.2);color:#fff" onclick="openEditProfil()">✏️</button>
-    </div>
-    <div class="bar" style="background:rgba(255,255,255,.25);margin-top:14px"><i id="profBar" style="background:#fff;width:0%"></i></div>
-    <p style="margin:7px 0 0;font-size:11px;opacity:.9" id="profNext">Menuju Level 2 — 0/160 XP</p>
-  </div>
-
-  <div class="section">
-    <div class="sectitle"><h2>📈 Statistik</h2></div>
-    <div class="stats">
-      <div class="stat"><b id="pSoal">0</b><span class="muted">Soal</span></div>
-      <div class="stat"><b id="pBenar">0</b><span class="muted">Benar</span></div>
-      <div class="stat"><b id="pAkurasi">0%</b><span class="muted">Akurasi</span></div>
-    </div>
-    <div class="stats" style="margin-top:9px">
-      <div class="stat"><b id="pLevel">1</b><span class="muted">Level</span></div>
-      <div class="stat"><b id="pBadge">0</b><span class="muted">Badge</span></div>
-      <div class="stat"><b id="pFokus">0</b><span class="muted">Menit Fokus</span></div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sectitle"><h2>📊 Aktivitas 7 Hari</h2></div>
-    <div class="card"><canvas class="chart" id="chart7"></canvas></div>
-  </div>
-
-  <div class="section">
-    <div class="sectitle"><h2>🏅 Koleksi Badge</h2><button class="see" onclick="openBadge()">Semua</button></div>
-    <div class="card" id="profBadges"></div>
-  </div>
-
-  <div class="section">
-    <div class="sectitle"><h2>⚙️ Lainnya</h2></div>
-    <div class="card">
-      <button class="option" onclick="openEditProfil()">✏️ Edit Nama & Avatar</button>
-      <button class="option" onclick="openShop()">🛍️ Toko Hadiah</button>
-      <button class="option" onclick="openBadge()">🏅 Achievement</button>
-      <button class="option" onclick="openReview()">⭐ Rating & Komentar</button>
-      <button class="option" onclick="openSettings()">⚙️ Pengaturan</button>
-      <button class="option" onclick="openAbout()">ℹ️ Tentang (by Pandana)</button>
-      <button class="option" onclick="resetData()" style="color:var(--red)">🗑️ Reset Semua Data</button>
-    </div>
-  </div>
-</section>
-
-<section id="page-latihan" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <h1 class="title">🎯 Latihan Soal</h1>
-  <p class="muted" style="margin-top:0">Pilih mapel, jawab, dapat pembahasan.</p>
-  <div class="tabs" id="mapelTabs" style="margin:12px 0"></div>
-  <div class="card" id="quizArea"></div>
-</section>
-
-<section id="page-tutor" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <h1 class="title">🤖 Tutor AI</h1>
-  <p class="muted" style="margin-top:0">Tanya materi apa saja, dijawab detail.</p>
-  <div class="card">
-    <div class="chat" id="chatBox"></div>
-    <div class="row" style="margin-top:9px">
-      <input id="chatIn" placeholder="Contoh: jelaskan SPLDV" onkeydown="if(event.key==='Enter')sendChat()">
-      <button class="primary" style="flex:0 0 auto" onclick="sendChat()">Kirim</button>
-    </div>
-    <div class="btnrow" style="margin-top:8px">
-      <button class="secondary" onclick="quickChat('Jelaskan SPLDV dengan bahasa sederhana')">SPLDV</button>
-      <button class="secondary" onclick="quickChat('Jelaskan fotosintesis')">Fotosintesis</button>
-      <button class="secondary" onclick="quickChat('Cara menghitung pecahan')">Pecahan</button>
-      <button class="secondary" onclick="quickChat('Ringkasan proklamasi kemerdekaan')">Proklamasi</button>
-      <button class="ghost" onclick="clearChat()">🧹 Bersihkan</button>
-    </div>
-  </div>
-</section>
-
-<section id="page-flash" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <h1 class="title">🧠 Flashcard</h1>
-  <p class="muted" style="margin-top:0">Klik kartu untuk lihat jawaban.</p>
-  <div class="tabs" id="deckTabs" style="margin:12px 0"></div>
-  <div class="flash" id="flashCard" onclick="flipFlash()">
-    <div class="flash-in">
-      <div class="flash-face"><small id="flashProg">1 / 8</small><h3 id="flashQ">Memuat...</h3></div>
-      <div class="flash-face flash-back"><h3 id="flashA">Jawaban</h3></div>
-    </div>
-  </div>
-  <div class="btnrow">
-    <button class="ghost" onclick="prevFlash()">← Sebelumnya</button>
-    <button class="ghost" onclick="speakText(document.getElementById('flashQ').textContent)">🔊 Baca</button>
-    <button class="primary" style="flex:1" onclick="nextFlash()">Berikutnya →</button>
-  </div>
-</section>
-
-<section id="page-fokus" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <h1 class="title">⏱️ Focus Timer</h1>
-  <p class="muted" style="margin-top:0">Belajar tanpa distraksi.</p>
-  <div class="card" style="text-align:center">
-    <div class="ring">
-      <svg width="200" height="200" viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="88" fill="none" stroke="var(--line)" stroke-width="12"/>
-        <circle id="ringProg" cx="100" cy="100" r="88" fill="none" stroke="var(--p)" stroke-width="12" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="0"/>
-      </svg>
-      <div class="txt" id="timerText">10:00</div>
-    </div>
-    <div class="tabs" style="justify-content:center;margin:14px 0">
-      <button class="tab active" onclick="setDur(10,this)">10 mnt</button>
-      <button class="tab" onclick="setDur(15,this)">15 mnt</button>
-      <button class="tab" onclick="setDur(25,this)">25 mnt</button>
-      <button class="tab" onclick="setDur(45,this)">45 mnt</button>
-    </div>
-    <div class="btnrow" style="justify-content:center">
-      <button class="primary" id="btnTimer" onclick="toggleTimer()">▶️ Mulai</button>
-      <button class="ghost" onclick="resetTimer()">🔄 Reset</button>
-      <button class="ghost" id="btnMusic" onclick="toggleMusic()">🎵 Musik</button>
-    </div>
-    <p class="muted" style="margin-top:12px">Total fokus: <b id="totalFokus">0</b> menit</p>
-  </div>
-</section>
-
-<section id="page-game" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <h1 class="title">🎮 Mini Game</h1>
-  <div class="tabs" style="margin:12px 0">
-    <button class="tab active" onclick="showGame('memory',this)">🃏 Memory</button>
-    <button class="tab" onclick="showGame('math',this)">➗ Hitung</button>
-    <button class="tab" onclick="showGame('tebak',this)">🧩 Tebak</button>
-  </div>
-  <div class="card" id="gameArea"></div>
-</section>
-
-<section id="page-planner" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <h1 class="title">📅 Jadwal Belajar</h1>
-  <div class="card">
-    <label class="lb">Kegiatan</label>
-    <input id="planNama" placeholder="Contoh: Belajar SPLDV">
-    <label class="lb">Tanggal</label>
-    <input id="planTgl" type="date">
-    <label class="lb">Jam</label>
-    <input id="planJam" type="time">
-    <button class="primary block" onclick="addPlan()">➕ Tambah</button>
-  </div>
-  <div class="section"><div class="sectitle"><h2>📋 Daftar</h2></div><div id="planList"></div></div>
-</section>
-
-<section id="page-calc" class="page">
-  <div class="back"><button onclick="showPage('home')">← Kembali</button></div>
-  <h1 class="title">🧮 Kalkulator</h1>
-  <p class="muted" style="margin-top:0">Hitung cepat, mendukung √ dan pangkat.</p>
-  <div class="card">
-    <div class="calc-display" id="cd">0</div>
-    <div class="calc-grid" id="calcGrid"></div>
-  </div>
-</section>
-
-</main>
-
-<nav class="bottom">
-  <button class="active" data-nav="home" onclick="showPage('home')"><span>🏠</span>Beranda</button>
-  <button data-nav="fitur" onclick="showPage('fitur')"><span>✨</span>Fitur</button>
-  <button data-nav="latihan" onclick="showPage('latihan')"><span>🎯</span>Latihan</button>
-  <button data-nav="tutor" onclick="showPage('tutor')"><span>🤖</span>Tutor</button>
-  <button data-nav="profil" onclick="showPage('profil')"><span>👤</span>Profil</button>
-</nav>
-
-<div class="pandana">by <b>Pandana</b></div>
-
-<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
-  <div class="modalbox"><button class="close" onclick="closeModal()">✕</button><div id="modalContent"></div></div>
-</div>
+<main id="app"></main>
 <div id="toast" class="toast"></div>
-<canvas id="confetti"></canvas>
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+  <div class="mbox"><button class="mclose" onclick="closeModal()">✕</button><div id="modalContent"></div></div>
+</div>
 
 <script>
-/* =============== STATE =============== */
-const DEF={nama:'Pejuang Belajar',avatar:'🦊',xp:0,coins:50,streak:0,lastActive:'',tema:'ungu',dark:true,suara:true,musik:false,tts:true,soalSelesai:0,jawabanBenar:0,menitFokus:0,badges:[],notes:'',items:[],planner:[],riwayat:[],quest:{soal:0,tutor:false,streak:false,klaim:false},lastReward:'',onboarded:false,chatHistory:[],ratings:[],myRating:0,comments:[],subjects:['matematika','ipa','indonesia'],aiEndpoint:'/api/chat',aiKey:''};
-function load(){try{const r=localStorage.getItem('rbjp_v3');if(!r)return{...DEF};return{...DEF,...JSON.parse(r)}}catch(e){return{...DEF}}}
-function save(){try{localStorage.setItem('rbjp_v3',JSON.stringify(S))}catch(e){}}
-let S=load();
-const $=id=>document.getElementById(id);
-
-/* =============== UTIL =============== */
-function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function fmt(n){return Number(n).toLocaleString('id-ID')}
-function lvlOf(xp){return Math.floor(xp/160)+1}
-function xpIn(xp){return xp%160}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2400)}
-function openModal(h){$('modalContent').innerHTML=h;$('modal').classList.add('show')}
-function closeModal(){$('modal').classList.remove('show')}
-
-/* =============== SUARA =============== */
-let AC=null;
-function sfx(type){
-  if(!S.suara)return;
-  try{
-    AC=AC||new(window.AudioContext||window.webkitAudioContext)();
-    const o=AC.createOscillator(),g=AC.createGain();
-    o.connect(g);g.connect(AC.destination);
-    const map={klik:[520,.06,'sine'],benar:[880,.18,'sine'],salah:[220,.22,'sawtooth'],naik:[660,.4,'triangle'],koin:[1040,.14,'square']};
-    const [f,d,w]=map[type]||map.klik;
-    o.type=w;o.frequency.value=f;
-    g.gain.setValueAtTime(.07,AC.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);
-    o.start();o.stop(AC.currentTime+d);
-  }catch(e){}
-}
-
-/* =============== TTS (BACA SOAL) =============== */
-let speaking=false;
-function speakText(text){
-  if(!S.tts||!text||!('speechSynthesis' in window))return;
-  try{
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(String(text).replace(/[📚🎯🤖✏️]/g,''));
-    u.lang='id-ID';u.rate=.95;u.pitch=1;
-    speechSynthesis.speak(u);
-  }catch(e){}
-}
-function stopSpeak(){try{speechSynthesis.cancel()}catch(e){}}
-
-/* =============== NAVIGASI =============== */
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));
-  document.querySelectorAll('.bottom button').forEach(b=>b.classList.toggle('active',b.dataset.nav===id));
-  window.scrollTo({top:0,behavior:'smooth'});
-  stopSpeak();
-  sfx('klik');
-  if(id==='latihan')renderQuiz();
-  if(id==='tutor')renderChat();
-  if(id==='flash')renderFlash();
-  if(id==='fokus'){updateTimerUI()}
-  if(id==='game')showGame('memory');
-  if(id==='planner')renderPlan();
-  if(id==='profil')renderProfil();
-  if(id==='calc')renderCalc();
-}
-
-/* =============== XP & LEVEL =============== */
-function addXP(n){
-  const b=lvlOf(S.xp);
-  S.xp+=n;
-  const a=lvlOf(S.xp);
-  if(a>b){
-    sfx('naik');confetti();
-    setTimeout(()=>openModal(`<div style="text-align:center;padding:14px"><div style="font-size:64px">🎉</div><h2 style="margin:8px 0">Naik Level!</h2><p class="muted">Sekarang <b>Level ${a}</b></p><p class="muted">Terus belajar!</p><button class="primary" onclick="closeModal()">Lanjut</button></div>`),500);
-  }
-  save();renderTopbar();
-}
-function addCoin(n){S.coins+=n;save();renderTopbar()}
-function renderTopbar(){
-  $('pillXP').textContent='⭐ '+fmt(S.xp)+' XP';
-  $('pillCoin').textContent='🪙 '+fmt(S.coins);
-  const lv=lvlOf(S.xp);
-  $('heroLevel').textContent='LEVEL '+lv+' • '+fmt(S.xp)+' XP';
-}
-
-/* =============== CONFETTI =============== */
-function confetti(){
-  const c=$('confetti');const ctx=c.getContext('2d');
-  c.width=innerWidth;c.height=innerHeight;
-  const parts=[];const warna=['#6366f1','#8b5cf6','#ec4899','#f59e0b','#16a34a','#3b82f6'];
-  for(let i=0;i<100;i++)parts.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.4,w:5+Math.random()*7,h:8+Math.random()*8,vy:2+Math.random()*4,vx:-1.5+Math.random()*3,rot:Math.random()*6,vr:-.2+Math.random()*.4,col:warna[Math.floor(Math.random()*warna.length)]});
-  let f=0;
-  (function loop(){
-    ctx.clearRect(0,0,c.width,c.height);
-    parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.col;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()});
-    f++;if(f<160)requestAnimationFrame(loop);else ctx.clearRect(0,0,c.width,c.height);
-  })();
-}
-
-/* =============== BANK SOAL =============== */
-const BANK={
-  matematika:[
-    {q:'Berapa banyak faktor positif dari 36?',o:['6','9','12','18'],a:1,e:'36 = 2² × 3². Banyak faktor = (2+1)(2+1) = 9.'},
-    {q:'Jika 3x + 6 = 21, nilai x adalah...',o:['3','5','7','9'],a:1,e:'3x = 15 → x = 5.'},
-    {q:'15% dari 240 adalah...',o:['24','32','36','40'],a:2,e:'0,15 × 240 = 36.'},
-    {q:'Keliling persegi dengan luas 49 cm² adalah...',o:['21 cm','28 cm','35 cm','49 cm'],a:1,e:'Sisi = √49 = 7 cm. Keliling = 28 cm.'},
-    {q:'Rata-rata dari 6, 8, 10, 12, 14 adalah...',o:['9','10','11','12'],a:1,e:'Jumlah = 50, dibagi 5 = 10.'},
-    {q:'Nilai x dari 2x − 5 = 3x + 1 adalah...',o:['−6','−4','4','6'],a:0,e:'−6 = x.'},
-    {q:'Peluang muncul angka prima pada dadu...',o:['1/6','1/3','1/2','2/3'],a:2,e:'Angka prima: 2,3,5 → 3/6 = 1/2.'},
-    {q:'Gradien garis melalui (0,0) dan (2,6) adalah...',o:['2','3','4','6'],a:1,e:'(6−0)/(2−0) = 3.'},
-    {q:'Jika a = 5 dan b = 3, maka a² − b² = ...',o:['4','8','16','25'],a:2,e:'25 − 9 = 16.'},
-    {q:'Hasil dari 2⁵ adalah...',o:['10','25','32','64'],a:2,e:'2×2×2×2×2 = 32.'}
-  ],
-  ipa:[
-    {q:'Organel tempat fotosintesis adalah...',o:['Mitokondria','Kloroplas','Ribosom','Nukleus'],a:1,e:'Kloroplas mengandung klorofil.'},
-    {q:'Satuan gaya adalah...',o:['Joule','Newton','Watt','Pascal'],a:1,e:'Gaya = Newton (N).'},
-    {q:'Zat yang mempercepat reaksi tanpa ikut bereaksi...',o:['Reaktan','Produk','Katalis','Indikator'],a:2,e:'Katalis.'},
-    {q:'Perubahan wujud gas ke padat disebut...',o:['Menguap','Menyublim','Mengembun','Mengkristal'],a:3,e:'Gas → padat = mengkristal (deposisi).'},
-    {q:'Bagian tumbuhan penyerap air...',o:['Daun','Batang','Akar','Bunga'],a:2,e:'Akar menyerap air & mineral.'},
-    {q:'Planet terdekat Matahari...',o:['Venus','Merkurius','Bumi','Mars'],a:1,e:'Merkurius.'},
-    {q:'Alat ukur tekanan udara...',o:['Barometer','Termometer','Higrometer','Anemometer'],a:0,e:'Barometer.'},
-    {q:'Proses perubahan air menjadi uap disebut...',o:['Menguap','Mengembun','Membeku','Menyublim'],a:0,e:'Menguap (evaporasi).'}
-  ],
-  indonesia:[
-    {q:'Kalimat bermajas personifikasi...',o:['Angin berbisik lembut','Dia sekuat baja','Wajahnya seperti bulan','Cepat seperti kilat'],a:0,e:'Personifikasi: benda mati diberi sifat manusia.'},
-    {q:'Ide pokok paragraf biasanya ada di...',o:['Kalimat terakhir','Kalimat utama','Kata penghubung','Judul'],a:1,e:'Ide pokok ada di kalimat utama.'},
-    {q:'Kata baku yang benar...',o:['Aktifitas','Aktivitas','Aktipitas','Aktifitas'],a:1,e:'KBBI: aktivitas.'},
-    {q:'Teks berisi langkah membuat sesuatu...',o:['Narasi','Deskripsi','Prosedur','Eksposisi'],a:2,e:'Teks prosedur.'},
-    {q:'Sinonim "cerdas"...',o:['Malas','Pandai','Lambat','Lemah'],a:1,e:'Cerdas = pandai.'},
-    {q:'Puisi 4 baris berima a-b-a-b...',o:['Pantun','Syair','Gurindam','Karmina'],a:0,e:'Pantun.'}
-  ],
-  ips:[
-    {q:'Proklamasi dibacakan tanggal...',o:['17 Agustus 1945','1 Juni 1945','28 Oktober 1928','10 November 1945'],a:0,e:'17 Agustus 1945.'},
-    {q:'Selat pemisah Jawa & Sumatera...',o:['Selat Malaka','Selat Sunda','Selat Bali','Selat Karimata'],a:1,e:'Selat Sunda.'},
-    {q:'Ibu kota Jawa Barat...',o:['Semarang','Surabaya','Bandung','Serang'],a:2,e:'Bandung.'},
-    {q:'ASEAN didirikan tahun...',o:['1965','1967','1970','1975'],a:1,e:'8 Agustus 1967.'},
-    {q:'Kegiatan menghasilkan barang/jasa...',o:['Konsumsi','Distribusi','Produksi','Investasi'],a:2,e:'Produksi.'}
-  ],
-  inggris:[
-    {q:'Choose the correct sentence.',o:['She go to school','She goes to school','She going to school','She gone to school'],a:1,e:'"She" pakai goes.'},
-    {q:'Opposite of "expensive"...',o:['cheap','rich','costly','valuable'],a:0,e:'Cheap.'},
-    {q:'Past tense of "buy"...',o:['buyed','bought','buying','buys'],a:1,e:'Bought.'},
-    {q:'"I have lived here ___ 2015."',o:['for','since','from','at'],a:1,e:'Since untuk titik waktu.'},
-    {q:'Plural of "child"...',o:['childs','childes','children','child'],a:2,e:'Children.'}
-  ]
+/* ========== KONFIGURASI ========== */
+// Ganti dengan konfigurasi Firebase kamu (isi kalau mau leaderboard lintas user)
+// Kosongkan untuk mode lokal (leaderboard cuma di device sendiri)
+const FIREBASE_CONFIG = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
 };
-const MAPEL={'matematika':'📐 Matematika','ipa':'🔬 IPA','indonesia':'📖 Bahasa Indonesia','ips':'🌏 IPS','inggris':'🇬🇧 Bahasa Inggris'};
+const AI_ENDPOINT = '/api/chat';
 
-/* =============== KUIS =============== */
-let Q={mapel:'matematika',idx:0,soal:[],benar:0,terjawab:false};
-function buildQuiz(mapel){
-  const b=BANK[mapel]||BANK.matematika;
-  const acak=[...b].sort(()=>Math.random()-.5);
-  Q={mapel,idx:0,soal:acak.slice(0,Math.min(5,acak.length)),benar:0,terjawab:false};
-}
-function openQuiz(mapel){
-  closeModal();
-  if(mapel)Q.mapel=mapel;
-  if(!Q.soal.length)buildQuiz(Q.mapel);
-  showPage('latihan');
-}
-function renderMapelTabs(){
-  const t=$('mapelTabs');if(!t)return;
-  t.innerHTML=Object.keys(MAPEL).map(k=>`<button class="tab ${k===Q.mapel?'active':''}" onclick="switchMapel('${k}')">${MAPEL[k]}</button>`).join('');
-}
-function switchMapel(k){buildQuiz(k);renderQuiz();sfx('klik')}
-function renderQuiz(){
-  renderMapelTabs();
-  const a=$('quizArea');if(!a)return;
-  if(!Q.soal.length)buildQuiz(Q.mapel);
-  if(Q.idx>=Q.soal.length){
-    const total=Q.soal.length,persen=Math.round(Q.benar/total*100);
-    const xp=Q.benar*20;
-    a.innerHTML=`<div style="text-align:center;padding:10px">
-      <div style="font-size:58px">${persen>=80?'🏆':persen>=50?'💪':'📚'}</div>
-      <h2 style="margin:8px 0 4px">Sesi Selesai!</h2>
-      <p class="muted">Benar <b>${Q.benar}</b> dari <b>${total}</b></p>
-      <div class="bar" style="margin:14px 0"><i style="width:${persen}%"></i></div>
-      <p style="font-size:30px;font-weight:900;margin:6px 0">${persen}%</p>
-      <p class="muted">⭐ +${xp} XP</p>
-      <div class="btnrow" style="justify-content:center;margin-top:14px">
-        <button class="primary" onclick="openQuiz('${Q.mapel}')">🔄 Ulangi</button>
-      </div></div>`;
-    return;
-  }
-  const s=Q.soal[Q.idx];
-  a.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-      <b style="font-size:13px">${MAPEL[Q.mapel]}</b>
-      <span class="pill">${Q.idx+1} / ${Q.soal.length}</span>
-    </div>
-    <div class="bar" style="margin:10px 0 4px"><i style="width:${Q.idx/Q.soal.length*100}%"></i></div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin:16px 0">
-      <div style="font-size:18px;font-weight:850;line-height:1.4;flex:1">${esc(s.q)}</div>
-      <button class="tts-btn" onclick="speakText('${esc(s.q).replace(/'/g,"\\'")}')">🔊 Baca</button>
-    </div>
-    <div id="opsiWrap">
-      ${s.o.map((o,i)=>`<button class="option" onclick="jawab(${i})">${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join('')}
-    </div>
-    <div class="btnrow" style="margin-top:12px">
-      <button class="ghost" onclick="openCalc()">🧮 Kalkulator</button>
-      <button class="ghost" onclick="stopSpeak()">🔇 Stop</button>
-    </div>`;
-  Q.terjawab=false;
-}
-function jawab(i){
-  if(Q.terjawab)return;
-  Q.terjawab=true;
-  const s=Q.soal[Q.idx];
-  const bs=document.querySelectorAll('#opsiWrap .option');
-  bs.forEach((b,k)=>{b.disabled=true;if(k===s.a)b.classList.add('benar');if(k===i&&i!==s.a)b.classList.add('salah')});
-  const benar=i===s.a;
-  if(benar){Q.benar++;sfx('benar')}else sfx('salah');
-  S.soalSelesai++;
-  if(benar)S.jawabanBenar++;
-  S.quest.soal=Math.min(10,S.quest.soal+1);
-  if(benar)addXP(20);
-  addRiwayat();
-  cekBadge();
-  save();
-  const w=$('opsiWrap');
-  const box=document.createElement('div');
-  box.className='card';box.style.marginTop='14px';
-  box.innerHTML=`<b style="color:${benar?'var(--green)':'var(--red)'}">${benar?'✅ Benar!':'❌ Belum tepat'}</b>
-    <p class="muted" style="margin:8px 0 0;line-height:1.55">${esc(s.e)}</p>
-    <div class="btnrow" style="margin-top:10px">
-      <button class="ghost" onclick="speakText('${esc(s.e).replace(/'/g,"\\'")}')">🔊 Baca Pembahasan</button>
-      <button class="primary" onclick="lanjutSoal()">Soal Berikutnya →</button>
-    </div>`;
-  w.appendChild(box);
-  box.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function lanjutSoal(){Q.idx++;renderQuiz();sfx('klik')}
-
-function addRiwayat(){
-  const t=today();
-  const h=S.riwayat.find(r=>r.tgl===t);
-  if(h)h.soal++;else S.riwayat.push({tgl:t,soal:1,benar:0});
-  if(S.riwayat.length>60)S.riwayat=S.riwayat.slice(-60);
-  save();
-}
-
-/* =============== AI TUTOR =============== */
-const KB=[
-  {k:['spldv','persamaan linear'],j:'SPLDV = Sistem Persamaan Linear Dua Variabel.\n\nCara menyelesaikan:\n1. Substitusi — ganti satu variabel\n2. Eliminasi — hilangkan satu variabel\n3. Grafik — cari titik potong\n\nContoh:\nx + y = 10\nx − y = 4\nJumlahkan: 2x = 14 → x = 7, maka y = 3.'},
-  {k:['pythagoras'],j:'Teorema Pythagoras berlaku pada segitiga siku-siku:\n\na² + b² = c²\n\nc = sisi miring.\n\nContoh: a=3, b=4 → c = √(9+16) = √25 = 5.\n\nTripel populer: 3-4-5, 5-12-13, 8-15-17.'},
-  {k:['fotosintesis'],j:'Fotosintesis = tumbuhan membuat makanan sendiri.\n\n6CO₂ + 6H₂O + cahaya → C₆H₁₂O₆ + 6O₂\n\nTahapan:\n1. Reaksi terang (membran tilakoid) — hasil ATP, NADPH, O₂\n2. Reaksi gelap/Siklus Calvin (stroma) — hasil glukosa\n\nFaktor: cahaya, suhu, CO₂, air.'},
-  {k:['majas','personifikasi'],j:'Majas = gaya bahasa.\n\n• Personifikasi — benda mati diberi sifat manusia. "Angin berbisik lembut."\n• Metafora — perbandingan langsung. "Dia singa di kelas."\n• Simile — pakai "seperti/bagai". "Cepat seperti kilat."\n• Hiperbola — berlebihan. "Suaranya menggetarkan dunia."'},
-  {k:['pecahan'],j:'Operasi pecahan:\n\n• Tambah/kurang: samakan penyebut\n  1/2 + 1/3 = 3/6 + 2/6 = 5/6\n• Kali: kalikan atas & bawah\n  2/3 × 3/4 = 6/12 = 1/2\n• Bagi: kali kebalikannya\n  1/2 ÷ 1/4 = 1/2 × 4 = 2'},
-  {k:['energi','usaha'],j:'Usaha (W) = gaya × perpindahan.\n\nW = F × s (satuan Joule)\n\nContoh: gaya 50 N, jarak 3 m → W = 150 J.\n\nKalau benda tidak berpindah, usahanya nol!'},
-  {k:['sejarah','kemerdekaan','proklamasi'],j:'Proklamasi Kemerdekaan:\n\n• Dibacakan Ir. Soekarno, 17 Agustus 1945, Jl. Pegangsaan Timur 56, Jakarta\n• Naskah disusun Soekarno, Hatta, Ahmad Soebardjo\n• Diketik Sayuti Melik\n• Bendera dijahit Ibu Fatmawati\n\nSebelumnya: Rengasdengklok (16 Agustus 1945).'},
-  {k:['bahasa inggris','tenses','grammar'],j:'Tenses dasar:\n\n1. Simple Present — fakta/kebiasaan. "She goes to school."\n2. Present Continuous — sedang. "She is going."\n3. Simple Past — selesai. "She went."\n4. Present Perfect — relevan. "She has gone."\n5. Simple Future — akan. "She will go."'},
-  {k:['statistika','mean','rata'],j:'Statistika:\n\n• Mean = jumlah data ÷ banyak data\n• Median = nilai tengah (setelah diurutkan)\n• Modus = paling sering muncul\n\nContoh data: 4,6,7,7,9\nMean = 33/5 = 6,6\nMedian = 7\nModus = 7'},
-  {k:['halo','hai','hello'],j:'Halo! 👋 Aku Tutor AI kamu.\n\nAku bisa bantu jelaskan materi, contoh soal, rangkuman, atau apa saja soal pelajaran.\n\nCoba tanya:\n• "Jelaskan SPLDV"\n• "Apa itu fotosintesis?"\n• "Cara hitung pecahan"'}
-];
-function cariJawaban(t){
-  const l=t.toLowerCase();
-  for(const item of KB){if(item.k.some(k=>l.includes(k)))return item.j}
-  return 'Pertanyaan bagus! 🤔\n\nCoba sebutkan lebih spesifik, misalnya:\n• "Jelaskan SPLDV"\n• "Apa itu fotosintesis?"\n• "Cara menghitung pecahan"\n• "Ringkasan proklamasi"\n\nAtau pilih tombol cepat di bawah kotak chat.';
-}
-async function callAI(prompt){
-  /* Kalau endpoint diisi, coba panggil API. Kalau gagal, fallback ke KB lokal. */
-  if(!S.aiEndpoint||S.aiEndpoint==='')return null;
-  try{
-    const body={messages:[{role:'system',content:'Kamu guru ramah untuk pelajar Indonesia. Jawab singkat, bahasa sederhana, tanpa markdown.'},{role:'user',content:prompt}]};
-    if(S.aiKey)body.apiKey=S.aiKey;
-    const r=await fetch(S.aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(!r.ok)throw 0;
-    const d=await r.json();
-    const t=(d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||d.text||d.reply||'';
-    if(!t)throw 0;
-    return t.trim();
-  }catch(e){return null}
-}
-function renderChat(){
-  const b=$('chatBox');if(!b)return;
-  if(!S.chatHistory.length){
-    S.chatHistory.push({r:'bot',t:'Halo '+S.nama+'! 👋\n\nAku Tutor AI. Tanya apa saja, misalnya SPLDV, Pythagoras, fotosintesis, tenses, atau materi lain.\n\nAku juga bisa kasih contoh soal dan rangkuman.'});
-    save();
-  }
-  b.innerHTML=S.chatHistory.map(m=>`<div class="bubble ${m.r}">${esc(m.t)}</div>`).join('');
-  b.scrollTop=b.scrollHeight;
-}
-function sendChat(){
-  const i=$('chatIn'),v=i.value.trim();
-  if(!v)return;
-  i.value='';
-  S.chatHistory.push({r:'user',t:v});save();renderChat();sfx('klik');
-  const b=$('chatBox');
-  const ty=document.createElement('div');
-  ty.className='bubble bot typing';ty.innerHTML='<i></i><i></i><i></i>';
-  b.appendChild(ty);b.scrollTop=b.scrollHeight;
-  setTimeout(async()=>{
-    ty.remove();
-    let jawab=await callAI(v);
-    if(!jawab)jawab=cariJawaban(v);
-    S.chatHistory.push({r:'bot',t:jawab});
-    if(!S.quest.tutor)S.quest.tutor=true;
-    save();renderChat();
-    if(S.tts)speakText(jawab.slice(0,200));
-    if(Math.random()>.6)addXP(5);
-  },600);
-}
-function quickChat(t){const i=$('chatIn');if(i)i.value=t;sendChat()}
-function clearChat(){S.chatHistory=[];save();renderChat();toast('Chat dibersihkan 🧹')}
-function openTutor(){closeModal();showPage('tutor')}
-
-/* =============== FLASHCARD =============== */
-const DECKS={
-  '📐 Matematika':[['Apa itu SPLDV?','Sistem Persamaan Linear Dua Variabel.'],['Rumus Pythagoras','a² + b² = c²'],['Luas lingkaran','L = π × r²'],['Keliling persegi','K = 4 × sisi'],['Bilangan prima','Hanya habis dibagi 1 dan dirinya sendiri.'],['Volume kubus','V = s³'],['Rata-rata','Jumlah data ÷ banyak data.'],['Gradien','Perubahan y ÷ perubahan x.']],
-  '🔬 IPA':[['Fotosintesis','Tumbuhan membuat makanan dengan cahaya.'],['Satuan gaya','Newton (N)'],['Katalis','Mempercepat reaksi tanpa ikut bereaksi.'],['Planet terdekat Matahari','Merkurius'],['Fungsi akar','Menyerap air & mineral.'],['Mengkristal','Gas → padat.'],['Barometer','Alat ukur tekanan udara.'],['Mutualisme','Hubungan saling menguntungkan.']],
-  '📖 Bahasa':[['Personifikasi','Benda mati diberi sifat manusia.'],['Ide pokok','Gagasan utama di kalimat utama.'],['Teks prosedur','Langkah-langkah membuat sesuatu.'],['Sinonim cerdas','Pandai'],['Pantun','Puisi 4 baris rima a-b-a-b.'],['Kata baku','Sesuai KBBI, mis. "aktivitas".']],
-  '🌏 Sejarah':[['Proklamasi','17 Agustus 1945'],['Pengetik naskah','Sayuti Melik'],['Penjahit bendera','Ibu Fatmawati'],['Rengasdengklok','16 Agustus 1945'],['ASEAN','8 Agustus 1967']]
+/* ========== STATE ========== */
+let S = {
+  nama: '', avatar: '🦊', xp: 0, coins: 20, streak: 0, lastActive: '',
+  soal: 0, benar: 0, menitFokus: 0, riwayat: [], badges: [],
+  chatHistory: [], myRating: 0, comments: [], theme: 'dark'
 };
-let F={deck:'📐 Matematika',idx:0};
-function renderFlash(){
-  const t=$('deckTabs');
-  if(t)t.innerHTML=Object.keys(DECKS).map(d=>`<button class="tab ${d===F.deck?'active':''}" onclick="pilihDeck('${d}')">${d}</button>`).join('');
-  const kartu=DECKS[F.deck];
-  const item=kartu[F.idx];
-  const f=$('flashCard');
-  if(f)f.classList.remove('flipped');
-  if($('flashProg'))$('flashProg').textContent=(F.idx+1)+' / '+kartu.length;
-  if($('flashQ'))$('flashQ').textContent=item[0];
-  if($('flashA'))$('flashA').textContent=item[1];
-}
-function pilihDeck(d){F.deck=d;F.idx=0;renderFlash();sfx('klik')}
-function flipFlash(){const f=$('flashCard');if(!f)return;f.classList.toggle('flipped');sfx('klik')}
-function nextFlash(){F.idx=(F.idx+1)%DECKS[F.deck].length;renderFlash();addXP(2)}
-function prevFlash(){F.idx=(F.idx-1+DECKS[F.deck].length)%DECKS[F.deck].length;renderFlash()}
-function openFlash(){closeModal();showPage('flash')}
+function load(){ try{ const r=localStorage.getItem('rbjp_v4'); if(r) S={...S,...JSON.parse(r)} }catch(e){} }
+function save(){ try{ localStorage.setItem('rbjp_v4',JSON.stringify(S)) }catch(e){} }
+load();
 
-/* =============== FOCUS TIMER =============== */
-let T={total:600,sisa:600,jalan:false,int:null};
-function setDur(m,el){
-  document.querySelectorAll('#page-fokus .tab').forEach(t=>t.classList.remove('active'));
-  if(el)el.classList.add('active');
-  T.total=m*60;T.sisa=T.total;stopTimer();updateTimerUI();
-}
-function updateTimerUI(){
-  const m=Math.floor(T.sisa/60),s=T.sisa%60;
-  if($('timerText'))$('timerText').textContent=m+':'+String(s).padStart(2,'0');
-  const r=$('ringProg');
-  if(r){const C=2*Math.PI*88;const p=T.total?(1-T.sisa/T.total):0;r.setAttribute('stroke-dasharray',C);r.setAttribute('stroke-dashoffset',C*p)}
-}
-function toggleTimer(){if(T.jalan)stopTimer();else startTimer()}
-function startTimer(){
-  if(T.jalan)return;
-  T.jalan=true;if($('btnTimer'))$('btnTimer').textContent='⏸️ Jeda';
-  T.int=setInterval(()=>{
-    T.sisa--;updateTimerUI();
-    if(T.sisa<=0){
-      stopTimer();S.menitFokus+=Math.round(T.total/60);addXP(30);cekBadge();save();confetti();sfx('naik');toast('🎉 Sesi fokus selesai! +30 XP');
-    }
-  },1000);
-}
-function stopTimer(){T.jalan=false;clearInterval(T.int);if($('btnTimer'))$('btnTimer').textContent='▶️ Mulai'}
-function resetTimer(){stopTimer();T.sisa=T.total;updateTimerUI();if($('totalFokus'))$('totalFokus').textContent=S.menitFokus}
-function openFocus(){closeModal();showPage('fokus');resetTimer()}
-let musicNodes=null;
-function toggleMusic(){if(S.musik)stopMusic();else startMusic()}
-function startMusic(){
-  try{
-    AC=AC||new(window.AudioContext||window.webkitAudioContext)();
-    const m=AC.createGain();m.gain.value=.05;m.connect(AC.destination);
-    const f=[261.63,329.63,392,523.25];
-    musicNodes=f.map((fr,i)=>{
-      const o=AC.createOscillator(),g=AC.createGain();
-      o.type='sine';o.frequency.value=fr;g.gain.value=.2;
-      o.connect(g);g.connect(m);o.start();
-      const lfo=AC.createOscillator(),lg=AC.createGain();
-      lfo.frequency.value=.06+i*.02;lg.gain.value=.15;
-      lfo.connect(lg);lg.connect(g.gain);lfo.start();
-      return{o,lfo};
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today = () => new Date().toISOString().slice(0,10);
+const lvlOf = xp => Math.floor(xp/100)+1;
+const xpIn = xp => xp%100;
+
+function toast(m){ const t=$('toast'); t.textContent=m; t.classList.remove('show'); void t.offsetWidth; t.classList.add('show'); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),2400) }
+function openModal(h){ $('modalContent').innerHTML=h; $('modal').classList.add('show') }
+function closeModal(){ $('modal').classList.remove('show') }
+function sfx(type){ try{ const C=new(window.AudioContext||window.webkitAudioContext)(); const o=C.createOscillator(),g=C.createGain(); o.connect(g); g.connect(C.destination); const m={klik:[520,.06,'sine'],ok:[880,.18,'sine'],no:[220,.22,'sawtooth'],naik:[660,.4,'triangle']}; const [f,d,w]=m[type]||m.klik; o.type=w; o.frequency.value=f; g.gain.setValueAtTime(.07,C.currentTime); g.gain.exponentialRampToValueAtTime(.001,C.currentTime+d); o.start(); o.stop(C.currentTime+d) }catch(e){} }
+
+/* ========== FIREBASE (opsional) ========== */
+let db = null;
+try {
+  if (FIREBASE_CONFIG.apiKey && typeof firebase !== 'undefined') {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+  }
+} catch(e) { console.warn('Firebase tidak aktif:', e.message) }
+
+async function pushLeaderboard() {
+  if (!db || !S.nama) return;
+  try {
+    await db.collection('leaderboard').doc(S.nama.toLowerCase().replace(/\s/g,'_')).set({
+      nama: S.nama, avatar: S.avatar, xp: S.xp, level: lvlOf(S.xp), updated: Date.now()
     });
-    S.musik=true;save();
-    if($('btnMusic'))$('btnMusic').textContent='🔇 Matikan';
-    toast('🎵 Musik fokus dinyalakan');
-  }catch(e){toast('Audio tidak didukung')}
-}
-function stopMusic(){
-  try{if(musicNodes)musicNodes.forEach(n=>{n.o.stop();n.lfo.stop()})}catch(e){}
-  musicNodes=null;S.musik=false;save();
-  if($('btnMusic'))$('btnMusic').textContent='🎵 Musik';
-  toast('🔇 Musik mati');
+  } catch(e) { console.warn('pushLeaderboard:', e.message) }
 }
 
-/* =============== GAME =============== */
-let gAktif='memory';
-function showGame(t,el){
-  gAktif=t;
-  if(el){document.querySelectorAll('#page-game .tab').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
-  if(t==='memory')startMemory();
-  if(t==='math')startMath();
-  if(t==='tebak')startTebak();
-}
-let MS={kartu:[],terbuka:[],selesai:0,langkah:0};
-function startMemory(){
-  const e=['📚','✏️','🧮','🔬','🌏','🎨','🎵','⚽'];
-  MS={kartu:[...e,...e].sort(()=>Math.random()-.5),terbuka:[],selesai:0,langkah:0};
-  renderMemory();
-}
-function renderMemory(){
-  const a=$('gameArea');if(!a)return;
-  a.innerHTML=`<div style="display:flex;justify-content:space-between"><b>🃏 Memory</b><span class="pill">${MS.selesai/2} / 8</span></div>
-    <p class="muted" style="margin:6px 0 0">Langkah: <b>${MS.langkah}</b></p>
-    <div class="memgrid" id="memGrid">${MS.kartu.map((e,i)=>`<div class="memcard ${MS.terbuka.includes(i)?'open':''}" onclick="klikMem(${i})">${MS.terbuka.includes(i)?e:'❓'}</div>`).join('')}</div>
-    <button class="ghost block" onclick="startMemory()">🔄 Acak Ulang</button>`;
-}
-function klikMem(i){
-  if(MS.terbuka.includes(i)||MS.terbuka.length>=2)return;
-  MS.terbuka.push(i);sfx('klik');renderMemory();
-  if(MS.terbuka.length===2){
-    MS.langkah++;
-    const[a,b]=MS.terbuka;
-    if(MS.kartu[a]===MS.kartu[b]){
-      MS.selesai+=2;MS.terbuka=[];sfx('benar');
-      setTimeout(()=>{
-        renderMemory();
-        if(MS.selesai===16){const h=Math.max(10,60-MS.langkah*2);addXP(h);addCoin(15);confetti();toast('🎉 Selesai! +'+h+' XP')}
-      },400);
-    }else{sfx('salah');setTimeout(()=>{MS.terbuka=[];renderMemory()},700)}
+/* ========== AI ========== */
+let aiStatus = 'unknown'; // unknown | ok | error
+async function callAI(messages) {
+  try {
+    const r = await fetch(AI_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'AI error');
+    const text = d.choices?.[0]?.message?.content || d.text || '';
+    if (!text) throw new Error('AI tidak merespons');
+    aiStatus = 'ok';
+    return text;
+  } catch(e) {
+    aiStatus = 'error';
+    throw e;
   }
 }
-let Mt={skor:0,sisa:30,int:null,soal:null};
-function startMath(){
-  clearInterval(Mt.int);
-  Mt={skor:0,sisa:30,int:null,soal:buatMath()};
-  renderMath();
-  Mt.int=setInterval(()=>{
-    Mt.sisa--;
-    if($('mathTimer'))$('mathTimer').textContent=Mt.sisa;
-    if(Mt.sisa<=0){
-      clearInterval(Mt.int);
-      const xp=Mt.skor*3;addXP(xp);addCoin(Math.floor(Mt.skor/2));confetti();
-      openModal(`<div style="text-align:center;padding:12px"><div style="font-size:56px">⏰</div><h2>Waktu Habis!</h2><p class="muted">Skor: <b style="font-size:24px;color:var(--p)">${Mt.skor}</b></p><p class="muted">⭐ +${xp} XP</p><button class="primary" onclick="closeModal();startMath()">Main Lagi</button></div>`);
-    }
-  },1000);
+
+async function callAIJSON(prompt, system) {
+  const msgs = [];
+  if (system) msgs.push({ role:'system', content: system });
+  msgs.push({ role:'user', content: prompt });
+  const text = await callAI(msgs);
+  // Extract JSON dari response
+  const a = text.indexOf('{');
+  const b = text.lastIndexOf('}');
+  if (a < 0 || b < a) throw new Error('AI tidak mengembalikan JSON valid');
+  const json = text.slice(a, b+1);
+  // Bersihkan
+  return JSON.parse(json);
 }
-function buatMath(){
-  const t=Math.floor(Math.random()*4);
-  let a,b,j,teks;
-  if(t===0){a=5+Math.floor(Math.random()*45);b=5+Math.floor(Math.random()*45);j=a+b;teks=a+' + '+b}
-  else if(t===1){a=20+Math.floor(Math.random()*60);b=3+Math.floor(Math.random()*17);j=a-b;teks=a+' − '+b}
-  else if(t===2){a=3+Math.floor(Math.random()*12);b=3+Math.floor(Math.random()*12);j=a*b;teks=a+' × '+b}
-  else{b=3+Math.floor(Math.random()*12);j=3+Math.floor(Math.random()*12);a=b*j;teks=a+' ÷ '+b}
-  return{teks,jawab:j};
+
+/* ========== NAVIGASI ========== */
+const PAGES = ['belajar','tutor','flash','nilai','peringkat'];
+function go(tab) { S.tab = tab; save(); render() }
+
+function render() {
+  const t = S.tab || 'belajar';
+  const pages = {
+    belajar: pBelajar,
+    tutor: pTutor,
+    flash: pFlash,
+    nilai: pNilai,
+    peringkat: pPeringkat
+  };
+  $('app').innerHTML = `
+    <div class="hero">
+      <h1>📚 Rajin Belajar</h1>
+      <p>Level ${lvlOf(S.xp)} • ${S.xp} XP • 🔥 ${S.streak} hari</p>
+    </div>
+    <div class="tabs">
+      <button class="${t==='belajar'?'on':''}" onclick="go('belajar')"><span>🎓</span>Belajar</button>
+      <button class="${t==='tutor'?'on':''}" onclick="go('tutor')"><span>🤖</span>Tutor</button>
+      <button class="${t==='flash'?'on':''}" onclick="go('flash')"><span>🧠</span>Flash</button>
+      <button class="${t==='nilai'?'on':''}" onclick="go('nilai')"><span>📊</span>Nilai</button>
+      <button class="${t==='peringkat'?'on':''}" onclick="go('peringkat')"><span>🏆</span>Rank</button>
+    </div>
+    ${pages[t]()}
+    <div class="credit">Dibuat dengan ❤️ by <b>Pandana</b></div>
+  `;
+  if (t === 'tutor') renderChat();
+  if (t === 'peringkat') loadLeaderboard();
 }
-function renderMath(){
-  const a=$('gameArea');if(!a)return;
-  a.innerHTML=`<div style="display:flex;justify-content:space-between"><b>➗ Hitung Cepat</b><span class="pill">⏰ <span id="mathTimer">${Mt.sisa}</span>s</span></div>
-    <p class="muted" style="margin:6px 0 0">Skor: <b style="color:var(--p)">${Mt.skor}</b></p>
-    <div style="text-align:center;padding:24px 0"><div style="font-size:38px;font-weight:900;letter-spacing:-1px">${Mt.soal.teks} = ?</div></div>
-    <input id="mathJawab" type="number" placeholder="Jawaban" style="text-align:center;font-size:18px;font-weight:800" onkeydown="if(event.key==='Enter')cekMath()">
-    <button class="primary block" onclick="cekMath()">Jawab</button>`;
-  setTimeout(()=>{const e=$('mathJawab');if(e)e.focus()},100);
+
+/* ========== BELAJAR ========== */
+const MAPEL = [
+  ['Matematika','🔢'],['IPA','🔬'],['IPS','🌏'],['Bahasa Indonesia','📖'],
+  ['Bahasa Inggris','🔤'],['Informatika','💻'],['PPKn','🇮🇩'],['Seni Budaya','🎨']
+];
+let setup = { mapel:'Matematika', jenjang:'SMP', kelas:8, tipe:'pg', n:5, kkm:70, kisi:'' };
+
+function pBelajar() {
+  return `
+  <div class="card">
+    <label style="margin-top:0">📚 Pilih mata pelajaran</label>
+    <div class="grid">
+      ${MAPEL.map(([m,e])=>`<button class="${setup.mapel===m?'sel':''}" onclick="setMapel('${m}')"><span style="font-size:18px">${e}</span> ${m}</button>`).join('')}
+    </div>
+
+    <label>⭐ Jenjang & Kelas</label>
+    <div class="row" style="display:flex;gap:6px">
+      <select onchange="setup.jenjang=this.value;updateKelas();render()" style="flex:1">
+        <option ${setup.jenjang==='SD'?'selected':''}>SD</option>
+        <option ${setup.jenjang==='SMP'?'selected':''}>SMP</option>
+        <option ${setup.jenjang==='SMA'?'selected':''}>SMA</option>
+      </select>
+      <select onchange="setup.kelas=+this.value" style="flex:1" id="selKelas"></select>
+    </div>
+
+    <label>📝 Jenis soal</label>
+    <div class="g3 grid">
+      <button class="${setup.tipe==='pg'?'sel':''}" onclick="setup.tipe='pg';render()">Pilihan Ganda</button>
+      <button class="${setup.tipe==='uraian'?'sel':''}" onclick="setup.tipe='uraian';render()">Uraian</button>
+      <button class="${setup.tipe==='campur'?'sel':''}" onclick="setup.tipe='campur';render()">Campuran</button>
+    </div>
+
+    <label>🔢 Jumlah soal</label>
+    <div class="g4 grid">
+      ${[5,10,15,20].map(n=>`<button class="${setup.n===n?'sel':''}" onclick="setup.n=${n};render()">${n}</button>`).join('')}
+    </div>
+
+    <label>🎯 KKM</label>
+    <input type="number" value="${setup.kkm}" oninput="setup.kkm=Math.max(0,Math.min(100,+this.value||0))">
+
+    <label>📋 Kisi-kisi (opsional)</label>
+    <textarea placeholder="Contoh: Bab Aljabar, SPLDV, persamaan linear" oninput="setup.kisi=this.value">${esc(setup.kisi)}</textarea>
+
+    <button class="go" onclick="mulaiKuis()">🚀 Mulai Kuis dengan AI</button>
+  </div>
+  <div class="ket" style="margin-top:12px">
+    💡 Soal dibuat langsung oleh AI setiap kali kamu mulai kuis. Jadi soal <b>selalu baru</b> dan tidak akan sama.
+  </div>`;
 }
-function cekMath(){
-  const e=$('mathJawab');if(!e||!e.value)return;
-  if(Number(e.value)===Mt.soal.jawab){Mt.skor++;sfx('benar');Mt.soal=buatMath();renderMath()}
-  else{sfx('salah');e.value='';e.classList.add('shake');setTimeout(()=>e.classList.remove('shake'),400);toast('Belum tepat!')}
+
+function setMapel(m){ setup.mapel=m; render() }
+function updateKelas(){
+  const map = { SD:[1,2,3,4,5,6], SMP:[7,8,9], SMA:[10,11,12] };
+  const arr = map[setup.jenjang] || [7,8,9];
+  if (!arr.includes(setup.kelas)) setup.kelas = arr[0];
+  const sel = $('selKelas');
+  if (sel) sel.innerHTML = arr.map(k=>`<option ${k===setup.kelas?'selected':''}>${k}</option>`).join('');
 }
-const TEB=['SPLDV','Termometer','Bandung','Fotosintesis','Personifikasi','Merkurius','Newton','Pantun'];
-const TEBQ=['Sistem Persamaan Linear Dua Variabel','Alat pengukur suhu','Ibu kota Jawa Barat','Proses tumbuhan membuat makanan','Gaya bahasa memberi sifat manusia','Planet terdekat Matahari','Satuan gaya','Puisi lama 4 baris a-b-a-b'];
-let Tb={idx:0,skor:0,acak:[]};
-function startTebak(){
-  const arr=TEB.map((t,i)=>({j:t,p:TEBQ[i]}));
-  Tb={idx:0,skor:0,acak:arr.sort(()=>Math.random()-.5).slice(0,5)};
-  renderTebak();
+
+/* ========== KUIS (AI) ========== */
+let quiz = { soal: [], idx: 0, jawab: [], skor: 0, loading: false };
+
+async function mulaiKuis() {
+  S.tab = 'belajar'; save();
+  const jumlah = setup.n;
+  const pg = Math.ceil(jumlah * 0.6);
+  const jenis = setup.tipe === 'pg'
+    ? `${jumlah} soal pilihan ganda`
+    : setup.tipe === 'uraian'
+    ? `${jumlah} soal uraian`
+    : `${jumlah} soal campuran (${pg} pilihan ganda, ${jumlah-pg} uraian)`;
+
+  const prompt = `Buatkan ${jenis} mata pelajaran ${setup.mapel} untuk siswa ${setup.jenjang} kelas ${setup.kelas} di Indonesia (Kurikulum Merdeka). Bahasa Indonesia.${setup.kisi ? ` Fokus pada materi: ${setup.kisi}.` : ''}
+
+Balas HANYA dengan JSON valid (tanpa markdown, tanpa penjelasan tambahan), dengan format:
+{
+  "soal": [
+    { "tipe": "pg", "q": "pertanyaan", "opsi": ["a","b","c","d"], "jawab": 0, "bahas": "penjelasan lengkap" },
+    { "tipe": "uraian", "q": "pertanyaan", "kunci": "jawaban model", "bahas": "penjelasan" }
+  ]
 }
-function renderTebak(){
-  const a=$('gameArea');if(!a)return;
-  if(Tb.idx>=Tb.acak.length){
-    const xp=Tb.skor*12;addXP(xp);
-    a.innerHTML=`<div style="text-align:center;padding:14px"><div style="font-size:56px">🧩</div><h2>Selesai!</h2><p class="muted">Skor: <b>${Tb.skor}</b> / ${Tb.acak.length}</p><p class="muted">⭐ +${xp} XP</p><button class="primary" onclick="startTebak()">Main Lagi</button></div>`;
-    return;
+
+Aturan:
+- Untuk "pg": opsi tepat 4, TANPA awalan huruf, "jawab" = indeks 0-3 jawaban benar
+- Untuk "uraian": ada field "kunci"
+- "bahas": penjelasan 3-5 kalimat, kenapa jawaban itu benar
+- Soal harus spesifik, tidak ambigu, dan bervariasi`;
+
+  quiz = { soal: [], idx: 0, jawab: [], skor: 0, loading: true };
+  showKuisLoading();
+
+  try {
+    const data = await callAIJSON(prompt, 'Kamu adalah pembuat soal profesional untuk pelajar Indonesia. Selalu balas dalam JSON valid.');
+    const list = (data.soal || []).filter(s => s.q && (
+      s.tipe === 'uraian' ? s.kunci : (Array.isArray(s.opsi) && s.opsi.length === 4 && typeof s.jawab === 'number')
+    )).map(s => ({
+      ...s,
+      tipe: s.tipe || 'pg',
+      opsi: s.opsi ? s.opsi.map(o => String(o).replace(/^\s*[a-dA-D][\.\)]\s+/,'')) : undefined
+    }));
+
+    if (list.length === 0) throw new Error('AI tidak menghasilkan soal valid');
+
+    quiz = { soal: list, idx: 0, jawab: [], skor: 0, loading: false };
+    renderKuis();
+  } catch(e) {
+    quiz.loading = false;
+    showKuisError(e.message);
   }
-  const s=Tb.acak[Tb.idx];
-  const pet=s.j.split('').map((c,i)=>i===0?c:'_').join(' ');
-  a.innerHTML=`<div style="display:flex;justify-content:space-between"><b>🧩 Tebak Kata</b><span class="pill">${Tb.idx+1} / ${Tb.acak.length}</span></div>
-    <p class="muted" style="margin:10px 0 0">Petunjuk:</p>
-    <p style="font-size:15px;font-weight:750;line-height:1.5">${esc(s.p)}</p>
-    <div style="font-family:monospace;font-size:22px;letter-spacing:4px;text-align:center;padding:18px 0;color:var(--p);font-weight:900">${pet}</div>
-    <input id="tebakIn" placeholder="Jawaban" style="text-align:center" onkeydown="if(event.key==='Enter')cekTebak()">
-    <button class="primary block" onclick="cekTebak()">Jawab</button>
-    <button class="ghost block" style="margin-top:8px" onclick="lewatTebak()">Lewati</button>`;
-  setTimeout(()=>{const e=$('tebakIn');if(e)e.focus()},100);
 }
-function cekTebak(){
-  const e=$('tebakIn');if(!e)return;
-  if(e.value.trim().toLowerCase()===Tb.acak[Tb.idx].j.toLowerCase()){Tb.skor++;sfx('benar');toast('✅ Benar!');Tb.idx++;setTimeout(renderTebak,350)}
-  else{sfx('salah');e.classList.add('shake');setTimeout(()=>e.classList.remove('shake'),400);toast('❌ Belum tepat')}
-}
-function lewatTebak(){Tb.idx++;renderTebak()}
 
-/* =============== PLANNER =============== */
-function addPlan(){
-  const n=$('planNama').value.trim();
-  const t=$('planTgl').value;
-  const j=$('planJam').value;
-  if(!n)return toast('Isi kegiatannya dulu');
-  S.planner.push({id:Date.now(),nama:n,tgl:t||today(),jam:j||'--:--',selesai:false});
-  S.planner.sort((a,b)=>(a.tgl+a.jam).localeCompare(b.tgl+b.jam));
-  save();$('planNama').value='';renderPlan();sfx('koin');toast('📅 Ditambahkan');
-}
-function renderPlan(){
-  const l=$('planList');if(!l)return;
-  if(!S.planner.length){l.innerHTML=`<div class="card" style="text-align:center;padding:28px"><div style="font-size:44px">📭</div><p class="muted" style="margin:8px 0 0">Belum ada jadwal.</p></div>`;return}
-  l.innerHTML=S.planner.map(p=>`<div class="card" style="margin-bottom:9px;display:flex;gap:12px;align-items:center;${p.selesai?'opacity:.55':''}">
-    <div class="mi">${p.selesai?'✅':'📌'}</div>
-    <div style="flex:1;min-width:0"><b style="font-size:13px;${p.selesai?'text-decoration:line-through':''}">${esc(p.nama)}</b><div class="muted">${p.tgl} • ${p.jam}</div></div>
-    <button class="ghost" style="padding:7px 9px" onclick="togglePlan(${p.id})">${p.selesai?'↩️':'✔️'}</button>
-    <button class="ghost" style="padding:7px 9px;color:var(--red)" onclick="hapusPlan(${p.id})">🗑️</button></div>`).join('');
-}
-function togglePlan(id){const p=S.planner.find(x=>x.id===id);if(!p)return;p.selesai=!p.selesai;if(p.selesai){addXP(10);sfx('benar');toast('✔️ Selesai! +10 XP')}save();renderPlan()}
-function hapusPlan(id){S.planner=S.planner.filter(x=>x.id!==id);save();renderPlan()}
-
-/* =============== KALKULATOR =============== */
-let calcExpr='';
-const CALC_KEYS=['C','⌫','(',')','7','8','9','÷','4','5','6','×','1','2','3','-','0','.','^','+','√('];
-function renderCalc(){
-  const g=$('calcGrid');if(!g)return;
-  g.innerHTML=CALC_KEYS.map(k=>{
-    const isOp=['÷','×','-','+','^','√('].includes(k);
-    return `<button class="${isOp?'op':''}" onclick="ckey('${k}')">${k}</button>`;
-  }).join('')+`<button class="eq" onclick="ckey('=')">=</button>`;
-  const d=$('cd');if(d)d.textContent=calcExpr||'0';
-}
-function ckey(k){
-  if(calcExpr==='Error')calcExpr='';
-  if(k==='C')calcExpr='';
-  else if(k==='⌫')calcExpr=calcExpr.slice(0,-1);
-  else if(k==='='){try{calcExpr=String(Math.round(evalCalc(calcExpr)*1e9)/1e9)}catch(e){calcExpr='Error'}}
-  else calcExpr+=k;
-  const d=$('cd');if(d)d.textContent=calcExpr||'0';
-}
-function evalCalc(s){
-  let i=0;
-  const ex=()=>{let v=tm();while(s[i]==='+'||s[i]==='-'){const o=s[i++],y=tm();v=o==='+'?v+y:v-y}return v};
-  const tm=()=>{let v=pw();while(s[i]==='×'||s[i]==='÷'){const o=s[i++],y=pw();v=o==='×'?v*y:v/y}return v};
-  const pw=()=>{const b=un();if(s[i]==='^'){i++;return Math.pow(b,pw())}return b};
-  const un=()=>{if(s[i]==='-'){i++;return -un()}if(s[i]==='√'){i++;return Math.sqrt(un())}return at()};
-  const at=()=>{if(s[i]==='('){i++;const v=ex();if(s[i]!==')')throw 0;i++;return v}const m=/^\d*\.?\d+/.exec(s.slice(i));if(!m)throw 0;i+=m[0].length;return parseFloat(m[0])};
-  const v=ex();if(i<s.length||!isFinite(v))throw 0;return v;
-}
-function openCalc(){closeModal();showPage('calc')}
-
-/* =============== RATING & KOMENTAR =============== */
-function openReview(){
-  const my=S.myRating||0;
-  const comments=S.comments||[];
-  openModal(`
-    <h2>⭐ Rating & Komentar</h2>
-    <p class="muted">Berikan bintang dan komentar untuk aplikasi ini.</p>
-    <div style="text-align:center;padding:10px 0">
-      <div class="stars" id="starWrap">
-        ${[1,2,3,4,5].map(i=>`<span class="${i<=my?'on':''}" onclick="setRating(${i})">⭐</span>`).join('')}
+function showKuisLoading() {
+  $('app').innerHTML = `
+    <div class="card">
+      <div class="bar"><i style="width:30%"></i></div>
+      <div style="text-align:center;padding:30px 10px">
+        <div style="font-size:48px;margin-bottom:10px">🤖</div>
+        <b style="font-size:15px">AI sedang membuat soal...</b>
+        <p style="color:var(--mut);font-size:12.5px;margin-top:8px">Soal dibuat khusus untuk kamu, tunggu sebentar ya</p>
       </div>
-      <p class="muted" id="ratingText">${my?my+' / 5 bintang':(S.avg?('Rata-rata: '+S.avg.toFixed(1)+' ('+S.ratingCount+' orang)'):'Belum ada rating')}</p>
-    </div>
-    <label class="lb">Komentar / saran untuk admin</label>
-    <textarea id="cmtTxt" placeholder="Contoh: Tambah fitur latihan bahasa daerah dong!"></textarea>
-    <button class="primary block" onclick="kirimKomentar()">💬 Kirim Komentar</button>
-    <div class="section" style="margin-top:16px">
-      <div class="sectitle"><h2 style="font-size:14px">💬 Komentar (${comments.length})</h2></div>
-      <div id="cmtList">${renderComments()}</div>
-    </div>
-  `);
+      <div class="sk" style="width:90%"></div>
+      <div class="sk" style="width:75%"></div>
+      <div class="sk" style="width:85%"></div>
+    </div>`;
 }
-function renderComments(){
-  const c=(S.comments||[]).slice().reverse();
-  if(!c.length)return '<p class="muted" style="text-align:center;padding:14px">Belum ada komentar. Jadi yang pertama! 🎉</p>';
-  return c.map(x=>`<div class="comment">
-    <div class="head"><b>${esc(x.nama)}</b><span class="time">${x.waktu}</span></div>
-    <p>${esc(x.isi)}</p></div>`).join('');
+
+function showKuisError(msg) {
+  $('app').innerHTML = `
+    <div class="card" style="text-align:center;padding:24px">
+      <div style="font-size:48px">😅</div>
+      <h2 style="margin:10px 0 6px">AI belum bisa membuat soal</h2>
+      <p style="color:var(--mut);font-size:13px;line-height:1.6">${esc(msg)}</p>
+      <div class="ket" style="text-align:left;margin-top:14px">
+        <b>💡 Yang bisa dicoba:</b><br>
+        1. Pastikan <code>GROQ_API_KEY</code> sudah diset di Vercel<br>
+        2. Cek <code>/api/chat</code> di browser — harus muncul <code>{"status":"ok"}</code><br>
+        3. Tunggu 1-2 menit, lalu coba lagi
+      </div>
+      <button class="go" onclick="render()">🔄 Coba Lagi</button>
+    </div>`;
 }
-function setRating(v){
-  S.myRating=v;
-  // Simulasi rating rata-rata
-  if(!S.ratingCount)S.ratingCount=0;
-  if(!S.avg)S.avg=0;
-  // Total = avg * count + v
-  const total=S.avg*S.ratingCount+v;
-  S.ratingCount++;
-  S.avg=total/S.ratingCount;
+
+function renderKuis() {
+  if (quiz.idx >= quiz.soal.length) return renderHasil();
+  const s = quiz.soal[quiz.idx];
+  const r = quiz.jawab[quiz.idx];
+  const done = !!r;
+  let body = '';
+
+  if (s.tipe === 'pg') {
+    body = s.opsi.map((o, i) => {
+      let cls = 'opt';
+      if (done) {
+        if (i === s.jawab) cls += ' ok';
+        else if (i === r.jwb) cls += ' no';
+      }
+      return `<button class="${cls}" ${done?'disabled':''} onclick="jwbPG(${i})"><b>${String.fromCharCode(65+i)}.</b> ${esc(o)}</button>`;
+    }).join('');
+    if (done) {
+      body += `<div class="bahas">${r.benar ? '✅ <b>Benar!</b>' : `❌ <b>Belum tepat.</b> Jawaban benar: <b>${String.fromCharCode(65+s.jawab)}. ${esc(s.opsi[s.jawab])}</b>`}
+
+${esc(s.bahas || '')}</div>`;
+    }
+  } else {
+    if (!done) {
+      body = `<textarea id="ansUraian" placeholder="Tulis jawabanmu..." style="width:100%"></textarea>
+        <button class="go" onclick="jwbUraian()">Periksa Jawaban</button>`;
+    } else {
+      body = `<div class="bahas"><b>Jawabanmu:</b> ${esc(r.jwb)}
+
+<b>Kunci:</b> ${esc(s.kunci)}
+
+${esc(s.bahas || '')}</div>`;
+    }
+  }
+
+  $('app').innerHTML = `
+    <div class="card">
+      <div class="bar"><i style="width:${(quiz.idx + (done?1:0)) / quiz.soal.length * 100}%"></i></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:10px">
+        <span>${esc(setup.mapel)} • Kelas ${setup.kelas}</span>
+        <span>Soal ${quiz.idx+1} / ${quiz.soal.length}</span>
+      </div>
+      <div style="font-size:17px;font-weight:800;line-height:1.4;margin:16px 0">${esc(s.q)}</div>
+      ${body}
+      ${done ? `<button class="go" onclick="lanjutSoal()">${quiz.idx+1 === quiz.soal.length ? '🏁 Lihat Nilai' : 'Soal Berikutnya →'}</button>` : ''}
+    </div>`;
+}
+
+function jwbPG(i) {
+  const s = quiz.soal[quiz.idx];
+  const benar = i === s.jawab;
+  quiz.jawab[quiz.idx] = { jwb: i, benar };
+  if (benar) { quiz.skor++; S.benar++; sfx('ok') } else sfx('no');
+  S.soal++; save();
+  renderKuis();
+}
+
+async function jwbUraian() {
+  const el = $('ansUraian');
+  const t = el?.value.trim();
+  if (!t) return toast('Tulis jawaban dulu');
+  const s = quiz.soal[quiz.idx];
+  quiz.jawab[quiz.idx] = { jwb: t, benar: true }; // default benar, nanti bisa dinilai AI
+  S.soal++; save();
+  renderKuis();
+}
+
+function lanjutSoal() {
+  quiz.idx++;
+  if (quiz.idx >= quiz.soal.length) renderHasil();
+  else renderKuis();
+}
+
+function renderHasil() {
+  const total = quiz.soal.length;
+  const nilai = Math.round((quiz.skor / total) * 100);
+  const lulus = nilai >= setup.kkm;
+  const xpDapat = quiz.skor * 15 + (lulus ? 30 : 0);
+  const riwayatBaru = { tgl: today(), mapel: setup.mapel, nilai, benar: quiz.skor, total };
+  S.riwayat.unshift(riwayatBaru);
+  S.riwayat = S.riwayat.slice(0, 30);
+  S.xp += xpDapat;
   save();
-  sfx('koin');
-  toast('⭐ Terima kasih rating '+v+' bintang!');
-  openReview();
-}
-function kirimKomentar(){
-  const t=$('cmtTxt').value.trim();
-  if(!t)return toast('Tulis komentar dulu');
-  S.comments.push({nama:S.nama,isi:t,waktu:new Date().toLocaleDateString('id-ID')});
-  save();
-  sfx('benar');
-  addXP(5);
-  toast('💬 Komentar terkirim!');
-  openReview();
-  renderHomeReview();
-}
-function renderHomeReview(){
-  const el=$('homeReviewPreview');if(!el)return;
-  const my=S.myRating||0;
-  el.innerHTML=`
-    <div class="stars" style="font-size:24px">
-      ${[1,2,3,4,5].map(i=>`<span class="${i<=my?'on':''}" onclick="setRatingHome(${i})">⭐</span>`).join('')}
+  pushLeaderboard();
+
+  const reaksi = lulus
+    ? ['🎉','🏆','🔥','⭐'].sort(()=>Math.random()-.5).slice(0,3)
+    : ['💪','🌱','🤗'].sort(()=>Math.random()-.5).slice(0,3);
+
+  $('app').innerHTML = `
+    <div class="card" style="text-align:center;${lulus?'background:linear-gradient(160deg,rgba(99,102,241,.15),rgba(236,72,153,.15))':''}">
+      <div style="font-size:60px">${nilai>=90?'🏆':lulus?'🥇':'🌱'}</div>
+      <h2 style="margin:8px 0 4px">${lulus?'Selamat, Tuntas! 🎉':'Belum tuntas, tapi kamu keren!'}</h2>
+      <div class="reaction">${reaksi.map((e,i)=>`<span style="animation-delay:${i*.2}s">${e}</span>`).join('')}</div>
+      <div class="score">${nilai}</div>
+      <p style="color:var(--mut);font-size:12.5px">Benar ${quiz.skor} dari ${total} soal</p>
+      <p style="font-size:15px;margin-top:14px">⭐ <b>+${xpDapat} XP</b></p>
     </div>
-    <p class="muted" style="text-align:center;margin:6px 0 0">
-      ${my?'Kamu kasih '+my+' bintang ⭐':'Ketuk bintang untuk rating'}
-    </p>
-    <button class="primary block" style="margin-top:12px" onclick="openReview()">💬 Beri Komentar untuk Admin</button>
+
+    <div class="card">
+      <b>🔑 Kunci Jawaban</b>
+      ${quiz.soal.map((s,i) => {
+        const r = quiz.jawab[i];
+        if (s.tipe === 'pg') {
+          return `<div style="padding:10px 0;border-bottom:1px solid var(--bd)">
+            <div style="font-size:13px">${i+1}. Jawaban: <b>${String.fromCharCode(65+s.jawab)}</b> ${r?.benar?'✅':'❌'}</div>
+            <div style="font-size:11.5px;color:var(--mut);margin-top:3px">${esc(s.q)}</div>
+          </div>`;
+        } else {
+          return `<div style="padding:10px 0;border-bottom:1px solid var(--bd)">
+            <div style="font-size:13px">${i+1}. Uraian</div>
+            <div style="font-size:11.5px;color:var(--mut);margin-top:3px">Kunci: ${esc(s.kunci)}</div>
+          </div>`;
+        }
+      }).join('')}
+    </div>
+
+    <button class="go" onclick="mulaiKuis()">🔄 Buat Soal Baru Lagi</button>
+    <button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--bd)" onclick="render()">🏠 Kembali ke Menu</button>
   `;
 }
-function setRatingHome(v){setRating(v);renderHomeReview()}
 
-/* =============== BADGE =============== */
-const BADGE_INFO={
-  streak7:{ic:'🔥',n:'Streak 7 Hari',d:'Belajar 7 hari berturut-turut'},
-  soal100:{ic:'🎯',n:'100 Soal',d:'Mengerjakan 100 soal'},
-  soal500:{ic:'🏹',n:'500 Soal',d:'Mengerjakan 500 soal'},
-  rajin:{ic:'📚',n:'Rajin Belajar',d:'60 menit fokus'},
-  akurasi90:{ic:'💎',n:'Akurasi 90%',d:'Akurasi di atas 90%'},
-  kaya:{ic:'🪙',n:'Sultan Koin',d:'500 koin terkumpul'},
-  level10:{ic:'👑',n:'Level 10',d:'Capai level 10'}
-};
-function cekBadge(){
-  const d={streak7:S.streak>=7,soal100:S.soalSelesai>=100,soal500:S.soalSelesai>=500,rajin:S.menitFokus>=60,akurasi90:S.soalSelesai>20&&(S.jawabanBenar/S.soalSelesai)>=.9,kaya:S.coins>=500,level10:lvlOf(S.xp)>=10};
-  let baru=false;
-  Object.keys(d).forEach(k=>{if(d[k]&&!S.badges.includes(k)){S.badges.push(k);baru=true}});
-  if(baru){save();setTimeout(()=>toast('🏅 Badge baru terbuka!'),700)}
-}
-
-/* =============== PROFIL =============== */
-function renderProfil(){
-  const lv=lvlOf(S.xp),inLv=xpIn(S.xp);
-  if($('profAvatar'))$('profAvatar').textContent=S.avatar;
-  if($('profNama'))$('profNama').textContent=S.nama;
-  if($('profSub'))$('profSub').textContent='Level '+lv+' • '+fmt(S.xp)+' XP';
-  if($('profStreak'))$('profStreak').textContent='🔥 Streak '+S.streak+' hari';
-  if($('profBar'))$('profBar').style.width=(inLv/160*100)+'%';
-  if($('profNext'))$('profNext').textContent='Menuju Level '+(lv+1)+' — '+inLv+'/160 XP';
-  if($('pSoal'))$('pSoal').textContent=fmt(S.soalSelesai);
-  if($('pBenar'))$('pBenar').textContent=fmt(S.jawabanBenar);
-  if($('pAkurasi'))$('pAkurasi').textContent=S.soalSelesai?Math.round(S.jawabanBenar/S.soalSelesai*100)+'%':'0%';
-  if($('pLevel'))$('pLevel').textContent=lv;
-  if($('pBadge'))$('pBadge').textContent=S.badges.length;
-  if($('pFokus'))$('pFokus').textContent=S.menitFokus;
-  if($('statAkurasi'))$('statAkurasi').textContent=S.soalSelesai?Math.round(S.jawabanBenar/S.soalSelesai*100)+'%':'0%';
-  if($('statSoal'))$('statSoal').textContent=fmt(S.soalSelesai);
-  if($('statBadge'))$('statBadge').textContent=S.badges.length;
-  const b=$('profBadges');
-  if(b){
-    const p=S.badges.slice(0,6);
-    b.innerHTML=p.length?'<div class="stats" style="grid-template-columns:repeat(3,1fr)">'+p.map(k=>{const x=BADGE_INFO[k];return x?`<div class="stat"><div style="font-size:22px">${x.ic}</div><span class="muted" style="font-size:10px">${x.n}</span></div>`:''}).join('')+'</div>':'<p class="muted" style="margin:0">Belum ada badge. Ayo belajar!</p>';
-  }
-  renderChart7();
-}
-const AVATARS=['🦊','🐼','🐯','🐰','🐨','🐸','🐺','🐱','🦁','🐵','🦉','🐧','🐢','🦄','🐲','🚀','👑','⭐','🎓','🧠'];
-function openEditProfil(){
-  openModal(`<h2>✏️ Edit Profil</h2>
-    <label class="lb">Nama</label>
-    <input id="editNama" value="${esc(S.nama)}" maxlength="24">
-    <label class="lb">Avatar</label>
-    <div class="avatars" id="avGrid">${AVATARS.map(a=>`<button class="${a===S.avatar?'sel':''}" onclick="pilihAvatar('${a}',this)">${a}</button>`).join('')}</div>
-    <button class="primary block" onclick="simpanProfil()">💾 Simpan</button>`);
-}
-let avBaru=null;
-function pilihAvatar(a,el){avBaru=a;document.querySelectorAll('#avGrid button').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');sfx('klik')}
-function simpanProfil(){
-  const n=$('editNama').value.trim();
-  if(n)S.nama=n;
-  if(avBaru)S.avatar=avBaru;
-  avBaru=null;
-  save();closeModal();renderProfil();renderGreeting();toast('✅ Tersimpan');
-}
-
-/* =============== CHART =============== */
-function renderChart7(){
-  const c=$('chart7');if(!c)return;
-  const ctx=c.getContext('2d');
-  const dpr=window.devicePixelRatio||1;
-  const w=c.clientWidth,h=170;
-  c.width=w*dpr;c.height=h*dpr;
-  ctx.setTransform(1,0,0,1,0,0);ctx.scale(dpr,dpr);
-  ctx.clearRect(0,0,w,h);
-  const data=[];const nama=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-  for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    const r=S.riwayat.find(x=>x.tgl===key);
-    data.push({label:nama[d.getDay()],val:r?r.soal:0});
-  }
-  const max=Math.max(5,...data.map(d=>d.val));
-  const padL=26,padB=24,padT=12;
-  const cW=w-padL-10,cH=h-padB-padT;
-  const bw=cW/data.length*.55;
-  const style=getComputedStyle(document.documentElement);
-  const wU=style.getPropertyValue('--p').trim()||'#6366f1';
-  const wG=style.getPropertyValue('--line').trim()||'#2b3145';
-  const wM=style.getPropertyValue('--muted').trim()||'#9aa6bf';
-  ctx.strokeStyle=wG;ctx.lineWidth=1;
-  for(let i=0;i<=4;i++){const y=padT+(cH/4)*i;ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(w-8,y);ctx.stroke()}
-  data.forEach((d,i)=>{
-    const x=padL+(cW/data.length)*i+(cW/data.length-bw)/2;
-    const bh=max?(d.val/max)*cH:0;
-    const y=padT+cH-bh;
-    const g=ctx.createLinearGradient(0,y,0,padT+cH);
-    g.addColorStop(0,wU);g.addColorStop(1,wU+'55');
-    ctx.fillStyle=bh>0?g:wG;
-    const r=Math.min(6,bw/2);
-    rr(ctx,x,bh>0?y:padT+cH-3,bw,Math.max(bh,3),r);ctx.fill();
-    ctx.fillStyle=wM;ctx.font='600 10px system-ui';ctx.textAlign='center';
-    ctx.fillText(d.label,x+bw/2,h-8);
-    if(d.val>0){ctx.fillStyle=wU;ctx.font='800 10px system-ui';ctx.fillText(d.val,x+bw/2,y-5)}
-  });
-}
-function rr(ctx,x,y,w,h,r){
-  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
-  ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
-  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
-  ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
-  ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
-}
-
-/* =============== STREAK =============== */
-function renderKalender(elId){
-  const el=$(elId);if(!el)return;
-  const now=new Date();let html='';
-  for(let i=29;i>=0;i--){
-    const d=new Date(now);d.setDate(d.getDate()-i);
-    const aktif=i<S.streak;
-    const today=i===0;
-    html+=`<div class="${aktif?'on':''} ${today?'today':''}">${d.getDate()}</div>`;
-  }
-  el.innerHTML=html;
-}
-function openStreak(){
-  openModal(`<h2>🔥 Streak Belajar</h2>
-    <div style="text-align:center;padding:12px 0"><div style="font-size:58px">🔥</div>
-    <div style="font-size:38px;font-weight:900;color:var(--p)">${S.streak} hari</div>
-    <p class="muted">Berturut-turut belajar</p></div>
-    <p class="muted">30 hari terakhir:</p>
-    <div class="cal" id="calModal"></div>
-    <div class="card" style="margin-top:14px"><b style="font-size:13px">💡 Tips jaga streak</b>
-    <p class="muted" style="margin:6px 0 0;line-height:1.6">• Belajar min 10 menit sehari<br>• Pakai Focus Timer<br>• 3 soal saja sudah cukup</p></div>
-    <button class="primary block" style="margin-top:14px" onclick="closeModal()">Mantap!</button>`);
-  setTimeout(()=>renderKalender('calModal'),60);
-}
-
-/* =============== QUEST, REWARD =============== */
-function renderHomeMissions(){
-  const el=$('homeMissions');if(!el)return;
-  const q=S.quest;
-  const p=Math.min(100,(q.soal/10)*100);
-  el.innerHTML=`
-    <div class="mission"><div class="mi">📖</div><main><b>Kerjakan 10 soal</b><div class="bar"><i style="width:${p}%"></i></div><small class="muted">${Math.min(q.soal,10)}/10 • +60 XP</small></main></div>
-    <div class="mission"><div class="mi">🤖</div><main><b>Tanya Tutor AI</b><div class="bar"><i style="width:${q.tutor?100:0}%"></i></div><small class="muted">${q.tutor?'Selesai':'Belum'} • +30 XP</small></main></div>
-    <div class="mission"><div class="mi">🔥</div><main><b>Jaga streak</b><div class="bar"><i style="width:${q.streak?100:0}%"></i></div><small class="muted">${q.streak?'Selesai':'Belum'} • +30 XP</small></main></div>`;
-}
-function openQuest(){
-  const q=S.quest;
-  const selesai=Math.min(q.soal,10)+(q.tutor?10:0)+(q.streak?10:0);
-  const p=Math.round(selesai/30*100);
-  const semua=selesai>=30;
-  openModal(`<h2>🔥 Daily Quest</h2>
-    <p class="muted">Selesaikan semua misi untuk bonus <b>+120 XP</b>.</p>
-    <div class="mission"><div class="mi">${q.tutor?'☑':'☐'}</div><main><b>Tanya Tutor AI</b><small class="muted">${q.tutor?'Selesai':'Belum'} • +30 XP</small></main></div>
-    <div class="mission"><div class="mi">${q.streak?'☑':'☐'}</div><main><b>Jaga streak</b><small class="muted">${q.streak?'Selesai':'Belum'} • +30 XP</small></main></div>
-    <div class="mission"><div class="mi">${q.soal>=10?'☑':'☐'}</div><main><b>Kerjakan 10 soal</b><small class="muted">${Math.min(q.soal,10)}/10 • +60 XP</small></main></div>
-    <div class="bar" style="margin:14px 0 6px"><i style="width:${p}%"></i></div>
-    <p class="muted" style="text-align:center">${p}% selesai</p>
-    ${semua&&!q.klaim?`<button class="primary block" onclick="klaimQuest()">🎁 Ambil Bonus +120 XP</button>`:
-      semua?`<p style="text-align:center;color:var(--green);font-weight:800">✅ Bonus sudah diambil</p>`:
-      `<button class="primary block" onclick="closeModal();openQuiz()">Lanjutkan Misi</button>`}`);
-}
-function klaimQuest(){
-  S.quest.klaim=true;addXP(120);addCoin(50);save();confetti();sfx('naik');closeModal();toast('🎉 Bonus +120 XP & +50 koin!');renderHomeMissions();
-}
-function openReward(){
-  const bisa=S.lastReward!==today();
-  openModal(`<div style="text-align:center;padding:10px">
-    <div style="font-size:60px" id="rIcon">🎁</div>
-    <h2 style="margin:8px 0">Hadiah Harian</h2>
-    ${bisa?`<p class="muted">Belum ambil hadiah hari ini.</p><button class="primary" onclick="ambilReward()">🎁 Ambil</button>`:
-      `<p class="muted">Sudah diambil. Kembali besok! ⏰</p><button class="ghost" onclick="closeModal()">Tutup</button>`}</div>`);
-}
-function ambilReward(){
-  const h=[{xp:30,coin:10,ic:'⭐'},{xp:50,coin:15,ic:'💰'},{xp:20,coin:30,ic:'🪙'},{xp:70,coin:5,ic:'💎'},{xp:40,coin:20,ic:'🎉'}][Math.floor(Math.random()*5)];
-  S.lastReward=today();addXP(h.xp);addCoin(h.coin);save();confetti();sfx('koin');
-  const i=$('rIcon');if(i){i.classList.add('spin-anim');i.textContent=h.ic}
-  setTimeout(()=>{closeModal();toast(`🎁 +${h.xp} XP & +${h.coin} koin!`)},1100);
-}
-function openBadge(){
-  openModal(`<h2>🏅 Badge</h2><p class="muted">Kumpulkan semua!</p>
-    ${Object.keys(BADGE_INFO).map(k=>{const b=BADGE_INFO[k];const p=S.badges.includes(k);
-      return `<div class="shopitem" style="${p?'':'opacity:.45'}"><div class="ic">${p?b.ic:'🔒'}</div><main><b>${b.n}</b><small>${b.d}</small></main></div>`}).join('')}
-    <p class="muted" style="text-align:center;margin-top:12px">${S.badges.length} / ${Object.keys(BADGE_INFO).length} badge</p>`);
-}
-const SHOP=[
-  {id:'av1',ic:'🐼',n:'Avatar Panda',h:80},{id:'av2',ic:'🦁',n:'Avatar Singa',h:100},
-  {id:'av3',ic:'🐉',n:'Avatar Naga',h:200},{id:'av4',ic:'🦄',n:'Avatar Unicorn',h:180},
-  {id:'av5',ic:'👑',n:'Mahkota Emas',h:300},{id:'av6',ic:'🚀',n:'Avatar Roket',h:150},
-  {id:'xp1',ic:'⚡',n:'Boost +200 XP',h:120},{id:'coin1',ic:'💰',n:'Bonus +50 koin',h:100}
-];
-function openShop(){
-  openModal(`<h2>🛍️ Toko</h2>
-    <p class="muted">Koin: <b style="color:var(--p)">🪙 ${fmt(S.coins)}</b></p>
-    ${SHOP.map(it=>{const p=S.items.includes(it.id);
-      return `<div class="shopitem"><div class="ic">${it.ic}</div><main><b>${it.n}</b><small>${p?'Sudah dimiliki':'Harga '+it.h+' koin'}</small></main>
-      <button class="${p?'ghost':'primary'}" style="padding:9px 13px" onclick="beli('${it.id}')" ${p?'disabled':''}>${p?'✔️':'Beli'}</button></div>`}).join('')}`);
-}
-function beli(id){
-  const it=SHOP.find(x=>x.id===id);if(!it)return;
-  if(S.items.includes(id))return toast('Sudah dimiliki');
-  if(S.coins<it.h)return toast('🪙 Koin belum cukup');
-  S.coins-=it.h;S.items.push(id);
-  if(id==='xp1')S.xp+=200;
-  if(id==='coin1')S.coins+=50;
-  if(id.startsWith('av'))S.avatar=it.ic;
-  save();sfx('koin');confetti();renderTopbar();renderProfil();openShop();toast('🎉 Beli '+it.n);
-}
-
-/* =============== LEADERBOARD & DUEL =============== */
-function openRank(){
-  const d=[{n:'Raka',lv:12,xp:2840,a:'🐯'},{n:'Naya',lv:11,xp:2510,a:'🐰'},
-    {n:S.nama,lv:lvlOf(S.xp),xp:S.xp,a:S.avatar,me:true},{n:'Dimas',lv:9,xp:2190,a:'🐺'},
-    {n:'Sari',lv:8,xp:1980,a:'🐨'},{n:'Bima',lv:8,xp:1750,a:'🐸'},{n:'Lala',lv:7,xp:1420,a:'🐱'}]
-    .sort((a,b)=>b.xp-a.xp);
-  const m=['🥇','🥈','🥉'];
-  openModal(`<h2>🏆 Ranking Mingguan</h2>
-    ${d.map((x,i)=>`<div class="lb-row ${x.me?'me':''}"><div class="lb-rank">${i<3?m[i]:(i+1)}</div>
-      <div class="lb-av">${x.a}</div>
-      <main style="flex:1"><b style="font-size:13px">${esc(x.n)}${x.me?' (Kamu)':''}</b><div class="muted">Level ${x.lv}</div></main>
-      <b style="color:var(--p);font-size:13px">${fmt(x.xp)} XP</b></div>`).join('')}
-    <button class="primary block" style="margin-top:14px" onclick="closeModal();openDuel()">⚔️ Tantang Teman</button>`);
-}
-function openDuel(){
-  const k='RB-'+Math.floor(1000+Math.random()*9000);
-  openModal(`<h2>⚔️ Duel Teman</h2>
-    <p class="muted">Bagikan kode ke temanmu.</p>
-    <div style="font-size:28px;text-align:center;font-weight:900;letter-spacing:5px;background:var(--psoft);color:var(--p);padding:22px;border-radius:16px;margin:14px 0">${k}</div>
-    <div class="btnrow"><button class="primary" style="flex:1" onclick="salinKode('${k}')">📋 Salin</button>
-    <button class="ghost" style="flex:1" onclick="closeModal();openQuiz('matematika')">🎯 Mulai</button></div>`);
-}
-function salinKode(k){navigator.clipboard?.writeText(k).then(()=>toast('📋 Disalin: '+k),()=>toast('Kode: '+k))}
-
-/* =============== PENGATURAN =============== */
-const TEMAS={
-  ungu:{p:'#6366f1',p2:'#8b5cf6',pdeep:'#4f46e5',psoft:'#1e1b4b'},
-  biru:{p:'#2563eb',p2:'#3b82f6',pdeep:'#1d4ed8',psoft:'#172554'},
-  hijau:{p:'#16a34a',p2:'#22c55e',pdeep:'#15803d',psoft:'#052e16'},
-  oranye:{p:'#f97316',p2:'#fb923c',pdeep:'#ea580c',psoft:'#431407'},
-  merah:{p:'#dc2626',p2:'#f43f5e',pdeep:'#b91c1c',psoft:'#450a0a'},
-  tosca:{p:'#0891b2',p2:'#06b6d4',pdeep:'#0e7490',psoft:'#083344'},
-  pink:{p:'#db2777',p2:'#ec4899',pdeep:'#be185d',psoft:'#500724'}
-};
-function applyTheme(){
-  const t=TEMAS[S.tema]||TEMAS.ungu;
-  const r=document.documentElement;
-  r.style.setProperty('--p',t.p);r.style.setProperty('--p2',t.p2);
-  r.style.setProperty('--pdeep',t.pdeep);r.style.setProperty('--psoft',t.psoft);
-  r.setAttribute('data-theme',S.dark?'dark':'light');
-  const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t.p);
-}
-function setTema(n,el){S.tema=n;save();applyTheme();document.querySelectorAll('#temaGrid button').forEach(b=>b.classList.remove('sel'));if(el)el.classList.add('sel');renderChart7()}
-function toggleDark(){S.dark=!S.dark;save();applyTheme();const b=$('btnDark');if(b)b.textContent=S.dark?'☀️ Mode Terang':'🌙 Mode Gelap';renderChart7();toast(S.dark?'🌙 Mode gelap':'☀️ Mode terang')}
-function toggleSuara(){S.suara=!S.suara;save();const b=$('btnSuara');if(b)b.textContent=S.suara?'🔊 Suara: Aktif':'🔇 Suara: Mati';toast(S.suara?'🔊 Suara aktif':'🔇 Suara mati')}
-function toggleTTS(){S.tts=!S.tts;save();const b=$('btnTTS');if(b)b.textContent=S.tts?'🔊 Baca Soal: Aktif':'🔇 Baca Soal: Mati';toast(S.tts?'🔊 TTS aktif':'🔇 TTS mati')}
-function openSettings(){
-  openModal(`<h2>⚙️ Pengaturan</h2>
-    <label class="lb">🎨 Warna Tema</label>
-    <div class="themes" id="temaGrid">${Object.keys(TEMAS).map(k=>`<button style="background:linear-gradient(135deg,${TEMAS[k].p},${TEMAS[k].p2})" class="${k===S.tema?'sel':''}" onclick="setTema('${k}',this)"></button>`).join('')}</div>
-    <label class="lb">🖥️ Tampilan</label>
-    <button class="option" id="btnDark" onclick="toggleDark()">${S.dark?'☀️ Mode Terang':'🌙 Mode Gelap'}</button>
-    <button class="option" id="btnSuara" onclick="toggleSuara()">${S.suara?'🔊 Suara: Aktif':'🔇 Suara: Mati'}</button>
-    <button class="option" id="btnTTS" onclick="toggleTTS()">${S.tts?'🔊 Baca Soal: Aktif':'🔇 Baca Soal: Mati'}</button>
-    <button class="option" onclick="toggleMusic()">${S.musik?'🔇 Matikan Musik':'🎵 Nyalakan Musik Fokus'}</button>
-    <label class="lb">🤖 AI</label>
-    <button class="option" onclick="openAISetup()">🔌 Setup AI (API endpoint)</button>
-    <label class="lb">📦 Data</label>
-    <button class="option" onclick="exportData()">📤 Ekspor Data</button>
-    <button class="option" onclick="openGuide()">❔ Panduan</button>
-    <button class="option" onclick="openAbout()">ℹ️ Tentang (by Pandana)</button>
-    <button class="option" onclick="resetData()" style="color:var(--red)">🗑️ Reset Semua Data</button>`);
-}
-function openAISetup(){
-  closeModal();
-  openModal(`<h2>🔌 Setup AI</h2>
-    <p class="muted" style="line-height:1.6">Agar Tutor AI benar-benar pintar (bukan cuma jawaban bawaan), kamu perlu menyambungkannya ke API. Ada 3 cara:</p>
-
-    <div class="card" style="margin-top:10px">
-      <b style="font-size:13px">1️⃣ Pakai Vercel Serverless (paling mudah)</b>
-      <p class="muted" style="line-height:1.6;margin:6px 0 0">Kalau kamu deploy ke Vercel, buat file <code>api/chat.js</code> berisi kode yang memanggil OpenAI/Gemini. Endpoint default <code>/api/chat</code> sudah siap dipakai.</p>
+/* ========== TUTOR ========== */
+function pTutor() {
+  const badge = aiStatus === 'ok' ? '<span class="ai-badge ai-ok">AI ONLINE</span>'
+    : aiStatus === 'error' ? '<span class="ai-badge ai-err">AI OFFLINE</span>'
+    : '<span class="ai-badge ai-wait">AI CHECKING</span>';
+  return `
+  <div class="card">
+    <b style="font-size:15px">🤖 Tutor AI</b> ${badge}
+    <p style="color:var(--mut);font-size:12.5px;margin:6px 0 12px">Tanya materi apa saja. AI akan menjelaskan.</p>
+    <div class="chat" id="chatBox"></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <input id="chatIn" placeholder="Tanya apa saja..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1">
+      <button class="go" style="width:auto;margin:0;padding:11px 16px" onclick="sendChat()">Kirim</button>
     </div>
-
-    <div class="card" style="margin-top:8px">
-      <b style="font-size:13px">2️⃣ Pakai API Key langsung</b>
-      <p class="muted" style="line-height:1.6;margin:6px 0 0">Kalau punya API key OpenAI/Gemini, isi di bawah. Tapi ini kurang aman untuk web publik (key bisa terlihat).</p>
+    <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+      <button class="ket" style="padding:6px 10px;cursor:pointer;font-size:11.5px" onclick="quickAsk('Jelaskan SPLDV')">SPLDV</button>
+      <button class="ket" style="padding:6px 10px;cursor:pointer;font-size:11.5px" onclick="quickAsk('Apa itu fotosintesis?')">Fotosintesis</button>
+      <button class="ket" style="padding:6px 10px;cursor:pointer;font-size:11.5px" onclick="quickAsk('Cara menghitung pecahan')">Pecahan</button>
+      <button class="ket" style="padding:6px 10px;cursor:pointer;font-size:11.5px" onclick="quickAsk('Ringkasan proklamasi')">Proklamasi</button>
+      <button class="ket" style="padding:6px 10px;cursor:pointer;font-size:11.5px" onclick="clearChat()">🗑️ Bersihkan</button>
     </div>
-
-    <div class="card" style="margin-top:8px">
-      <b style="font-size:13px">3️⃣ Tanpa AI (fallback)</b>
-      <p class="muted" style="line-height:1.6;margin:6px 0 0">Kosongkan endpoint. Tutor AI akan pakai basis pengetahuan bawaan (SPLDV, Pythagoras, Fotosintesis, dll). Tetap jalan, tapi jawaban terbatas.</p>
-    </div>
-
-    <label class="lb">Endpoint AI</label>
-    <input id="aiEp" value="${esc(S.aiEndpoint)}" placeholder="/api/chat atau URL lain">
-    <label class="lb">API Key (opsional)</label>
-    <input id="aiK" value="${esc(S.aiKey)}" placeholder="sk-... atau kosongkan">
-    <button class="primary block" onclick="simpanAI()">💾 Simpan</button>
-    <button class="ghost block" style="margin-top:8px" onclick="testAI()">🧪 Tes AI</button>
-    <p id="aiTest" class="muted" style="text-align:center;margin-top:10px"></p>`);
-}
-function simpanAI(){
-  S.aiEndpoint=$('aiEp').value.trim();
-  S.aiKey=$('aiK').value.trim();
-  save();
-  closeModal();
-  toast('✅ Pengaturan AI disimpan');
-}
-async function testAI(){
-  const ep=$('aiEp').value.trim();
-  const k=$('aiK').value.trim();
-  const t=$('aiTest');
-  if(!ep){t.textContent='⚠️ Endpoint kosong, AI akan pakai fallback lokal.';t.style.color='var(--yellow)';return}
-  t.textContent='⏳ Menguji...';
-  try{
-    const r=await fetch(ep,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({apiKey:k,messages:[{role:'user',content:'Halo'}]})});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const d=await r.json();
-    t.textContent='✅ AI merespons dengan baik!';
-    t.style.color='var(--green)';
-  }catch(e){
-    t.textContent='❌ Gagal: '+e.message+'. Cek endpoint & CORS.';
-    t.style.color='var(--red)';
-  }
-}
-function exportData(){
-  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
-  const u=URL.createObjectURL(b);
-  const a=document.createElement('a');a.href=u;a.download='rajin-belajar.json';a.click();
-  URL.revokeObjectURL(u);toast('📤 Data diekspor');
-}
-function resetData(){
-  openModal(`<h2 style="color:var(--red)">🗑️ Reset Data</h2>
-    <p class="muted">Semua progres akan dihapus permanen.</p>
-    <div class="btnrow" style="margin-top:14px">
-      <button class="ghost" style="flex:1" onclick="closeModal()">Batal</button>
-      <button class="danger" style="flex:1" onclick="konfirmasiReset()">Ya, Reset</button></div>`);
-}
-function konfirmasiReset(){
-  localStorage.removeItem('rbjp_v3');
-  S={...DEF};
-  save();applyTheme();closeModal();
-  renderTopbar();renderGreeting();renderHomeMissions();renderKalender('calMini');renderProfil();renderHomeReview();
-  showPage('home');toast('✅ Data direset');
+  </div>`;
 }
 
-/* =============== PANDUAN, TENTANG, NOTIF =============== */
-function openGuide(){
-  openModal(`<h2>❔ Panduan</h2>
-    <div class="card" style="margin-bottom:10px"><b>1️⃣ Beranda</b><p class="muted" style="margin:6px 0 0;line-height:1.6">Pilih aktivitas: Latihan, Tutor AI, Fokus, atau Misi.</p></div>
-    <div class="card" style="margin-bottom:10px"><b>2️⃣ Latihan Soal</b><p class="muted" style="margin:6px 0 0;line-height:1.6">Pilih mapel, jawab soal. Ada tombol 🔊 untuk baca soal, 🧮 untuk kalkulator.</p></div>
-    <div class="card" style="margin-bottom:10px"><b>3️⃣ Tutor AI</b><p class="muted" style="margin:6px 0 0;line-height:1.6">Tanya materi apa saja. Tanpa setup, pakai jawaban bawaan. Dengan API, jawaban lebih pintar.</p></div>
-    <div class="card" style="margin-bottom:10px"><b>4️⃣ TTS / Baca Soal</b><p class="muted" style="margin:6px 0 0;line-height:1.6">Aktifkan di ⚙️ Pengaturan. Soal & pembahasan akan dibacakan.</p></div>
-    <div class="card" style="margin-bottom:10px"><b>5️⃣ Kalkulator & Sketsa</b><p class="muted" style="margin:6px 0 0;line-height:1.6">Kalkulator ada di halaman sendiri + tombol cepat di kuis.</p></div>
-    <div class="card"><b>6️⃣ Rating & Komentar</b><p class="muted" style="margin:6px 0 0;line-height:1.6">Kasih bintang + komentar untuk admin di halaman Profil atau Beranda.</p></div>
-    <button class="primary block" style="margin-top:14px" onclick="closeModal()">Mengerti!</button>`);
-}
-function openAbout(){
-  openModal(`<div style="text-align:center;padding:8px">
-    <div style="width:78px;height:78px;border-radius:24px;background:linear-gradient(135deg,var(--p),var(--p2));display:grid;place-items:center;font-size:38px;margin:0 auto 12px">📚</div>
-    <h2 style="margin:0">Rajin Belajar Jadi Pintar</h2>
-    <p class="muted" style="margin:6px 0 0">Versi 3.0 • Aplikasi belajar interaktif</p>
-    <p style="margin:14px 0 6px;font-size:14px"><b>by Pandana</b> ❤️</p></div>
-    <div class="card"><p class="muted" style="margin:0;line-height:1.65">
-      Aplikasi ini dibuat untuk membantu pelajar Indonesia belajar dengan cara menyenangkan:
-      kuis, tutor AI, kalkulator, TTS baca soal, focus timer, mini game, dan sistem XP + badge.
-    </p></div>
-    <div class="stats" style="margin-top:12px">
-      <div class="stat"><b>25+</b><span class="muted">Fitur</span></div>
-      <div class="stat"><b>5</b><span class="muted">Mapel</span></div>
-      <div class="stat"><b>40+</b><span class="muted">Soal</span></div>
-    </div>
-    <p class="muted" style="text-align:center;margin-top:14px;font-size:11px">
-      Data tersimpan di perangkatmu (localStorage).<br>Tidak ada data yang dikirim ke server.
-    </p>
-    <button class="primary block" style="margin-top:12px" onclick="closeModal()">Tutup</button>`);
-}
-function openNotif(){
-  const n=[
-    {ic:'🔥',t:'Streak kamu '+S.streak+' hari!',d:'Belajar 10 menit hari ini.'},
-    {ic:'🎁',t:'Hadiah harian',d:S.lastReward===today()?'Sudah diambil.':'Ambil sekarang!'},
-    {ic:'🏆',t:'Ranking mingguan',d:'Cek posisimu di Leaderboard.'},
-    {ic:'⭐',t:'Kasih rating',d:'Beri bintang untuk aplikasi ini.'}
-  ];
-  openModal(`<h2>🔔 Notifikasi</h2>${n.map(x=>`<div class="shopitem"><div class="ic">${x.ic}</div><main><b>${x.t}</b><small>${x.d}</small></main></div>`).join('')}
-    <button class="primary block" style="margin-top:12px" onclick="closeModal()">Tutup</button>`);
-}
-
-/* =============== DAFTAR FITUR =============== */
-const FITUR_LIST=[
-  {i:'🎯',n:'Latihan Soal',d:'Kuis semua mapel + pembahasan.',f:"openQuiz()"},
-  {i:'🤖',n:'Tutor AI',d:'Chat tanya materi.',f:"openTutor()"},
-  {i:'🔊',n:'Baca Soal (TTS)',d:'Dibacakan otomatis.',f:"openSettings()"},
-  {i:'🧮',n:'Kalkulator',d:'Hitung cepat + √ + pangkat.',f:"openCalc()"},
-  {i:'🧠',n:'Flashcard',d:'Hafal materi lebih cepat.',f:"openFlash()"},
-  {i:'⏱️',n:'Focus Timer',d:'Belajar tanpa distraksi.',f:"openFocus()"},
-  {i:'🎵',n:'Musik Fokus',d:'Nada menenangkan.',f:"toggleMusic()"},
-  {i:'🎮',n:'Mini Game',d:'Memory, hitung, tebak.',f:"showPage('game')"},
-  {i:'📅',n:'Jadwal Belajar',d:'Atur rencana harian.',f:"showPage('planner')"},
-  {i:'🏆',n:'Leaderboard',d:'Ranking mingguan.',f:"openRank()"},
-  {i:'⚔️',n:'Duel Teman',d:'Kompetisi pakai kode.',f:"openDuel()"},
-  {i:'🔥',n:'Streak',d:'Kalender 30 hari.',f:"openStreak()"},
-  {i:'🎁',n:'Reward Harian',d:'Hadiah kejutan.',f:"openReward()"},
-  {i:'🏅',n:'Badge',d:'Lencana pencapaian.',f:"openBadge()"},
-  {i:'🛍️',n:'Toko Hadiah',d:'Tukar koin.',f:"openShop()"},
-  {i:'⭐',n:'Rating',d:'Beri bintang aplikasi.',f:"openReview()"},
-  {i:'💬',n:'Komentar',d:'Saran untuk admin.',f:"openReview()"},
-  {i:'🎨',n:'Ganti Tema',d:'7 warna + mode gelap.',f:"openSettings()"},
-  {i:'🔌',n:'Setup AI',d:'Sambungkan API.',f:"openAISetup()"},
-  {i:'📤',n:'Ekspor Data',d:'Backup progres.',f:"exportData()"},
-  {i:'❔',n:'Panduan',d:'Cara pakai.',f:"openGuide()"},
-  {i:'ℹ️',n:'Tentang',d:'Info app (by Pandana).',f:"openAbout()"}
-];
-function renderFiturGrid(filter=''){
-  const el=$('fiturGrid');if(!el)return;
-  const q=filter.toLowerCase();
-  const list=FITUR_LIST.filter(f=>!q||f.n.toLowerCase().includes(q)||f.d.toLowerCase().includes(q));
-  if(!list.length){el.innerHTML='<p class="muted" style="grid-column:1/-1;text-align:center;padding:24px">Tidak ditemukan 🔍</p>';return}
-  el.innerHTML=list.map(f=>`<div class="feature"><div class="fi">${f.i}</div><h3>${f.n}</h3><p>${f.d}</p><button class="secondary" onclick="${f.f}">Buka</button></div>`).join('');
-}
-function filterFitur(v){renderFiturGrid(v)}
-
-/* =============== GREETING =============== */
-const QUOTES=['Belajar hari ini, berbuah esok hari. 🌱','Sedikit demi sedikit, lama-lama menjadi bukit. ⛰️','Orang yang berhenti belajar akan tertinggal. 🚀','Kesalahan adalah bagian dari proses belajar. 💪','Fokus pada kemajuan, bukan kesempurnaan. ✨','Ilmu adalah cahaya yang tak pernah padam. 💡','Konsistensi mengalahkan bakat. 🔥','Setiap soal yang kamu kerjakan membuatmu lebih pintar. 🧠'];
-let quoteIdx=0;
-function renderGreeting(){
-  const jam=new Date().getHours();
-  let s='Selamat pagi';
-  if(jam>=11&&jam<15)s='Selamat siang';
-  else if(jam>=15&&jam<18)s='Selamat sore';
-  else if(jam>=18||jam<4)s='Selamat malam';
-  if($('greetTime'))$('greetTime').textContent=s+', '+S.nama+'!';
-  if($('greetName'))$('greetName').textContent=jam<11?'Yuk, mulai harimu 👋':jam<18?'Semangat belajar! 💪':'Waktunya belajar malam 📚';
-  if($('quoteText'))$('quoteText').textContent=QUOTES[quoteIdx%QUOTES.length];
-}
-function nextQuote(){quoteIdx++;renderGreeting();bacaQuote()}
-function bacaQuote(){if(S.tts)speakText($('quoteText').textContent)}
-
-function quickStudy(){
-  openModal(`<h2>⚡ Mulai Belajar</h2><p class="muted">Pilih sesi:</p>
-    <button class="option" onclick="closeModal();openQuiz('matematika')">🎯 Latihan soal Matematika</button>
-    <button class="option" onclick="closeModal();openQuiz('ipa')">🔬 Latihan soal IPA</button>
-    <button class="option" onclick="closeModal();openTutor()">🤖 Tanya Tutor AI</button>
-    <button class="option" onclick="closeModal();openFlash()">🧠 Flashcard</button>
-    <button class="option" onclick="closeModal();openFocus()">⏱️ Focus Timer</button>
-    <button class="option" onclick="closeModal();showPage('game')">🎮 Mini Game</button>`);
-}
-
-/* =============== ONBOARDING =============== */
-function openOnboarding(){
-  const l=[
-    {ic:'📚',t:'Selamat Datang!',d:'Rajin Belajar Jadi Pintar teman belajarmu. Kumpulkan XP, naik level, raih badge. Dibuat oleh Pandana ❤️'},
-    {ic:'🎯',t:'Latihan Soal',d:'Pilih mapel, jawab, dapat pembahasan. Ada tombol 🔊 untuk baca soal.'},
-    {ic:'🤖',t:'Tutor AI',d:'Tanya materi apa saja. Tanpa setup, pakai jawaban bawaan. Dengan API, lebih pintar.'},
-    {ic:'⭐',t:'Rating & Komentar',d:'Kasih bintang dan saran untuk admin di halaman Profil.'},
-    {ic:'🎨',t:'Atur Sesukamu',d:'Ganti tema, mode gelap, TTS, dan musik fokus dari ⚙️ Pengaturan.'}
-  ];
-  let i=0;
-  function r(){
-    const x=l[i];
-    openModal(`<div style="text-align:center;padding:12px 6px">
-      <div style="font-size:64px;margin-bottom:8px;animation:float 2.6s ease-in-out infinite">${x.ic}</div>
-      <h2 style="margin:6px 0">${x.t}</h2>
-      <p class="muted" style="line-height:1.65">${x.d}</p>
-      <div class="dots">${l.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
-      <div class="btnrow" style="justify-content:center">
-        ${i>0?`<button class="ghost" onclick="obPrev()">← Kembali</button>`:''}
-        <button class="primary" onclick="obNext()">${i===l.length-1?'Mulai 🚀':'Lanjut →'}</button>
-      </div></div>`);
-  }
-  window.obNext=()=>{if(i<l.length-1){i++;r()}else{closeModal();S.onboarded=true;save()}};
-  window.obPrev=()=>{if(i>0){i--;r()}};
-  r();
-}
-
-/* =============== INIT =============== */
-function initApp(){
-  applyTheme();
-  setTimeout(()=>{$('splash').classList.add('hide')},1600);
-  if($('planTgl'))$('planTgl').value=today();
-  renderTopbar();renderGreeting();renderFiturGrid();renderHomeMissions();renderKalender('calMini');renderProfil();renderPlan();renderHomeReview();
-  // Streak harian
-  const t=today();
-  if(S.lastActive!==t){
-    const km=new Date();km.setDate(km.getDate()-1);
-    const kk=km.getFullYear()+'-'+String(km.getMonth()+1).padStart(2,'0')+'-'+String(km.getDate()).padStart(2,'0');
-    if(S.lastActive===kk)S.streak++;
-    else if(S.lastActive&&S.lastActive!==t)S.streak=1;
-    S.lastActive=t;
-    S.quest={soal:0,tutor:false,streak:true,klaim:false};
-    S.streak=Math.max(1,S.streak);
+function renderChat() {
+  const b = $('chatBox');
+  if (!b) return;
+  if (!S.chatHistory.length) {
+    S.chatHistory.push({ r: 'bot', t: `Halo ${S.nama}! 👋\n\nAku Tutor AI. Tanya apa saja tentang pelajaran, nanti aku jelaskan.` });
     save();
   }
-  cekBadge();
-  if(!S.onboarded)setTimeout(()=>openOnboarding(),2000);
-  let rT;window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(renderChart7,220)});
-  const obs=new MutationObserver(()=>{if($('page-profil')?.classList.contains('active'))renderChart7()});
-  const p=$('page-profil');if(p)obs.observe(p,{attributes:true,attributeFilter:['class']});
-  setInterval(renderGreeting,60000);
-  setTimeout(()=>toast('👋 Selamat datang, '+S.nama+'!'),2200);
+  b.innerHTML = S.chatHistory.map(m => `<div class="bub ${m.r}">${esc(m.t)}</div>`).join('');
+  b.scrollTop = b.scrollHeight;
 }
-document.addEventListener('DOMContentLoaded',initApp);
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+function quickAsk(t) {
+  const i = $('chatIn');
+  if (i) i.value = t;
+  sendChat();
+}
+
+async function sendChat() {
+  const i = $('chatIn');
+  const v = i?.value.trim();
+  if (!v) return;
+  i.value = '';
+  S.chatHistory.push({ r: 'user', t: v });
+  save();
+  renderChat();
+  sfx('klik');
+
+  const b = $('chatBox');
+  const typ = document.createElement('div');
+  typ.className = 'typ';
+  typ.innerHTML = '<i></i><i></i><i></i>';
+  b.appendChild(typ);
+  b.scrollTop = b.scrollHeight;
+
+  try {
+    const msgs = [
+      { role: 'system', content: 'Kamu Tutor AI ramah untuk pelajar Indonesia. Jawab singkat, bahasa sederhana, tanpa markdown. Kalau soal hitungan, tunjukkan langkahnya.' },
+      ...S.chatHistory.slice(-8).filter(m => m.r !== 'bot' || S.chatHistory.length <= 3).map(m => ({ role: m.r === 'bot' ? 'assistant' : 'user', content: m.t }))
+    ];
+    const text = await callAI(msgs);
+    typ.remove();
+    S.chatHistory.push({ r: 'bot', t: text });
+    save();
+    renderChat();
+    S.xp += 2;
+    save();
+  } catch(e) {
+    typ.remove();
+    S.chatHistory.push({ r: 'bot', t: `Maaf, AI sedang tidak bisa dihubungi.\n\nError: ${e.message}\n\nCoba cek /api/chat di browser, atau pastikan GROQ_API_KEY sudah diset di Vercel.` });
+    save();
+    renderChat();
+  }
+}
+
+function clearChat() {
+  S.chatHistory = [];
+  save();
+  renderChat();
+  toast('Chat dibersihkan');
+}
+
+/* ========== FLASHCARD (AI) ========== */
+let flash = { deck: [], idx: 0, loading: false };
+
+function pFlash() {
+  return `
+  <div class="card">
+    <b style="font-size:15px">🧠 Flashcard</b>
+    <p style="color:var(--mut);font-size:12.5px;margin:6px 0 12px">Kartu dibuat AI, klik untuk lihat jawaban.</p>
+    <label style="margin-top:0">Pilih topik</label>
+    <div class="grid">
+      ${['Matematika','IPA','Bahasa Indonesia','Sejarah','Bahasa Inggris','Umum'].map(t=>`
+        <button onclick="loadFlash('${t}')">${t}</button>
+      `).join('')}
+    </div>
+    <div id="flashArea" style="margin-top:14px">
+      <div class="ket" style="text-align:center;padding:20px">Pilih topik di atas untuk memuat kartu dari AI</div>
+    </div>
+  </div>`;
+}
+
+async function loadFlash(topik) {
+  $('flashArea').innerHTML = `
+    <div class="card" style="text-align:center;padding:24px">
+      <div style="font-size:44px">🤖</div>
+      <p style="color:var(--mut);font-size:13px;margin-top:8px">AI sedang membuat kartu tentang ${topik}...</p>
+    </div>`;
+  try {
+    const data = await callAIJSON(`Buatkan 8 kartu flashcard (tanya-jawab) tentang topik "${topik}" untuk pelajar SMP/SMA Indonesia. Bahasa Indonesia.
+
+Balas HANYA JSON:
+{"kartu":[{"q":"pertanyaan","a":"jawaban singkat 1-3 kalimat"}]}`,
+      'Kamu pembuat flashcard belajar. Selalu balas JSON valid.');
+    const kartu = (data.kartu || []).filter(k => k.q && k.a);
+    if (!kartu.length) throw new Error('Tidak ada kartu');
+    flash = { deck: kartu, idx: 0, loading: false };
+    renderFlash();
+  } catch(e) {
+    $('flashArea').innerHTML = `<div class="card" style="text-align:center;padding:24px">
+      <div style="font-size:44px">😅</div>
+      <p style="color:var(--mut);font-size:13px;margin-top:8px">Gagal memuat: ${esc(e.message)}</p>
+    </div>`;
+  }
+}
+
+function renderFlash() {
+  const k = flash.deck[flash.idx];
+  $('flashArea').innerHTML = `
+    <div class="card" style="min-height:200px;text-align:center;padding:30px 20px;position:relative">
+      <div style="font-size:11px;color:var(--mut);position:absolute;top:12px;left:16px">${flash.idx+1} / ${flash.deck.length}</div>
+      <div id="flashContent" style="display:flex;flex-direction:column;justify-content:center;min-height:160px">
+        <div style="font-size:17px;font-weight:800;line-height:1.4">${esc(k.q)}</div>
+        <button class="go" style="margin-top:20px" onclick="flipFlash()">👁️ Lihat Jawaban</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--bd)" onclick="flashPrev()">← Sebelumnya</button>
+      <button class="go" onclick="flashNext()">Berikutnya →</button>
+    </div>`;
+}
+
+function flipFlash() {
+  const k = flash.deck[flash.idx];
+  $('flashContent').innerHTML = `
+    <div style="font-size:17px;font-weight:800;line-height:1.4;color:var(--pr)">${esc(k.a)}</div>
+    <div style="font-size:12px;color:var(--mut);margin-top:12px;line-height:1.5">${esc(k.q)}</div>`;
+  S.xp += 1;
+  save();
+}
+
+function flashNext() {
+  flash.idx = (flash.idx + 1) % flash.deck.length;
+  renderFlash();
+}
+function flashPrev() {
+  flash.idx = (flash.idx - 1 + flash.deck.length) % flash.deck.length;
+  renderFlash();
+}
+
+/* ========== NILAI ========== */
+function pNilai() {
+  const akurasi = S.soal ? Math.round(S.benar / S.soal * 100) : 0;
+  const lvl = lvlOf(S.xp);
+  const xpNow = xpIn(S.xp);
+  return `
+  <div class="card" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:0">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:64px;height:64px;border-radius:20px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:34px">🦊</div>
+      <div style="flex:1;min-width:0">
+        <h2 style="margin:0;font-size:18px">${esc(S.nama)}</h2>
+        <p style="margin:4px 0 0;font-size:12px;opacity:.9">Level ${lvl} • ${S.xp} XP</p>
+      </div>
+    </div>
+    <div class="bar" style="background:rgba(255,255,255,.25);margin-top:14px"><i style="background:#fff;width:${xpNow}%"></i></div>
+    <p style="margin:6px 0 0;font-size:11px;opacity:.9">Menuju Level ${lvl+1} — ${xpNow}/100 XP</p>
+  </div>
+
+  <div class="st">
+    <div><span class="e">📝</span>${S.soal} soal</div>
+    <div><span class="e">✅</span>${S.benar} benar</div>
+    <div><span class="e">📈</span>${akurasi}%</div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <b>📊 Riwayat Kuis</b>
+    ${S.riwayat.length === 0
+      ? '<p style="color:var(--mut);font-size:12.5px;margin-top:8px">Belum ada riwayat. Ayo mulai kuis!</p>'
+      : S.riwayat.slice(0,10).map(r=>`
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd);font-size:13px">
+          <div>${esc(r.mapel)} <span style="color:var(--mut);font-size:11.5px">${r.tgl}</span></div>
+          <b style="color:${r.nilai >= setup.kkm ? 'var(--ok)' : 'var(--mut)'}">${r.nilai}</b>
+        </div>`).join('')}
+  </div>
+
+  <div class="card">
+    <label style="margin-top:0">✏️ Ganti Nama</label>
+    <input id="inNama" value="${esc(S.nama)}" placeholder="Nama kamu">
+    <button class="go" onclick="ubahNama()">💾 Simpan Nama</button>
+  </div>
+
+  <div class="card">
+    <b>⭐ Rating Aplikasi</b>
+    <div class="stars">
+      ${[1,2,3,4,5].map(i=>`<span class="${i<=S.myRating?'on':''}" onclick="setRating(${i})">⭐</span>`).join('')}
+    </div>
+    <button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--bd)" onclick="openKomentar()">💬 Beri Komentar untuk Admin</button>
+  </div>`;
+}
+
+function ubahNama() {
+  const n = $('inNama').value.trim();
+  if (!n) return toast('Nama tidak boleh kosong');
+  S.nama = n;
+  save();
+  pushLeaderboard();
+  render();
+  toast('✅ Nama tersimpan');
+}
+
+function setRating(v) {
+  S.myRating = v;
+  save();
+  render();
+  toast('⭐ Terima kasih rating ' + v + ' bintang!');
+}
+
+function openKomentar() {
+  openModal(`
+    <h2>💬 Komentar untuk Admin</h2>
+    <p style="color:var(--mut);font-size:12.5px;margin-bottom:10px">Saran, kritik, atau ide fitur baru.</p>
+    <textarea id="komentarTxt" placeholder="Contoh: Tambah fitur latihan bahasa daerah"></textarea>
+    <button class="go" onclick="kirimKomentar()">Kirim</button>
+    <div style="margin-top:14px">
+      <b style="font-size:13px">Komentar sebelumnya:</b>
+      ${(S.comments||[]).length === 0
+        ? '<p style="color:var(--mut);font-size:12px">Belum ada komentar.</p>'
+        : S.comments.map(c=>`<div style="padding:8px 0;border-bottom:1px solid var(--bd);font-size:12.5px">
+            <b>${esc(c.nama)}</b> <span style="color:var(--mut);font-size:11px">${c.tgl}</span>
+            <p style="margin:3px 0 0">${esc(c.isi)}</p>
+          </div>`).join('')}
+    </div>`);
+}
+
+function kirimKomentar() {
+  const t = $('komentarTxt')?.value.trim();
+  if (!t) return toast('Tulis dulu komentarnya');
+  if (!S.comments) S.comments = [];
+  S.comments.push({ nama: S.nama, isi: t, tgl: today() });
+  save();
+  closeModal();
+  toast('💬 Terkirim, terima kasih!');
+  S.xp += 3;
+  save();
+}
+
+/* ========== PERINGKAT (Leaderboard) ========== */
+async function loadLeaderboard() {
+  const el = $('lbContent');
+  if (!el) return;
+  el.innerHTML = '<div class="sk" style="height:44px"></div><div class="sk" style="height:44px"></div><div class="sk" style="height:44px"></div>';
+
+  // Kalau tidak ada Firebase, tampilkan leaderboard lokal
+  if (!db) {
+    el.innerHTML = `
+      <div class="ket">
+        🔌 <b>Mode Lokal</b><br>
+        Leaderboard lintas user belum aktif karena Firebase belum dikonfigurasi. Kamu tetap bisa lihat XP kamu sendiri.
+      </div>
+      ${renderLocalLeaderboard()}
+    `;
+    return;
+  }
+
+  try {
+    const snap = await db.collection('leaderboard').orderBy('xp','desc').limit(20).get();
+    const rows = snap.docs.map(d => d.data());
+    el.innerHTML = renderLB(rows);
+  } catch(e) {
+    el.innerHTML = `<div class="ket">Gagal memuat leaderboard: ${esc(e.message)}</div>${renderLocalLeaderboard()}`;
+  }
+}
+
+function renderLocalLeaderboard() {
+  return `
+    <div class="lbrow me">
+      <div class="lbr">1</div>
+      <div class="lba">${S.avatar}</div>
+      <div class="lbb"><b>${esc(S.nama)} (Kamu)</b><small>Level ${lvlOf(S.xp)}</small></div>
+      <div class="lbp">${S.xp} XP</div>
+    </div>`;
+}
+
+function renderLB(rows) {
+  const medali = ['🥇','🥈','🥉'];
+  if (!rows.length) return '<div class="ket">Belum ada data. Jadilah yang pertama!</div>';
+  return rows.map((r, i) => {
+    const me = r.nama === S.nama;
+    return `<div class="lbrow ${me?'me':''}">
+      <div class="lbr">${i<3?medali[i]:(i+1)}</div>
+      <div class="lba">${r.avatar||'🦊'}</div>
+      <div class="lbb"><b>${esc(r.nama)}${me?' (Kamu)':''}</b><small>Level ${r.level||1}</small></div>
+      <div class="lbp">${r.xp||0} XP</div>
+    </div>`;
+  }).join('');
+}
+
+function pPeringkat() {
+  return `
+  <div class="card">
+    <b style="font-size:15px">🏆 Peringkat</b>
+    <p style="color:var(--mut);font-size:12.5px;margin:6px 0 12px">Daftar berdasarkan XP dari semua pengguna.</p>
+    <div id="lbContent"></div>
+    <button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--bd);margin-top:12px" onclick="loadLeaderboard()">🔄 Refresh</button>
+  </div>`;
+}
+
+/* ========== INIT ========== */
+function init() {
+  if (!S.nama) {
+    openModal(`
+      <h2>👋 Selamat Datang!</h2>
+      <p style="color:var(--mut);font-size:13px;margin-bottom:12px">Masukkan nama kamu untuk mulai belajar.</p>
+      <input id="namaAwal" placeholder="Nama atau panggilan" maxlength="20">
+      <button class="go" onclick="simpanNamaAwal()">Mulai Belajar 🚀</button>
+      <p style="color:var(--mut);font-size:11px;margin-top:10px;text-align:center">Nama ini muncul di peringkat, jadi pilih yang kamu suka.</p>
+    `);
+  }
+
+  // Update streak
+  const t = today();
+  if (S.lastActive !== t) {
+    const km = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+    if (S.lastActive === km) S.streak++;
+    else if (S.lastActive) S.streak = 1;
+    S.lastActive = t;
+    save();
+  }
+
+  // Cek status AI
+  checkAIStatus();
+
+  render();
+  updateKelas();
+}
+
+function simpanNamaAwal() {
+  const n = $('namaAwal')?.value.trim();
+  if (!n) return toast('Isi nama dulu');
+  S.nama = n;
+  save();
+  pushLeaderboard();
+  closeModal();
+  toast('Halo, ' + n + '! 👋');
+  render();
+}
+
+async function checkAIStatus() {
+  try {
+    const r = await fetch(AI_ENDPOINT);
+    const d = await r.json();
+    if (d.status === 'ok' && d.hasKey) aiStatus = 'ok';
+    else aiStatus = 'error';
+  } catch(e) {
+    aiStatus = 'error';
+  }
+  if (S.tab === 'tutor') renderChat();
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
-                                                     </html>
+</html>
