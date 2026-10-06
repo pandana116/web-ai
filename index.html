@@ -7,8 +7,9 @@
 <meta property="og:site_name" content="Rajin Belajar Jadi Pintar">
 <meta property="og:title" content="Rajin Belajar Jadi Pintar">
 <meta property="og:description" content="Latihan soal dengan AI untuk SD, SMP, SMA. Gratis, tanpa email: kuis, nilai, dan peringkat.">
-<meta property="og:url" content="https://web-ai-eta-smoky.vercel.app/">
 <meta property="og:image" content="https://web-ai-eta-smoky.vercel.app/og.jpg">
+<meta property="og:image:secure_url" content="https://web-ai-eta-smoky.vercel.app/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -60,6 +61,13 @@ input[type=text],input[type=password]{width:100%;font:inherit;padding:10px;borde
 .pf{position:absolute;top:10px;right:10px;padding:5px 12px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.28);color:#fff;border:0;z-index:2}
 </style></head><body><main id="app"></main><div id="rt"></div>
 <script>
+let timerOn=false,tmr=null;try{timerOn=localStorage.getItem("timerOn")=="1"}catch(e){}
+function togTimer(){timerOn=!timerOn;try{localStorage.setItem("timerOn",timerOn?"1":"0")}catch(e){}soal()}
+function startTimer(){clearInterval(tmr);const q=st.soal&&st.soal[st.i];if(!timerOn||!q||q.tipe!="pg"||st.res[st.i])return;let t=30;const el=()=>document.getElementById("tm");if(el())el().textContent="⏳ "+t+" dtk";tmr=setInterval(()=>{if(!el()||st.res[st.i]){clearInterval(tmr);return}t--;el().textContent="⏳ "+t+" dtk";if(t<=0){clearInterval(tmr);jwb(-1)}},1000)}
+async function aiText(prompt){const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:"Kamu guru ramah untuk pelajar Indonesia. Jawab singkat (maksimal 5 kalimat), bahasa sederhana, tanpa markdown."},{role:"user",content:prompt}]})});const d=await r.json();if(!r.ok)throw new Error("ai");return ((d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||"").trim()}
+async function tanyaAI(mode){const q=st.soal[st.i],box=document.getElementById("ai");box.style.display="block";box.textContent="⏳ AI lagi menjawab...";try{const p=mode=="jelas"?"Jelaskan dengan cara lain yang lebih sederhana, kenapa jawaban soal ini begitu.\nSoal: "+q.q+"\nJawaban benar: "+(q.tipe=="pg"?q.opsi[q.jawab]:q.kunci):"Berikan satu soal contoh serupa beserta jawaban dan penjelasan singkat.\nTopik soal: "+q.q;box.textContent=await aiText(p)}catch(e){box.textContent="AI lagi sibuk, coba lagi sebentar ya."}}
+function latihSalah(){const idx=[];st.res.forEach((r,i)=>{if(r&&r.skor!==null&&r.skor<.7)idx.push(i)});if(!idx.length)return;st.soal=idx.map(i=>st.soal[i]);st.res=[];st.i=0;st.latih=true;soal()}
+function extraBox(r){if(!r)return `<div class="s" style="margin-top:10px"><button class="ct" onclick="togTimer()">⏱️ Mode waktu 30 dtk: ${timerOn?"Nyala":"Mati"}</button> <b id="tm"></b></div>`;return `<div class="grid" style="margin-top:10px"><button class="ct" onclick="tanyaAI('jelas')">🤖 Jelaskan lagi</button><button class="ct" onclick="tanyaAI('contoh')">💡 Contoh soal lain</button></div><div id="ai" class="bahas" style="display:none"></div>`}
 async function aiSample(){return{json:async(prompt)=>{
 const sys="Kamu hanya membalas JSON valid tanpa teks lain. Di dalam nilai teks JANGAN pakai tanda kutip ganda (\"), pakai tanda kutip tunggal ('). Jangan pakai baris baru di dalam nilai teks dan jangan pakai backslash.";
 let lastErr;
@@ -213,7 +221,7 @@ function pilihK(i){const k=KHUSUS[i];st.tag=k[0];st.m=k[3];st.req=k[4];st.t="cam
 function pStiker(){
  return `<div class="card"><b>🎁 Koleksi Stiker</b> <small style="color:var(--mut)">${prog.stik.length}/${STIKER.length}</small><p class="s">Selesaikan tantangan untuk membuka stiker!</p><div class="st">${STIKER.map(([e,n,d])=>{const o=prog.stik.includes(e);return `<div class="${o?"":"lk"}"><div class="e">${o?e:"🔒"}</div><b>${n}</b><br>${d}</div>`}).join("")}</div></div>`}
 async function mulai(){
- st.err="";
+ st.err="";st.latih=false;
  const b=$("mulai");if(b){b.disabled=true;b.textContent="⏳ AI lagi bikin soal..."}else $("app").innerHTML=`<div class="card ct"><div class="medal">⏳</div><div class="judul">AI lagi bikin soal baru...</div><p class="s">Tunggu sebentar ya</p></div>`;
  const n=st.n,pg=Math.ceil(n*.6);
  const jenis=st.t=="pg"?`${n} soal pilihan ganda (tipe "pg")`:st.t=="uraian"?`${n} soal uraian (tipe "uraian")`:`${n} soal campuran: ${pg} pilihan ganda (tipe "pg") lalu ${n-pg} uraian (tipe "uraian")`;
@@ -242,7 +250,8 @@ function soal(){
  <p class="s">${esc(nm())} • Kelas ${st.k} • Soal ${st.i+1}/${st.soal.length} • ${q.tipe=="pg"?"Pilihan ganda":"Uraian"}</p>
  <div class="card"><b>${esc(q.q)}</b>${q.svg?`<img class="gb" alt="gambar soal" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(q.svg)}">`:""}<div style="margin-top:14px">${body}</div></div>
  <div id="tp"></div>
- ${done?`<button class="go" onclick="lanjut()">${st.i+1==st.soal.length?"🏁 Lihat Nilai":"Soal Berikutnya ➜"}</button>`:""}`;renderTools();
+  ${q.tipe=="pg"||r?extraBox(r):""}
+ ${done?`<button class="go" onclick="lanjut()">${st.i+1==st.soal.length?"🏁 Lihat Nilai":"Soal Berikutnya ➜"}</button>`:""}`;renderTools();startTimer();
 }
 function jwb(k){st.res[st.i]={skor:k==st.soal[st.i].jawab?1:0,jwb:k};soal()}
 async function cek(){
@@ -260,6 +269,7 @@ function manual(v){st.res[st.i].skor=v;st.res[st.i].manual=false;st.res[st.i].fb
 function lanjut(){if(st.i+1<st.soal.length){st.i++;soal()}else hasil()}
 
 function hasil(){
+ if(st.latih){clearInterval(tmr);const ok=st.res.filter(r=>r&&r.skor>=.7).length;st.latih=false;$("app").innerHTML=`<div class="card ct"><div class="medal">💪</div><div class="judul">Latihan selesai!</div><p>Benar ${ok} dari ${st.soal.length} soal yang tadi salah.</p></div><button class="go" onclick="home()">🏠 Kembali ke menu</button>`;return}
  const tot=st.res.reduce((a,r)=>a+(r?r.skor:0),0),n=Math.round(tot/st.soal.length*100),nama=nm();
  const prev=(best[nama]||{}).s||0,rekor=n>prev&&n>0;
  if(n>prev||!best[nama])best[nama]={s:n,k:st.k};
@@ -292,6 +302,7 @@ function hasil(){
  ${profil()}
  <div class="card"><b>🔑 Kunci Jawaban</b>${kunci}</div>
  ${lulus?`<button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--bd)" onclick="pesta()">🔊 Putar suara selamat lagi</button>`:""}
+ ${st.res.some(r=>r&&r.skor!==null&&r.skor<.7)?'<button class="go" onclick="latihSalah()">🎯 Latih soal yang salah</button>':""}
  <button class="go" onclick="mulai()">🔁 Ulangi dengan soal baru</button>
  <button class="go" style="background:var(--card);color:var(--tx);border:1px solid var(--bd)" onclick="home()">🏠 Kembali ke menu</button>`;
  confetti(lulus?["🎉","🎊","⭐","✨","💫"]:["🌟","💪","🌱","💙"]);
