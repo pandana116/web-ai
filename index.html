@@ -67,7 +67,15 @@ function startTimer(){clearInterval(tmr);const q=st.soal&&st.soal[st.i];if(!time
 async function aiText(prompt){const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:"Kamu guru ramah untuk pelajar Indonesia. Jawab singkat (maksimal 5 kalimat), bahasa sederhana, tanpa markdown."},{role:"user",content:prompt}]})});const d=await r.json();if(!r.ok)throw new Error("ai");return ((d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||"").trim()}
 async function tanyaAI(mode){const q=st.soal[st.i],box=document.getElementById("ai");box.style.display="block";box.textContent="⏳ AI lagi menjawab...";try{const p=mode=="jelas"?"Jelaskan dengan cara lain yang lebih sederhana, kenapa jawaban soal ini begitu.\nSoal: "+q.q+"\nJawaban benar: "+(q.tipe=="pg"?q.opsi[q.jawab]:q.kunci):"Berikan satu soal contoh serupa beserta jawaban dan penjelasan singkat.\nTopik soal: "+q.q;box.textContent=await aiText(p)}catch(e){box.textContent="AI lagi sibuk, coba lagi sebentar ya."}}
 function latihSalah(){const idx=[];st.res.forEach((r,i)=>{if(r&&r.skor!==null&&r.skor<.7)idx.push(i)});if(!idx.length)return;st.soal=idx.map(i=>st.soal[i]);st.res=[];st.i=0;st.latih=true;soal()}
-function extraBox(r){if(!r)return `<div class="s" style="margin-top:10px"><button class="ct" onclick="togTimer()">⏱️ Mode waktu 30 dtk: ${timerOn?"Nyala":"Mati"}</button> <b id="tm"></b></div>`;return `<div class="grid" style="margin-top:10px"><button class="ct" onclick="tanyaAI('jelas')">🤖 Jelaskan lagi</button><button class="ct" onclick="tanyaAI('contoh')">💡 Contoh soal lain</button></div><div id="ai" class="bahas" style="display:none"></div>`}
+function extraBox(r){if(!r)return `<div class="s" style="margin-top:10px"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button class="ct" onclick="togTimer()">⏱️ Waktu 30 dtk: ${timerOn?"Nyala":"Mati"}</button><button class="ct" onclick="togSnd()">${sndOn?"🔊":"🔇"}</button><button class="ct" onclick="togFz()">Aa</button><button class="ct" onclick="bacaSoal()">🔈 Bacakan</button><b id="tm"></b></div></div>`;return `<div class="grid" style="margin-top:10px"><button class="ct" onclick="tanyaAI('jelas')">🤖 Jelaskan lagi</button><button class="ct" onclick="tanyaAI('contoh')">💡 Contoh soal lain</button></div><div id="ai" class="bahas" style="display:none"></div>`}
+let sndOn=true,fz=0;try{sndOn=localStorage.getItem("snd")!="0";fz=Number(localStorage.getItem("fz"))||0}catch(e){}
+function applyFz(){try{document.body.style.zoom=[1,1.15,1.3][fz]}catch(e){}}
+document.addEventListener("DOMContentLoaded",applyFz);
+function bunyi(ok){if(!sndOn)return;try{const C=new (window.AudioContext||window.webkitAudioContext)(),o=C.createOscillator(),g=C.createGain();o.connect(g);g.connect(C.destination);o.type="sine";const t=C.currentTime;if(ok){o.frequency.setValueAtTime(660,t);o.frequency.setValueAtTime(880,t+.12)}else{o.frequency.setValueAtTime(300,t);o.frequency.setValueAtTime(200,t+.15)}g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.start(t);o.stop(t+.35)}catch(e){}}
+function togSnd(){sndOn=!sndOn;try{localStorage.setItem("snd",sndOn?"1":"0")}catch(e){}soal()}
+function togFz(){fz=(fz+1)%3;try{localStorage.setItem("fz",fz)}catch(e){}applyFz()}
+function bacaSoal(){try{const q=st.soal[st.i];let t=q.q;if(q.tipe=="pg")t+=". "+q.opsi.map((o,k)=>L[k]+". "+o).join(". ");speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="id-ID";speechSynthesis.speak(u)}catch(e){}}
+function levelCard(){const xp=prog.xp||0,lv=Math.floor(xp/100)+1,pr=xp%100;const B=[["🌱","Pemula",prog.kuis>=1],["📚","Rajin (10 kuis)",prog.kuis>=10],["🔥","Beruntun 3 hari",(prog.streak||0)>=3],["🔥🔥","Beruntun 7 hari",(prog.streak||0)>=7],["🏅","Tuntas 5x",prog.tuntas>=5],["💎","Rata-rata 85+",prog.kuis>=3&&prog.tot/prog.kuis>=85],["⚡","500 XP",xp>=500]];return `<div class="card"><b>🎖️ Level ${lv}</b> <span class="s">(${xp} XP)</span><div class="bar" style="margin:8px 0"><i style="width:${pr}%"></i></div><p class="s" style="margin:0 0 8px">${100-pr} XP lagi menuju level ${lv+1}</p><div style="display:flex;gap:8px;flex-wrap:wrap">${B.map(b=>`<div style="text-align:center;width:72px;font-size:11px;opacity:${b[2]?1:.3};filter:${b[2]?"none":"grayscale(1)"}"><div style="font-size:26px">${b[0]}</div>${b[1]}</div>`).join("")}</div></div>`}
 async function aiSample(){return{json:async(prompt)=>{
 const sys="Kamu hanya membalas JSON valid tanpa teks lain. Di dalam nilai teks JANGAN pakai tanda kutip ganda (\"), pakai tanda kutip tunggal ('). Jangan pakai baris baru di dalam nilai teks dan jangan pakai backslash.";
 let lastErr;
@@ -146,7 +154,7 @@ function pBelajar(){return `${st.tag?`<div class="card" style="border-color:var(
  <button class="go" id="mulai" onclick="mulai()">🚀 Mulai Kuis</button></div>`}
 function pNilai(){
  const n=prog.kuis;
- return `<div class="card"><b>📈 Ringkasan belajar</b><div class="st" style="margin-top:8px"><div><div class="e">📝</div>${n} kuis</div><div><div class="e">⭐</div>Rata-rata ${n?Math.round(prog.tot/n):0}</div><div><div class="e">✅</div>Tuntas ${n?Math.round(prog.tuntas/n*100):0}%</div></div></div>${profil()||'<div class="card ct">Belum ada nilai. Yuk mulai kuis pertamamu! 🚀</div>'}
+ return `<div class="card"><b>📈 Ringkasan belajar</b><div class="st" style="margin-top:8px"><div><div class="e">📝</div>${n} kuis</div><div><div class="e">⭐</div>Rata-rata ${n?Math.round(prog.tot/n):0}</div><div><div class="e">✅</div>Tuntas ${n?Math.round(prog.tuntas/n*100):0}%</div></div></div>${levelCard()}${profil()||'<div class="card ct">Belum ada nilai. Yuk mulai kuis pertamamu! 🚀</div>'}
  ${riwayat.length?`<div class="card"><b>🕘 Riwayat terakhir</b>${riwayat.slice(0,10).map(r=>`<div class="h"><span>${ico(r.m)} ${esc(r.m)} (Kelas ${esc(r.k)})</span><b>${r.s>=st.kkm?"✅":"📖"} ${r.s}</b></div>`).join("")}</div>`:""}`}
 function pKhusus(){
  const kt=(a,b)=>KHUSUS.slice(a,b).map(([n,e,c],k)=>`<button class="mp" style="--c:${c}" onclick="pilihK(${a+k})"><span class="em">${e}</span>${n}</button>`).join("");
@@ -253,7 +261,7 @@ function soal(){
   ${q.tipe=="pg"||r?extraBox(r):""}
  ${done?`<button class="go" onclick="lanjut()">${st.i+1==st.soal.length?"🏁 Lihat Nilai":"Soal Berikutnya ➜"}</button>`:""}`;renderTools();startTimer();
 }
-function jwb(k){st.res[st.i]={skor:k==st.soal[st.i].jawab?1:0,jwb:k};soal()}
+function jwb(k){st.res[st.i]={skor:k==st.soal[st.i].jawab?1:0,jwb:k};bunyi(k==st.soal[st.i].jawab);soal()}
 async function cek(){
  const t=$("ans").value.trim();if(!t)return;
  const b=$("cek");b.disabled=true;b.textContent="⏳ Lagi diperiksa...";
