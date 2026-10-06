@@ -1628,6 +1628,81 @@ applyTheme();
     c.getContext('2d').clearRect(0,0,c.width,c.height);
   };
 })();
+  /* ============ SOAL AI (GROQ) ============ */
+(function(){
+  if(typeof A==='undefined')return;
+
+  window.__genAI=async function(mapel,jumlah){
+    try{
+      var tok=localStorage.getItem('rb_token')||'';
+      var s=JSON.parse(localStorage.getItem('rb_state')||'{}');
+      var kelas=s.user?s.user.classLevel:6;
+      var r=await fetch('/api/generate',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
+        body:JSON.stringify({mapel:mapel,jumlah:jumlah||5,kelas:kelas})
+      });
+      var d=await r.json();
+      if(!r.ok)throw new Error(d.error||'HTTP '+r.status);
+      return d.soal||[];
+    }catch(e){toast('AI error: '+e.message);return[]}
+  };
+
+  window.__startAIQuiz=async function(mapel){
+    var mc=document.getElementById('mc');
+    if(mc)mc.innerHTML='<div class="center"><div class="big">🤖</div><h2>AI sedang membuat soal...</h2><p class="muted">Tunggu 3–5 detik</p><div class="bar"><i style="width:80%"></i></div></div>';
+    var modal=document.getElementById('modal');
+    if(modal)modal.classList.add('show');
+
+    var soal=await window.__genAI(mapel,5);
+    if(!soal.length){
+      if(mc)mc.innerHTML='<div class="center"><div class="big">😕</div><h2>Gagal buat soal</h2><p class="muted">Cek GROQ_API_KEY di Vercel</p><button class="primary full" data-a="close">Tutup</button></div>';
+      return;
+    }
+
+    /* Inject ke Q supaya pakai engine quiz yang sudah ada */
+    var p=soal.map(function(q){
+      var idx=[0,1,2,3].sort(function(){return Math.random()-0.5});
+      var c=JSON.parse(JSON.stringify(q));
+      c.o=idx.map(function(i){return q.o[i]});
+      c.a=idx.indexOf(q.a);
+      return c;
+    });
+    var titles={};
+    if(typeof Q!=='undefined'&&Q)Q=null;
+    window.Q={cfg:{subject:mapel,n:p.length,mode:'ai'},qs:p,i:0,score:0,locked:false,wrong:[],mode:'ai',xp:25,earned:0,startAt:Date.now(),title:'🤖 AI '+mapel};
+    qRender();
+  };
+
+  /* Tombol baru di modal Latihan */
+  var oldQuizSetup=window.quizSetup;
+  if(typeof quizSetup==='function'){
+    var _old=quizSetup;
+    window.quizSetup=function(){
+      _old();
+      setTimeout(function(){
+        var mc=document.getElementById('mc');
+        if(!mc)return;
+        var btn=document.createElement('button');
+        btn.className='secondary full';
+        btn.setAttribute('data-ai','1');
+        btn.textContent='🤖 Soal AI (unlimited)';
+        btn.onclick=function(){
+          var sel=document.getElementById('qs');
+          var mapel=sel?sel.value:'Matematika';
+          if(mapel==='Semua')mapel='Matematika';
+          window.__startAIQuiz(mapel);
+        };
+        var fb=mc.querySelector('[data-a="kisi"]');
+        if(fb&&fb.parentNode)fb.parentNode.insertBefore(btn,fb);
+        else mc.appendChild(btn);
+      },50);
+    };
+  }
+
+  console.log('✅ AI Quiz aktif');
+})();
+/* ============ END SOAL AI ============ */
 })();
 </script>
 </body>
