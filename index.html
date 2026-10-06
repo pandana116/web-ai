@@ -1392,6 +1392,120 @@ applyTheme();
     showScreen('authScreen');
   });
 })();
+  /* ============ CHAT REAL-TIME PATCH ============ */
+(function(){
+  function getS(){try{return JSON.parse(localStorage.getItem('rb_state')||'{}')}catch(e){return{}}}
+  function getToken(){try{return localStorage.getItem('rb_token')||''}catch(e){return''}}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function toast(msg){
+    var t=document.getElementById('toast');if(!t)return;
+    t.textContent=msg;t.style.display='block';
+    clearTimeout(t._tt);t._tt=setTimeout(function(){t.style.display='none'},2300);
+  }
+  async function chatApi(qs,opts){
+    opts=opts||{};
+    var tok=getToken();
+    var r=await fetch('/api/chat'+qs,{
+      method:opts.method||'GET',
+      headers:tok?{'Content-Type':'application/json','Authorization':'Bearer '+tok}:{'Content-Type':'application/json'},
+      body:opts.body?JSON.stringify(opts.body):undefined,
+      cache:'no-store'
+    });
+    var d=await r.json();
+    if(!r.ok)throw new Error(d.error||'HTTP '+r.status);
+    return d;
+  }
+  function userClass(){var s=getS();return s.user?s.user.classLevel:6}
+  function myName(){var s=getS();return s.user?s.user.username:''}
+  function bubble(m){
+    var me=m.user===myName();
+    var cls=me?'me':'bot';
+    var delBtn=me?'<button class="mini" data-x="del" data-id="'+m.id+'" style="margin-left:6px;padding:2px 6px;font-size:10px">✕</button>':'';
+    var time=m.at?new Date(m.at).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}):'';
+    return'<div class="bubble '+cls+'"><b>'+esc(m.user)+':</b> '+esc(m.text)+' '+delBtn+'<div style="font-size:10px;opacity:.6;margin-top:2px">'+time+'</div></div>';
+  }
+  var LAST=0,TIMER=null;
+  function renderAll(c,list){
+    if(!list.length){c.innerHTML='<div class="bubble bot">Belum ada pesan. Jadi yang pertama! 👋</div>';return}
+    c.innerHTML=list.slice(-80).map(bubble).join('');
+    c.scrollTop=c.scrollHeight;
+    LAST=new Date(list[list.length-1].at).getTime();
+  }
+  function appendNew(c,list){
+    list.forEach(function(m){c.insertAdjacentHTML('beforeend',bubble(m))});
+    c.scrollTop=c.scrollHeight;
+    if(list.length)LAST=new Date(list[list.length-1].at).getTime();
+  }
+  async function load(initial){
+    var c=document.getElementById('chatKelas');if(!c)return;
+    try{
+      var qs='?room=k'+userClass();
+      if(!initial&&LAST)qs+='&since='+LAST;
+      else qs+='&markRead=1';
+      var d=await chatApi(qs);
+      var list=Array.isArray(d)?d:((d&&d.list)||[]);
+      if(initial)renderAll(c,list);
+      else if(list.length)appendNew(c,list);
+    }catch(e){if(initial)c.innerHTML='<div class="bubble bot">Gagal: '+esc(e.message)+'</div>'}
+  }
+  async function openChat(){
+    var mc=document.getElementById('mc');
+    var modal=document.getElementById('modal');
+    if(!mc||!modal)return;
+    mc.innerHTML='<h2>💬 Chat Kelas '+userClass()+'</h2>'+
+    '<p class="muted">Auto-refresh tiap 3 detik • Klik ✕ di pesanmu untuk hapus</p>'+
+    '<div class="chat" id="chatKelas"><div class="bubble bot">Memuat...</div></div>'+
+    '<div class="row"><input id="chatMsg" placeholder="Tulis pesan..."><button class="primary" id="chatSendBtn" style="flex:0 0 auto">Kirim</button></div>'+
+    '<div class="row" style="margin-top:6px"><button class="ghost" id="chatRefreshBtn">🔄 Refresh</button></div>';
+    modal.classList.add('show');
+    if(TIMER)clearInterval(TIMER);
+    LAST=0;
+    await load(true);
+    TIMER=setInterval(function(){
+      if(!document.getElementById('chatKelas')){clearInterval(TIMER);TIMER=null;return}
+      load(false);
+    },3000);
+    document.getElementById('chatSendBtn').onclick=async function(){
+      var inp=document.getElementById('chatMsg');
+      if(!inp||!inp.value.trim())return;
+      var text=inp.value.trim();inp.value='';
+      try{
+        await chatApi('?room=k'+userClass(),{method:'POST',body:{text:text}});
+        LAST=0;await load(true);
+      }catch(e){toast('Gagal: '+e.message)}
+    };
+    document.getElementById('chatRefreshBtn').onclick=async function(){LAST=0;await load(true);toast('🔄 Diperbarui')};
+    mc.querySelectorAll('[data-x="del"]').forEach(function(b){
+      b.onclick=async function(){
+        if(!confirm('Hapus pesan ini?'))return;
+        try{
+          await chatApi('?room=k'+userClass(),{method:'DELETE',body:{id:b.getAttribute('data-id')}});
+          LAST=0;await load(true);toast('🗑 Dihapus');
+        }catch(e){toast('Gagal: '+e.message)}
+      };
+    });
+    mc.addEventListener('click',function(e){
+      var b=e.target.closest&&e.target.closest('[data-x="del"]');
+      if(b){
+        e.stopPropagation();
+        if(!confirm('Hapus pesan ini?'))return;
+        chatApi('?room=k'+userClass(),{method:'DELETE',body:{id:b.getAttribute('data-id')}}).then(function(){
+          LAST=0;load(true);toast('🗑 Dihapus');
+        }).catch(function(err){toast('Gagal: '+err.message)});
+      }
+    });
+  }
+  /* Intercept klik tombol Chat Kelas */
+  document.addEventListener('click',function(e){
+    var t=e.target.closest&&e.target.closest('[data-a="chat"]');
+    if(t){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      openChat();
+      return false;
+    }
+  },true);
+})();
+/* ============ END CHAT PATCH ============ */
 })();
 </script>
 </body>
