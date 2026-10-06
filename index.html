@@ -1505,7 +1505,129 @@ applyTheme();
     }
   },true);
 })();
-/* ============ END CHAT PATCH ============ */
+/* ============ END CHAT PATCH ============ *//* ============ SUPER PATCH ============ */
+(function(){
+  var style=document.createElement('style');
+  style.textContent=[
+    '@media(max-width:700px){',
+    '.modal{padding:0 !important;align-items:stretch !important}',
+    '.box{width:100% !important;max-width:100% !important;height:100vh !important;max-height:100vh !important;border-radius:0 !important;padding:16px 14px calc(20px + env(safe-area-inset-bottom)) !important;margin:0 !important}',
+    '.box .close{position:fixed;top:14px;right:14px;z-index:99;background:var(--c);box-shadow:0 2px 8px #0003}',
+    '}',
+    '.qbtns{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap}',
+    '.qbtns button{flex:1;min-width:70px;padding:9px 8px;border-radius:10px;border:1px solid var(--l);background:var(--s);font-weight:800;font-size:13px}',
+    '.mini-calc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0;padding:10px;background:var(--s);border-radius:12px}',
+    '.mini-calc button{padding:14px 0;border-radius:9px;border:1px solid var(--l);background:var(--c);font-weight:800;font-size:16px}',
+    '.mini-calc input{grid-column:1/-1;text-align:right;font-size:22px;font-weight:800;padding:10px;border-radius:9px;border:1px solid var(--l);background:var(--c);width:100%}',
+    'canvas.sketch{width:100%;height:300px;background:#fff;border-radius:12px;border:1px solid var(--l);touch-action:none;display:block}'
+  ].join('');
+  document.head.appendChild(style);
+
+  document.addEventListener('click',function(){
+    try{var a=ctx();if(a&&a.state==='suspended')a.resume()}catch(e){}
+  },true);
+
+  function speak(text){
+    try{
+      if(!window.speechSynthesis){toast('Browser tidak dukung suara');return}
+      window.speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(text);
+      u.lang='id-ID';u.rate=.95;
+      window.speechSynthesis.speak(u);
+    }catch(e){toast('Gagal: '+e.message)}
+  }
+  function stopSpeak(){try{window.speechSynthesis.cancel()}catch(e){}}
+
+  var _origQRender=qRender;
+  qRender=function(){
+    var q=Q.qs[Q.i];
+    openM('<div class="qhead"><span class="muted">'+Q.title+' • '+(Q.i+1)+'/'+Q.qs.length+' • +'+Q.xp+' XP</span><span class="chip">'+esc(q.s)+'</span></div>'+
+    '<div class="bar"><i style="width:'+(Q.i/Q.qs.length*100)+'%"></i></div>'+
+    '<h3 class="qtext">'+esc(q.q)+'</h3>'+
+    '<div class="qbtns">'+
+    '<button data-a="tts">🔊 Bacakan</button>'+
+    '<button data-a="stoptts">⏸ Stop</button>'+
+    '<button data-a="calcq">🧮 Kalkulator</button>'+
+    '<button data-a="sketch">✏️ Sketsa</button>'+
+    '</div>'+
+    '<div id="toolArea"></div>'+
+    q.o.map(function(o,i){return'<button class="option" data-a="pick" data-v="'+i+'">'+'ABCD'.charAt(i)+'. '+esc(o)+'</button>'}).join('')+
+    '<div id="fb"></div>');
+  };
+
+  var _origPick=pick;
+  pick=async function(v){stopSpeak();return _origPick(v)};
+  var _origQnext=qnext;
+  qnext=function(){stopSpeak();return _origQnext()};
+
+  A.tts=function(){
+    if(!Q)return;
+    var q=Q.qs[Q.i];
+    speak(q.q+'. Pilihan A: '+q.o[0]+'. Pilihan B: '+q.o[1]+'. Pilihan C: '+q.o[2]+'. Pilihan D: '+q.o[3]);
+  };
+  A.stoptts=function(){stopSpeak()};
+  A.calcq=function(){
+    var t=$('toolArea');if(!t)return;
+    if(t.dataset.open==='calc'){t.innerHTML='';t.dataset.open='';return}
+    t.dataset.open='calc';
+    var keys=['7','8','9','÷','4','5','6','×','1','2','3','−','0','.','=','+'];
+    t.innerHTML='<div class="mini-calc"><input id="mqc" placeholder="0" readonly>'+
+    keys.map(function(k){return'<button data-a="mqc" data-v="'+k+'">'+k+'</button>'}).join('')+
+    '<button data-a="mqc" data-v="C" style="grid-column:1/-1">Hapus</button></div>';
+    window.__mqc='';
+  };
+  A.mqc=function(v){
+    var inp=$('mqc');if(!inp)return;
+    if(v==='C'){window.__mqc='';inp.value='0';return}
+    if(v==='='){
+      try{
+        var x=window.__mqc.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+        var r=Function('"use strict";return ('+x+')')();
+        inp.value=String(r);window.__mqc=String(r);
+      }catch(e){inp.value='Error';window.__mqc=''}
+      return;
+    }
+    window.__mqc=(window.__mqc||'')+v;
+    inp.value=window.__mqc;
+  };
+  A.sketch=function(){
+    var t=$('toolArea');if(!t)return;
+    if(t.dataset.open==='sketch'){t.innerHTML='';t.dataset.open='';return}
+    t.dataset.open='sketch';
+    t.innerHTML='<canvas class="sketch" id="sk"></canvas>'+
+    '<div class="row" style="margin-top:6px"><button class="secondary" data-a="skclear">🗑 Hapus</button></div>';
+    var c=$('sk'),g=c.getContext('2d');
+    var r=c.getBoundingClientRect();
+    c.width=r.width*2;c.height=r.height*2;
+    g.scale(2,2);
+    g.lineWidth=2;g.strokeStyle='#202238';g.lineCap='round';
+    var drawing=false,lastX=0,lastY=0;
+    function pos(e){
+      var rect=c.getBoundingClientRect();
+      var x=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
+      var y=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
+      return {x:x,y:y};
+    }
+    function start(e){drawing=true;var p=pos(e);lastX=p.x;lastY=p.y;e.preventDefault()}
+    function move(e){
+      if(!drawing)return;
+      var p=pos(e);
+      g.beginPath();g.moveTo(lastX,lastY);g.lineTo(p.x,p.y);g.stroke();
+      lastX=p.x;lastY=p.y;e.preventDefault();
+    }
+    function end(){drawing=false}
+    c.addEventListener('touchstart',start,{passive:false});
+    c.addEventListener('touchmove',move,{passive:false});
+    c.addEventListener('touchend',end);
+    c.addEventListener('mousedown',start);
+    c.addEventListener('mousemove',move);
+    c.addEventListener('mouseup',end);
+  };
+  A.skclear=function(){
+    var c=$('sk');if(!c)return;
+    c.getContext('2d').clearRect(0,0,c.width,c.height);
+  };
+})();
 })();
 </script>
 </body>
