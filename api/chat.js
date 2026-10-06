@@ -1,50 +1,76 @@
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+import { getJSON, setJSON, findByToken, str } from './db.js';
 
-  if (req.method === 'GET') {
-    const k = process.env.GROQ_API_KEY;
-    return res.json({
-      status: 'ok',
-      hasKey: !!k,
-      keyPrefix: k ? k.slice(0, 10) : 'KOSONG'
-    });
-  }
+function bearer(req){return (req.headers.authorization||'').replace(/^Bearer\s+/i,'').trim()}
+function json(res,code,data){return res.status(code).json(data)}
 
-  try {
-    const key = process.env.GROQ_API_KEY;
-    if (!key) {
-      return res.status(500).json({ error: 'GROQ_API_KEY kosong di Vercel' });
+export default async function handler(req,res){
+  res.setHeader('Access-Control-Allow-Origin','*');
+  res.setHeader('Access-Control-Allow-Methods','GET, POST, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');
+  if(req.method==='OPTIONS')return res.status(200).end();
+
+  const url=new URL(req.url,`http://${req.headers.host}`);
+  const room=(url.searchParams.get('room')||'umum').replace(/[^a-z0-9_-]/gi,'');
+  const key='chat_'+room;
+
+  try{
+    if(req.method==='GET'){
+      const since=url.searchParams.get('since');
+      const markRead=url.searchParams.get('markRead')==='1';
+      const msgs=(await getJSON(key))||[];
+
+      const found=await findByToken(bearer(req));
+      if(markRead&&found){
+        await setJSON('chatread_'+found.key+'_'+room, Date.now());
+      }
+
+      if(since){
+        const t=Number(since);
+        return res.status(200).json({ok:true,list:msgs.filter(m=>new Date(m.at).getTime()>t),serverTime:Date.now()});
+      }
+      return res.status(200).json(msgs.slice(-100));
     }
 
-    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    const messages = body.messages || [{ role: 'user', content: body.prompt || 'Halo' }];
+    if(req.method==='POST'){
+      const found=await findByToken(bearer(req));
+      if(!found)return json(res,401,{error:'Login dulu'});
+      const body=typeof req.body==='string'?JSON.parse(req.body||'{}'):(req.body||{});
 
-    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + key
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: messages,
-        max_tokens: 1024,
-        temperature: 0.7
-      })
-    });
+      if(body.action==='unread-count'){
+        const lastSeen=(await getJSON('chatread_'+found.key+'_'+room))||0;
+        const msgs=(await getJSON(key))||[];
+        const unread=msgs.filter(m=>new Date(m.at).getTime()>lastSeen&&m.user!==found.user.username).length;
+        return res.status(200).json({ok:true,unread});
+      }
 
-    const d = await r.json();
-    if (!r.ok) {
-      return res.status(r.status).json({
-        error: (d && d.error && d.error.message) || 'Groq error',
-        status: r.status
+      const text=str(body.text,500);
+      if(!text)return json(res,400,{error:'Pesan kosong'});
+      const msgs=(await getJSON(key))||[];
+      msgs.push({
+        id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),
+        user:found.user.username,
+        classLevel:found.user.classLevel,
+        text,
+        at:new Date().toISOString()
       });
+      await setJSON(key,msgs.slice(-200));
+      return res.status(200).json({ok:true});
     }
-    return res.json(d);
-  } catch (e) {
-    return res.status(500).json({ error: e.message || 'Unknown error' });
+
+    if(req.method==='DELETE'){
+      const found=await findByToken(bearer(req));
+      if(!found)return json(res,401,{error:'Login dulu'});
+      const body=typeof req.body==='string'?JSON.parse(req.body||'{}'):(req.body||{});
+      const id=str(body.id,50);
+      const msgs=(await getJSON(key))||[];
+      const filtered=msgs.filter(m=>!(m.id===id&&m.user===found.user.username));
+      await setJSON(key,filtered);
+      return res.status(200).json({ok:true});
+    }
+
+    return json(res,405,{error:'Method not allowed'});
+  }catch(e){
+    console.error('CHAT ERROR:',e);
+    return json(res,500,{error:e.message});
   }
-}
+        }
