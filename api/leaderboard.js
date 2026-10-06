@@ -1,67 +1,66 @@
-const KV_URL = process.env.KV_REST_API_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+import { getAllUsers, findByToken, num } from './db.js';
 
-async function redis(...args) {
-  const r = await fetch(KV_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + KV_TOKEN,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(args)
-  });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error);
-  return d.result;
+function bearer(req) {
+  return (req.headers.authorization || "").replace(/^Bearer\s+/i, "").trim();
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
-
-  if (!KV_URL || !KV_TOKEN) {
-    return res.status(500).json({ error: 'KV belum diset' });
-  }
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    // Ambil semua member dari sorted set, urut dari XP tertinggi
-    // Format: [member1, score1, member2, score2, ...]
-    const raw = await redis('ZREVRANGE', 'leaderboard', '0', '49', 'WITHSCORES');
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const kelasQ = url.searchParams.get("class");
+    const scope = url.searchParams.get("scope") || "global"; // global | class
+    const limit = Math.min(num(url.searchParams.get("limit")) || 50, 100);
 
-    const rows = [];
-    if (raw && raw.length) {
-      // Ambil detail tiap user secara paralel
-      const slugs = [];
-      for (let i = 0; i < raw.length; i += 2) {
-        slugs.push({ slug: raw[i], xp: parseInt(raw[i+1], 10) || 0 });
-      }
-
-      const details = await Promise.all(slugs.map(async (s) => {
-        const key = 'user:' + s.slug;
-        const userRaw = await redis('GET', key);
-        if (!userRaw) return null;
-        try {
-          const u = JSON.parse(userRaw);
-          return {
-            nama: u.nama || s.slug,
-            slug: s.slug,
-            avatar: u.avatar || '🦊',
-            xp: u.xp || 0,
-            level: Math.floor((u.xp || 0) / 100) + 1,
-            soal: u.soal || 0,
-            streak: u.streak || 0
-          };
-        } catch { return null; }
+    const users = await getAllUsers();
+    let list = Object.values(users)
+      .filter(u => u && u.username)
+      .map(u => ({
+        username: u.username,
+        classLevel: u.classLevel,
+        xp: u.xp || 0,
+        streak: u.streak || 0,
+        lastPlay: u.lastPlay || null
       }));
 
-      details.forEach(d => { if (d) rows.push(d); });
+    if (scope === "class") {
+      const kelas = num(kelasQ);
+      if (kelas < 1 || kelas > 12) return res.status(400).json({ error: "Kelas harus 1–12" });
+      list = list.filter(u => u.classLevel === kelas);
     }
 
-    return res.json({ ok: true, rows, total: rows.length });
+    list.sort((a, b) => b.xp - a.xp);
+    list = list.slice(0, limit);
+    list.forEach((u, i) => { u.rank = i + 1; });
 
+    // Rank user sendiri (kalau login)
+    let me = null;
+    const found = await findByToken(bearer(req));
+    if (found) {
+      const myRank = list.findIndex(u => u.username === found.user.username);
+      me = {
+        username: found.user.username,
+        classLevel: found.user.classLevel,
+        xp: found.user.xp || 0,
+        rank: myRank >= 0 ? myRank + 1 : null
+      };
+    }
+
+    return res.status(200).json({
+      ok: true,
+      scope,
+      classLevel: scope === "class" ? num(kelasQ) : null,
+      total: list.length,
+      list,
+      me
+    });
   } catch (e) {
+    console.error("LEADERBOARD ERROR:", e);
     return res.status(500).json({ error: e.message });
   }
-    }
+}
