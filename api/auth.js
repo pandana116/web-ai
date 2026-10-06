@@ -1,148 +1,176 @@
-const KV_URL = process.env.KV_REST_API_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+import {
+  getJSON, setJSON, getAllUsers, saveAllUsers,
+  findByUsername, findByToken, str, num, ID_RE
+} from './db.js';
 
-async function redis(...args) {
-  const r = await fetch(KV_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + KV_TOKEN,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(args)
-  });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error);
-  return d.result;
+/* ============ PASSWORD (Web Crypto, edge-friendly) ============ */
+async function hashPw(pw, salt) {
+  const data = new TextEncoder().encode(salt + "::" + pw + "::rb");
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-async function hashPw(pw) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('rbjp:' + pw));
-  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+function makeSalt() {
+  const a = new Uint8Array(16);
+  crypto.getRandomValues(a);
+  return [...a].map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-function slugNama(n) {
-  return n.toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+function makeToken() {
+  const a = new Uint8Array(32);
+  crypto.getRandomValues(a);
+  return [...a].map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
+function json(res, code, data) { return res.status(code).json(data); }
+
+function bearer(req) {
+  return (req.headers.authorization || "").replace(/^Bearer\s+/i, "").trim();
+}
+
+function validPass(pw) {
+  if (!pw || pw.length < 6) return "Password minimal 6 karakter";
+  if (pw.length > 72) return "Password maksimal 72 karakter";
+  return null;
+}
+
+/* ============ HANDLER ============ */
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") return res.status(200).end();
 
-  if (req.method === 'GET') {
-    return res.json({ 
-      status: 'ok', 
-      hasKV: !!(KV_URL && KV_TOKEN),
-      kvUrl: KV_URL ? 'diset' : 'KOSONG',
-      kvToken: KV_TOKEN ? 'diset' : 'KOSONG'
-    });
-  }
-
-  if (!KV_URL || !KV_TOKEN) {
-    return res.status(500).json({ error: 'KV_REST_API_URL / KV_REST_API_TOKEN belum diset' });
-  }
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const action = url.searchParams.get("action");
+  const body = req.method === "POST"
+    ? (typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {}))
+    : {};
 
   try {
-    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const { action, nama, password, avatar, stats } = body;
+    /* ============ REGISTER ============ */
+    if (req.method === "POST" && action === "register") {
+      const username = str(body.username, 20).toLowerCase();
+      const display = str(body.username, 20);
+      const password = String(body.password || "");
+      const kelas = num(body.classLevel);
 
-    if (!action) return res.status(400).json({ error: 'action wajib diisi' });
+      if (!ID_RE.test(username)) return json(res, 400, { error: "Username 3–16 huruf/angka/underscore" });
+      const ep = validPass(password); if (ep) return json(res, 400, { error: ep });
+      if (kelas < 1 || kelas > 12) return json(res, 400, { error: "Kelas harus 1–12" });
 
-    if (action === 'register') {
-      if (!nama || nama.trim().length < 3) return res.status(400).json({ error: 'Nama minimal 3 karakter' });
-      if (!password || password.length < 4) return res.status(400).json({ error: 'Password minimal 4 karakter' });
+      const users = await getAllUsers();
+      if (users[username]) return json(res, 400, { error: "Username sudah dipakai" });
 
-      const slug = slugNama(nama);
-      if (slug.length < 3) return res.status(400).json({ error: 'Nama hanya boleh huruf, angka, dan spasi' });
+      const salt = makeSalt();
+      const hash = await hashPw(password, salt);
+      const token = makeToken();
 
-      const key = 'user:' + slug;
-      const exists = await redis('EXISTS', key);
-      if (exists === 1) return res.status(409).json({ error: 'Nama "' + nama + '" sudah dipakai. Coba nama lain.' });
-
-      const user = {
-        nama: nama.trim(),
-        slug,
-        hash: await hashPw(password),
-        avatar: avatar || '🦊',
-        xp: 0,
-        coins: 20,
-        streak: 0,
-        soal: 0,
-        benar: 0,
-        menitFokus: 0,
-        lastActive: new Date().toISOString().slice(0, 10),
-        dibuat: Date.now()
+      users[username] = {
+        username: display,
+        usernameLower: username,
+        classLevel: kelas,
+        salt, hash, token,
+        xp: 0, streak: 0, best: { sprint: 0 },
+        createdAt: new Date().toISOString()
       };
+      await saveAllUsers(users);
 
-      await redis('SET', key, JSON.stringify(user));
-      await redis('ZADD', 'leaderboard', '0', slug);
-      await redis('SADD', 'users:all', slug);
-
-      const safe = { ...user };
-      delete safe.hash;
-      return res.json({ ok: true, user: safe, message: 'Akun berhasil dibuat!' });
+      return json(res, 200, {
+        ok: true, token,
+        user: { username: display, classLevel: kelas, xp: 0, streak: 0 }
+      });
     }
 
-    if (action === 'login') {
-      if (!nama || !password) return res.status(400).json({ error: 'Nama dan password wajib diisi' });
+    /* ============ LOGIN ============ */
+    if (req.method === "POST" && action === "login") {
+      const username = str(body.username, 20).toLowerCase();
+      const password = String(body.password || "");
+      if (!username || !password) return json(res, 400, { error: "Username & password wajib" });
 
-      const slug = slugNama(nama);
-      const key = 'user:' + slug;
-      const raw = await redis('GET', key);
-      if (!raw) return res.status(404).json({ error: 'Akun tidak ditemukan. Cek nama atau daftar dulu.' });
+      const u = await findByUsername(username);
+      if (!u) return json(res, 404, { error: "User tidak ditemukan" });
 
-      const user = JSON.parse(raw);
-      if (user.hash !== await hashPw(password)) {
-        return res.status(401).json({ error: 'Password salah' });
-      }
+      const hash = await hashPw(password, u.salt);
+      if (hash !== u.hash) return json(res, 401, { error: "Password salah" });
 
-      // Update lastActive & streak
-      const t = new Date().toISOString().slice(0, 10);
-      const km = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-      if (user.lastActive !== t) {
-        if (user.lastActive === km) user.streak = (user.streak || 0) + 1;
-        else if (user.lastActive) user.streak = 1;
-        user.lastActive = t;
-        await redis('SET', key, JSON.stringify(user));
-      }
+      const users = await getAllUsers();
+      users[u.usernameLower].token = makeToken();
+      await saveAllUsers(users);
 
-      const safe = { ...user };
-      delete safe.hash;
-      return res.json({ ok: true, user: safe });
+      return json(res, 200, {
+        ok: true, token: users[u.usernameLower].token,
+        user: {
+          username: u.username, classLevel: u.classLevel,
+          xp: u.xp || 0, streak: u.streak || 0
+        }
+      });
     }
 
-    if (action === 'update') {
-      if (!nama || !password) return res.status(400).json({ error: 'Nama dan password wajib' });
-
-      const slug = slugNama(nama);
-      const key = 'user:' + slug;
-      const raw = await redis('GET', key);
-      if (!raw) return res.status(404).json({ error: 'Akun tidak ditemukan' });
-
-      const user = JSON.parse(raw);
-      if (user.hash !== await hashPw(password)) {
-        return res.status(401).json({ error: 'Sesi tidak valid' });
-      }
-
-      const allowed = ['xp','coins','streak','soal','benar','menitFokus','avatar','lastActive'];
-      if (stats && typeof stats === 'object') {
-        allowed.forEach(k => {
-          if (stats[k] !== undefined) user[k] = stats[k];
-        });
-      }
-
-      await redis('SET', key, JSON.stringify(user));
-      await redis('ZADD', 'leaderboard', String(user.xp || 0), slug);
-
-      const safe = { ...user };
-      delete safe.hash;
-      return res.json({ ok: true, user: safe });
+    /* ============ ME ============ */
+    if (req.method === "GET" && action === "me") {
+      const found = await findByToken(bearer(req));
+      if (!found) return json(res, 401, { error: "Token tidak valid" });
+      const u = found.user;
+      return json(res, 200, {
+        ok: true,
+        user: {
+          username: u.username, classLevel: u.classLevel,
+          xp: u.xp || 0, streak: u.streak || 0
+        }
+      });
     }
 
-    return res.status(400).json({ error: 'Action tidak dikenal: ' + action });
+    /* ============ LOGOUT ============ */
+    if (req.method === "POST" && action === "logout") {
+      const found = await findByToken(bearer(req));
+      if (found) {
+        const users = await getAllUsers();
+        users[found.key].token = null;
+        await saveAllUsers(users);
+      }
+      return json(res, 200, { ok: true });
+    }
 
+    /* ============ GANTI PASSWORD ============ */
+    if (req.method === "POST" && action === "change-password") {
+      const found = await findByToken(bearer(req));
+      if (!found) return json(res, 401, { error: "Login dulu" });
+
+      const oldPw = String(body.oldPassword || "");
+      const newPw = String(body.newPassword || "");
+      const ep = validPass(newPw); if (ep) return json(res, 400, { error: ep });
+
+      const oldHash = await hashPw(oldPw, found.user.salt);
+      if (oldHash !== found.user.hash) return json(res, 401, { error: "Password lama salah" });
+
+      const users = await getAllUsers();
+      users[found.key].salt = makeSalt();
+      users[found.key].hash = await hashPw(newPw, users[found.key].salt);
+      users[found.key].token = makeToken();
+      await saveAllUsers(users);
+
+      return json(res, 200, { ok: true, token: users[found.key].token });
+    }
+
+    /* ============ UPDATE PROFIL (kelas) ============ */
+    if (req.method === "POST" && action === "update-profile") {
+      const found = await findByToken(bearer(req));
+      if (!found) return json(res, 401, { error: "Login dulu" });
+
+      const kelas = num(body.classLevel);
+      if (kelas < 1 || kelas > 12) return json(res, 400, { error: "Kelas harus 1–12" });
+
+      const users = await getAllUsers();
+      users[found.key].classLevel = kelas;
+      await saveAllUsers(users);
+
+      return json(res, 200, { ok: true, user: { username: found.user.username, classLevel: kelas } });
+    }
+
+    return json(res, 404, { error: "Action tidak dikenal" });
   } catch (e) {
-    return res.status(500).json({ error: e.message || 'Terjadi kesalahan server' });
+    console.error("AUTH ERROR:", e);
+    return json(res, 500, { error: e.message || "Server error" });
   }
         }
