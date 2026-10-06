@@ -4,814 +4,2191 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#6366f1">
+<meta name="description" content="Rajin Belajar Jadi Pintar - belajar seru dengan AI">
 <title>Rajin Belajar Jadi Pintar</title>
 <style>
-:root{--bg:#0f1117;--card:#1a1d29;--tx:#e8ecf5;--mut:#9aa6bf;--pr:#6366f1;--pr2:#8b5cf6;--ok:#16a34a;--ok2:#22c55e;--no:#dc2626;--bd:#2b3145;--yl:#f59e0b}
-html[data-theme=light]{--bg:#f5f7fb;--card:#fff;--tx:#1b2433;--mut:#64708a;--bd:#dde3ef}
+:root{--bg:#0f1117;--card:#1a1d29;--card2:#232838;--tx:#e8ecf5;--mut:#9aa6bf;--pr:#6366f1;--pr2:#8b5cf6;--ok:#16a34a;--ok2:#22c55e;--no:#dc2626;--yl:#f59e0b;--bd:#2b3145;--sh:rgba(0,0,0,.4)}
+html[data-theme=light]{--bg:#f5f7fb;--card:#ffffff;--card2:#f0f3fa;--tx:#1b2433;--mut:#64708a;--bd:#dde3ef;--sh:rgba(0,0,0,.08)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;transition:background .3s,color .3s}
-main{max-width:600px;margin:0 auto;padding:14px 14px 100px}
-.hero{position:relative;overflow:hidden;border-radius:18px;padding:18px;margin-bottom:14px;background:linear-gradient(135deg,#6366f1,#ec4899 60%,#f59e0b);color:#fff}
-.hero h1{font-size:20px;margin:0 0 4px}.hero p{margin:0;font-size:12.5px;opacity:.95}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:12px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
-button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:11px;text-align:left;transition:.15s}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+img{max-width:100%;display:block}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
 button:active{transform:scale(.97)}
-button.sel{border-color:var(--pr);background:var(--pr);color:#fff;font-weight:700}
-button.go{width:100%;text-align:center;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:0;font-weight:700;margin-top:8px;padding:13px}
-button.ghost{background:var(--card)}
-button.danger{background:var(--no);color:#fff;border:0}
+a{color:var(--pr);text-decoration:none}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:9px}
+main{max-width:600px;margin:0 auto;padding:14px 14px 100px}
+h1,h2,h3,h4,p{margin:0}
+h1{font-size:20px}h2{font-size:18px}h3{font-size:15px}
+/* HERO */
+.hero{border-radius:18px;padding:18px;margin-bottom:14px;background:linear-gradient(135deg,#6366f1,#ec4899 60%,#f59e0b);color:#fff;box-shadow:0 8px 24px rgba(99,102,241,.3);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:rgba(255,255,255,.12);border-radius:50%}
+.hero::after{content:"";position:absolute;bottom:-80px;left:-40px;width:150px;height:150px;background:rgba(255,255,255,.08);border-radius:50%}
+.hero-content{position:relative;z-index:1}
+.hero h1{font-size:20px;margin-bottom:4px}
+.hero p{margin:0;font-size:12.5px;opacity:.95}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:0 2px 8px var(--sh)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.card-header h3{margin:0;font-size:15px;display:flex;align-items:center;gap:6px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;text-align:center;transition:.15s;border:1px solid transparent}
+.btn-primary{background:linear-gradient(135deg,var(--pr),var(--pr2));color:#fff}
+.btn-primary:hover{opacity:.95}
+.btn-secondary{background:var(--card2);color:var(--tx);border-color:var(--bd)}
+.btn-ghost{background:transparent;color:var(--tx);border-color:var(--bd)}
+.btn-danger{background:var(--no);color:#fff}
+.btn-ok{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff}
+.btn-block{display:flex;width:100%}
+.btn-lg{padding:14px 20px;font-size:14.5px}
+.btn-sm{padding:7px 11px;font-size:11.5px;border-radius:9px}
+button.sel{background:var(--pr);color:#fff;border-color:var(--pr)}
 button:disabled{opacity:.5;cursor:not-allowed}
-label{display:block;font-size:12.5px;font-weight:600;color:var(--mut);margin:12px 0 5px}
-.opt{display:block;width:100%;margin-bottom:8px;text-align:left;font-size:14px;padding:14px 16px;position:relative;transition:all .2s}
-.opt.ok{border-color:var(--ok);background:linear-gradient(90deg,rgba(22,163,74,.2),rgba(22,163,74,.05));color:#4ade80;font-weight:700;box-shadow:0 0 0 2px rgba(22,163,74,.3)}
-.opt.no{border-color:var(--no);background:rgba(220,38,38,.15);color:#fca5a5}
-.opt .badge-ok{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px}
-.bar{height:6px;background:var(--bd);border-radius:9px;overflow:hidden;margin-bottom:12px}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#ec4899);transition:width .4s}
-.score{font-size:64px;font-weight:800;text-align:center;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent}
-.bahas{font-size:13px;line-height:1.7;background:var(--bg);border-radius:12px;padding:14px;margin-top:14px;white-space:pre-wrap;border:1px solid var(--bd);position:relative}
-.bahas b{color:var(--pr)}
-.bahas-ok{border-color:rgba(22,163,74,.5);background:rgba(22,163,74,.08)}
+/* GRID */
+.grid{display:grid;gap:8px}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-5{grid-template-columns:repeat(5,1fr)}
+/* FORM */
+label{display:block;font-size:12px;font-weight:700;color:var(--mut);margin:12px 0 5px;text-transform:uppercase;letter-spacing:.5px}
+input,textarea,select{width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);outline:0;font-size:14px;transition:.15s}
+input:focus,textarea:focus,select:focus{border-color:var(--pr);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+textarea{resize:vertical;min-height:80px;font-family:inherit}
+/* TABS */
+.tabs{display:grid;gap:4px;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5;margin-bottom:10px}
+.tabs-6{grid-template-columns:repeat(6,1fr)}
+.tabs button{padding:8px 2px;font-size:10px;text-align:center;border-radius:10px;border:1px solid transparent;background:var(--card);color:var(--mut);font-weight:700;transition:.15s}
+.tabs button span{display:block;font-size:20px;margin-bottom:3px}
+.tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr);box-shadow:0 4px 12px rgba(99,102,241,.3)}
+/* OPT */
+.opt{display:block;width:100%;margin-bottom:8px;text-align:left;font-size:14px;padding:14px 16px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-weight:500;transition:.2s;position:relative}
+.opt:hover{border-color:var(--pr)}
+.opt.ok{border-color:var(--ok);background:linear-gradient(90deg,rgba(22,163,74,.15),rgba(22,163,74,.02));color:#4ade80;font-weight:700;box-shadow:0 0 0 2px rgba(22,163,74,.3)}
+.opt.no{border-color:var(--no);background:rgba(220,38,38,.1);color:#fca5a5}
+.opt .tick{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:18px}
+/* BAR */
+.bar{height:7px;background:var(--bd);border-radius:9px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#ec4899);border-radius:9px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.bar-ok i{background:linear-gradient(90deg,#16a34a,#4ade80)}
+/* BADGE */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;font-size:10.5px;font-weight:800;background:rgba(99,102,241,.15);color:#a5b4fc;letter-spacing:.3px}
+html[data-theme=light] .chip{background:rgba(99,102,241,.1);color:#4f46e5}
+.chip-ok{background:rgba(22,163,74,.15);color:#4ade80}
+.chip-no{background:rgba(220,38,38,.15);color:#fca5a5}
+.chip-yl{background:rgba(245,158,11,.15);color:#fbbf24}
+/* STAT */
+.stat{background:var(--card2);border-radius:12px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-size:22px;color:var(--pr);font-weight:900;line-height:1.1}
+.stat small{color:var(--mut);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.stat .ic{font-size:26px;display:block;margin-bottom:4px}
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(30px);background:#25263a;color:#fff;padding:11px 18px;border-radius:12px;z-index:9999;display:none;font-size:12.5px;font-weight:700;max-width:90vw;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.5);transition:transform .3s,opacity .3s;opacity:0}
+.toast.show{display:block;transform:translateX(-50%) translateY(0);opacity:1}
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal.show{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.mbox{background:var(--card);width:min(520px,100%);border-radius:18px;padding:22px;max-height:88vh;overflow:auto;border:1px solid var(--bd);animation:slideUp .3s}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.mbox h2{font-size:18px;margin-bottom:10px}
+.mclose{float:right;background:var(--bd);color:var(--tx);width:32px;height:32px;border-radius:9px;font-weight:900;border:0;padding:0;display:flex;align-items:center;justify-content:center}
+/* CHAT */
+.chat{height:340px;overflow-y:auto;background:var(--bg);border-radius:14px;padding:12px;border:1px solid var(--bd);display:flex;flex-direction:column;gap:4px}
+.bub{max-width:86%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.bub.bot{background:var(--card);border:1px solid var(--bd);border-bottom-left-radius:4px;align-self:flex-start}
+.bub.user{background:linear-gradient(135deg,var(--pr),var(--pr2));color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.typing{display:flex;gap:4px;padding:13px 15px;background:var(--card);border:1px solid var(--bd);border-radius:14px;align-self:flex-start}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--mut);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.18s}
+.typing i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+/* AUTH */
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.auth-tabs button{padding:11px;font-size:13px;font-weight:700;border-radius:11px;border:1px solid var(--bd);background:var(--card);color:var(--mut)}
+.auth-tabs button.on{background:linear-gradient(135deg,var(--pr),var(--pr2));color:#fff;border-color:var(--pr)}
+.err{background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.35);color:#fca5a5;padding:10px 13px;border-radius:10px;font-size:12.5px;margin-bottom:12px;display:none}
+.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
+.avatar-grid button{padding:8px 0;text-align:center;font-size:22px;border-radius:11px;border:1px solid var(--bd);background:var(--card)}
+.avatar-grid button.sel{background:var(--pr);border-color:var(--pr)}
+/* MISC */
+.ket{background:var(--bg);border-radius:11px;padding:11px;font-size:12px;line-height:1.65;border:1px solid var(--bd);color:var(--mut)}
+.ket b{color:var(--tx)}
+.credit{text-align:center;padding:24px 0 8px;color:var(--mut);font-size:11.5px;line-height:1.7}
+.credit b{color:var(--pr)}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pill-row button{padding:6px 12px;border-radius:9px;font-size:11.5px;background:var(--card2);border:1px solid var(--bd);font-weight:600;color:var(--tx)}
+/* QUIZ ROOM */
+.quiz-room{position:fixed;inset:0;background:linear-gradient(180deg,#0a0c12,#0f1117);z-index:900;overflow-y:auto}
+html[data-theme=light] .quiz-room{background:linear-gradient(180deg,#eef1f8,#f5f7fb)}
+.quiz-header{padding:14px 16px;background:rgba(99,102,241,.12);border-bottom:1px solid rgba(99,102,241,.25);position:sticky;top:0;z-index:2;backdrop-filter:blur(12px)}
+.quiz-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.quiz-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.quiz-close{background:rgba(255,255,255,.12);border:0;color:var(--tx);padding:7px 12px;border-radius:9px;font-size:12px;font-weight:700}
+.quiz-prog{height:8px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden}
+html[data-theme=light] .quiz-prog{background:rgba(0,0,0,.08)}
+.quiz-prog i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#ec4899);border-radius:9px;transition:width .5s;box-shadow:0 0 12px rgba(99,102,241,.5)}
+.quiz-body{padding:20px 16px 120px;max-width:600px;margin:0 auto}
+.quiz-num{font-size:74px;font-weight:900;line-height:1;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-4px}
+.quiz-num span{font-size:32px;color:var(--mut);-webkit-text-fill-color:var(--mut)}
+.quiz-q-card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:22px;margin-top:14px;box-shadow:0 12px 32px var(--sh)}
+.quiz-q-text{font-size:17px;font-weight:800;line-height:1.55;margin:0 0 18px}
+.quiz-tools{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.quiz-tools button{padding:9px 14px;border-radius:11px;border:1px solid var(--bd);background:var(--card2);font-size:12px;font-weight:700;color:var(--tx)}
+.quiz-tools button:hover{border-color:var(--pr);color:var(--pr)}
+.quiz-nav{position:fixed;bottom:0;left:0;right:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));background:rgba(15,17,23,.94);border-top:1px solid var(--bd);z-index:3;backdrop-filter:blur(12px)}
+html[data-theme=light] .quiz-nav{background:rgba(245,247,251,.94)}
+.quiz-nav-inner{max-width:600px;margin:0 auto}
+.quiz-nav button{width:100%;padding:15px;border-radius:14px;font-size:15px;font-weight:800;text-align:center;border:0;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 8px 24px rgba(99,102,241,.4)}
+/* BAHAS */
+.bahas{font-size:13px;line-height:1.75;background:var(--bg);border-radius:12px;padding:14px;margin-top:14px;white-space:pre-wrap;border:1px solid var(--bd)}
+.bahas-ok{border-color:rgba(22,163,74,.5);background:rgba(22,163,74,.06)}
 .bahas-no{border-color:rgba(220,38,38,.4);background:rgba(220,38,38,.06)}
 .bahas-title{font-weight:800;font-size:15px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5;margin-bottom:10px}
-.tabs button{text-align:center;padding:6px 1px;font-size:9.5px;border-radius:10px}
-.tabs button span{display:block;font-size:18px;margin-bottom:2px}
-.tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
-input,textarea,select{width:100%;font:inherit;padding:10px;border-radius:11px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);outline:0;font-size:14px}
-input:focus,textarea:focus{border-color:var(--pr)}
-textarea{resize:vertical;min-height:80px}
-.chat{height:320px;overflow:auto;background:var(--bg);border-radius:14px;padding:12px;border:1px solid var(--bd);display:flex;flex-direction:column;gap:4px}
-.bub{max-width:86%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
-.bub.bot{background:var(--card);border:1px solid var(--bd);border-bottom-left-radius:4px;align-self:flex-start}
-.bub.user{background:var(--pr);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
-.typ{display:flex;gap:4px;padding:11px 13px;align-self:flex-start;background:var(--card);border:1px solid var(--bd);border-radius:14px}
-.typ i{width:6px;height:6px;border-radius:50%;background:var(--mut);animation:bl 1s infinite}
-.typ i:nth-child(2){animation-delay:.18s}.typ i:nth-child(3){animation-delay:.36s}
-@keyframes bl{0%,60%,100%{opacity:.3}30%{opacity:1}}
-.lbrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)}
-.lbrow:last-child{border-bottom:0}
-.lbrow.me{background:rgba(99,102,241,.15);border-radius:10px;padding:9px 12px;border:0}
-.lbr{width:26px;font-weight:900;text-align:center;color:var(--mut);font-size:12.5px}
-.lba{width:34px;height:34px;border-radius:10px;background:rgba(99,102,241,.15);display:grid;place-items:center;font-size:17px}
-.lbb{flex:1;min-width:0}.lbb b{font-size:13px;display:block}.lbb small{color:var(--mut);font-size:10.5px}
-.lbp{font-weight:800;color:var(--pr);font-size:12.5px}
-.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.st div{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:10px 4px;text-align:center;font-size:11px}
-.st .e{font-size:24px;display:block}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#25263a;color:#fff;padding:11px 16px;border-radius:12px;z-index:200;display:none;font-size:12.5px;font-weight:700;max-width:88vw;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.4)}
-.toast.show{display:block;animation:ti .3s forwards}
-@keyframes ti{to{transform:translateX(-50%) translateY(0)}}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:120;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
-.modal.show{display:flex}
-.mbox{background:var(--card);width:min(500px,100%);border-radius:18px;padding:20px;max-height:88vh;overflow:auto;border:1px solid var(--bd);animation:su .3s}
-@keyframes su{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
-.mbox h2{margin:0 0 8px;font-size:19px}
-.mclose{float:right;background:var(--bd);color:var(--tx);width:32px;height:32px;border-radius:9px;font-weight:900;border:0;text-align:center;padding:0}
-.reaction{display:flex;justify-content:center;gap:10px;font-size:38px;margin:6px 0}
-.reaction span{animation:pp .8s ease backwards}
-@keyframes pp{0%{transform:scale(.2)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
-.stars{display:flex;gap:4px;justify-content:center;font-size:30px;margin:10px 0;cursor:pointer}
-.stars span{opacity:.3;transition:.2s}
-.stars span.on{opacity:1;transform:scale(1.15)}
-.credit{text-align:center;padding:22px 0 8px;color:var(--mut);font-size:11.5px}
-.credit b{color:var(--pr)}
-.sk{background:linear-gradient(90deg,var(--bd),rgba(99,102,241,.15),var(--bd));background-size:200% 100%;animation:sk 1.4s infinite;border-radius:9px;height:14px;margin:6px 0}
-@keyframes sk{to{background-position:-200% 0}}
-.ket{background:var(--bg);border-radius:10px;padding:10px;font-size:12px;line-height:1.6;border:1px solid var(--bd);color:var(--mut)}
-.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.auth-tabs button{text-align:center;padding:10px;font-size:13px;font-weight:700}
-.auth-tabs button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
-.err{background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.4);color:#fca5a5;padding:9px 12px;border-radius:10px;font-size:12.5px;margin-bottom:10px;display:none}
-.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
-.avatar-grid button{padding:6px 0;text-align:center;font-size:22px;border-radius:10px}
-.avatar-grid button.sel{background:var(--pr);border-color:var(--pr)}
-.pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.pill-row button{padding:6px 11px;border-radius:8px;font-size:11.5px;background:var(--bd);border:0;font-weight:600}
-
-/* ============ RUANG KUIS ============ */
-.quiz-room{position:fixed;inset:0;background:linear-gradient(180deg,#0a0c12,#0f1117);z-index:100;overflow-y:auto;display:flex;flex-direction:column}
-html[data-theme=light] .quiz-room{background:linear-gradient(180deg,#f0f2f8,#f5f7fb)}
-.quiz-header{padding:14px 16px;background:rgba(99,102,241,.12);border-bottom:1px solid rgba(99,102,241,.25);position:sticky;top:0;z-index:2;backdrop-filter:blur(10px)}
-.quiz-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.quiz-top .info{display:flex;gap:10px;align-items:center;flex:1;min-width:0}
-.quiz-top .chip{background:rgba(99,102,241,.2);color:#a5b4fc;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:800;white-space:nowrap}
-html[data-theme=light] .quiz-top .chip{background:rgba(99,102,241,.15);color:#4f46e5}
-.quiz-top .close-btn{background:rgba(255,255,255,.1);border:0;color:var(--tx);padding:7px 11px;border-radius:9px;font-size:12px;font-weight:700;flex:0 0 auto}
-.quiz-prog-big{height:8px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden}
-html[data-theme=light] .quiz-prog-big{background:rgba(0,0,0,.08)}
-.quiz-prog-big i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#ec4899);border-radius:9px;transition:width .5s;box-shadow:0 0 12px rgba(99,102,241,.6)}
-.quiz-body{flex:1;padding:20px 16px 100px;max-width:600px;margin:0 auto;width:100%}
-.quiz-num-big{font-size:72px;font-weight:900;line-height:1;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-3px}
-.quiz-q-card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:22px;margin-top:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-html[data-theme=light] .quiz-q-card{box-shadow:0 10px 30px rgba(0,0,0,.06)}
-.quiz-q-text{font-size:18px;font-weight:800;line-height:1.5;margin:0 0 18px}
-.quiz-tools{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.quiz-tools button{padding:10px 14px;border-radius:11px;border:1px solid var(--bd);background:var(--card);font-size:12.5px;font-weight:700;text-align:center;color:var(--tx)}
-.quiz-tools button:hover{border-color:var(--pr);color:var(--pr)}
-.quiz-nav{position:fixed;bottom:0;left:0;right:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));background:rgba(15,17,23,.95);border-top:1px solid var(--bd);backdrop-filter:blur(10px);z-index:3}
-html[data-theme=light] .quiz-nav{background:rgba(245,247,251,.95)}
-.quiz-nav .inner{max-width:600px;margin:0 auto;display:flex;gap:10px}
-.quiz-nav button{flex:1;padding:15px;border-radius:14px;font-size:15px;font-weight:800;text-align:center;border:0}
-.quiz-nav .next{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 8px 24px rgba(99,102,241,.4)}
-.quiz-nav .next:disabled{opacity:.4;box-shadow:none}
-.quiz-nav .check{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff}
-
-/* OVERLAY KALKULATOR / SKETSA */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:150;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
-.overlay.show{display:flex}
-.overlay-box{background:var(--card);width:min(600px,100%);border-radius:24px 24px 0 0;padding:20px;max-height:85vh;overflow-y:auto;border-top:1px solid var(--bd);animation:slideUp .3s}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.score{font-size:64px;font-weight:900;text-align:center;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.reaction{display:flex;justify-content:center;gap:12px;font-size:38px;margin:10px 0}
+.reaction span{animation:pop .8s ease backwards}
+@keyframes pop{0%{transform:scale(.2)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:950;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.overlay.show{display:flex;animation:fadeIn .2s}
+.overlay-box{background:var(--card);width:min(620px,100%);border-radius:24px 24px 0 0;padding:20px;max-height:88vh;overflow-y:auto;border-top:1px solid var(--bd);animation:slideUp .3s}
 .overlay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .overlay-header h3{margin:0;font-size:17px}
-.overlay-header button{background:var(--bd);border:0;width:32px;height:32px;border-radius:9px;font-weight:900;padding:0;text-align:center}
-.calc-display{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:16px;text-align:right;font-size:24px;font-weight:800;min-height:60px;word-break:break-all;font-variant-numeric:tabular-nums}
+.overlay-close{background:var(--bd);border:0;width:34px;height:34px;border-radius:10px;font-weight:900;padding:0;color:var(--tx);display:flex;align-items:center;justify-content:center}
+/* CALC */
+.calc-display{background:var(--bg);border:1px solid var(--bd);border-radius:14px;padding:16px;text-align:right;font-size:24px;font-weight:800;min-height:64px;word-break:break-all;font-variant-numeric:tabular-nums;overflow-x:auto}
 .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}
-.calc-grid button{padding:16px 0;text-align:center;border-radius:12px;background:var(--bg);border:1px solid var(--bd);font-weight:800;font-size:16px}
+.calc-grid button{padding:17px 0;text-align:center;border-radius:12px;background:var(--card2);border:1px solid var(--bd);font-weight:800;font-size:16px;color:var(--tx)}
+.calc-grid button:hover{background:var(--bd)}
 .calc-grid button.op{background:rgba(99,102,241,.15);color:var(--pr)}
-.calc-grid button.eq{background:var(--pr);color:#fff;grid-column:span 2}
-canvas.sketch{width:100%;height:320px;border:1px solid var(--bd);border-radius:12px;background:#fff;touch-action:none;display:block}
+.calc-grid button.eq{background:linear-gradient(135deg,var(--pr),var(--pr2));color:#fff;grid-column:span 2}
+/* SKETCH */
+canvas.sketch{width:100%;height:340px;border:1px solid var(--bd);border-radius:12px;background:#fff;touch-action:none;display:block;cursor:crosshair}
 .sketch-tools{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-top:8px}
-.sketch-tools button{padding:10px 0;text-align:center;border-radius:11px;background:var(--card);border:1px solid var(--bd);font-size:15px}
-.sketch-tools button.sel{border-color:var(--pr);background:rgba(99,102,241,.15)}
-
-/* SPEAKING */
-.speak-btn{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f43f5e);color:#fff;border:0;font-size:40px;display:flex;align-items:center;justify-content:center;margin:16px auto;box-shadow:0 8px 24px rgba(236,72,153,.4);transition:.2s}
-.speak-btn.rec{animation:rec 1.2s infinite;background:linear-gradient(135deg,#dc2626,#f43f5e)}
-@keyframes rec{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.7)}70%{box-shadow:0 0 0 20px rgba(220,38,38,0)}}
-.score-badge{display:inline-block;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-left:8px}
-.score-badge.good{background:rgba(22,163,74,.2);color:#4ade80}
-.score-badge.mid{background:rgba(245,158,11,.2);color:#fbbf24}
-.score-badge.bad{background:rgba(220,38,38,.2);color:#fca5a5}
+.sketch-tools button{padding:11px 0;text-align:center;border-radius:11px;background:var(--card2);border:1px solid var(--bd);font-size:15px;color:var(--tx)}
+.sketch-tools button.sel{border-color:var(--pr);background:rgba(99,102,241,.2)}
+/* SPEAK */
+.speak-btn{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f43f5e);color:#fff;border:0;font-size:44px;display:flex;align-items:center;justify-content:center;margin:20px auto;box-shadow:0 10px 32px rgba(236,72,153,.4);transition:.2s;padding:0}
+.speak-btn.rec{animation:rec 1.3s infinite;background:linear-gradient(135deg,#dc2626,#f43f5e)}
+@keyframes rec{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.8)}70%{box-shadow:0 0 0 24px rgba(220,38,38,0)}}
+.score-badge{display:inline-block;padding:4px 10px;border-radius:8px;font-size:11.5px;font-weight:800;margin-left:6px}
+.score-good{background:rgba(22,163,74,.2);color:#4ade80}
+.score-mid{background:rgba(245,158,11,.2);color:#fbbf24}
+.score-bad{background:rgba(220,38,38,.2);color:#fca5a5}
+/* TRACK */
+.track{display:flex;align-items:center;gap:11px;padding:11px;border-radius:12px;background:var(--bg);border:1px solid var(--bd);margin-bottom:7px}
+.track .ic{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:grid;place-items:center;font-size:18px;flex:0 0 auto;color:#fff}
+.track .info{flex:1;min-width:0}
+.track .info b{font-size:13px;display:block}
+.track .info small{color:var(--mut);font-size:11px}
+/* MUSIC CARD */
+.music-card{background:linear-gradient(135deg,#4c1d95,#5b21b6);color:#fff;border:0;position:relative;overflow:hidden}
+html[data-theme=light] .music-card{background:linear-gradient(135deg,#7c3aed,#8b5cf6)}
+.music-visual{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:70px;margin:12px 0}
+.music-visual span{width:4px;background:rgba(255,255,255,.7);border-radius:3px;height:20%;animation:mv 1.2s infinite ease-in-out}
+.music-visual.paused span{animation-play-state:paused;opacity:.35}
+@keyframes mv{0%,100%{height:20%}50%{height:100%}}
+.vol-row{display:flex;align-items:center;gap:10px;font-size:11.5px;opacity:.9}
+.vol-row input{flex:1;padding:0;height:6px;background:rgba(255,255,255,.3);border-radius:9px;appearance:none;border:0}
+.vol-row input::-webkit-slider-thumb{appearance:none;width:18px;height:18px;background:#fff;border-radius:50%;cursor:pointer}
+/* LB */
+.lb-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.lb-row:last-child{border-bottom:0}
+.lb-row.me{background:rgba(99,102,241,.14);border-radius:11px;padding:10px 12px;border:0;margin-bottom:5px}
+.lb-rank{width:28px;font-weight:900;text-align:center;color:var(--mut);font-size:12.5px}
+.lb-av{width:36px;height:36px;border-radius:11px;background:rgba(99,102,241,.15);display:grid;place-items:center;font-size:18px}
+.lb-info{flex:1;min-width:0}
+.lb-info b{font-size:13px;display:block}
+.lb-info small{color:var(--mut);font-size:10.5px}
+.lb-xp{font-weight:900;color:var(--pr);font-size:13px}
+/* STARS */
+.stars{display:flex;gap:4px;justify-content:center;font-size:34px;margin:10px 0;cursor:pointer}
+.stars span{opacity:.3;transition:.2s;cursor:pointer}
+.stars span.on{opacity:1;transform:scale(1.15)}
+/* MOOD */
+.mood-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.mood-btn{padding:13px 4px;text-align:center;font-size:11.5px;border-radius:12px;background:var(--card2);border:1px solid var(--bd);color:var(--tx);font-weight:600}
+.mood-btn .em{display:block;font-size:28px;margin-bottom:5px}
+.mood-hist{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap}
+.mood-hist div{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:var(--bg);border:1px solid var(--bd)}
+/* PLAN */
+.plan-item{display:flex;align-items:center;gap:10px;padding:11px;border-radius:12px;background:var(--bg);border:1px solid var(--bd);margin-bottom:7px}
+.plan-item.done{opacity:.5}
+.plan-item.done .plan-txt b{text-decoration:line-through}
+.plan-dot{width:36px;height:36px;border-radius:11px;background:rgba(99,102,241,.15);display:grid;place-items:center;font-size:16px;color:var(--pr);flex:0 0 auto}
+.plan-txt{flex:1;min-width:0}
+.plan-txt b{font-size:13px;display:block}
+.plan-txt small{color:var(--mut);font-size:10.5px}
+/* BADGE GRID */
+.badge-item{text-align:center;padding:12px 6px;border-radius:12px;background:var(--card2);font-size:10.5px;line-height:1.35;border:1px solid var(--bd)}
+.badge-item .ic{font-size:30px;display:block;margin-bottom:5px}
+.badge-item.locked{filter:grayscale(1);opacity:.4}
+.badge-item b{display:block;font-size:11px;margin-bottom:2px}
+/* CHART */
+canvas.chart{width:100%;height:180px;display:block}
+/* SKELETON */
+.sk{background:linear-gradient(90deg,var(--bd),rgba(99,102,241,.1),var(--bd));background-size:200% 100%;animation:sk 1.4s infinite;border-radius:9px;height:14px;margin:6px 0}
+@keyframes sk{to{background-position:-200% 0}}
+/* TOGGLE */
+.toggle{position:relative;width:44px;height:24px;background:var(--bd);border-radius:99px;cursor:pointer;transition:.2s;flex:0 0 auto}
+.toggle.on{background:var(--pr)}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s}
+.toggle.on::after{left:23px}
+/* SETTINGS ROW */
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--bd)}
+.set-row:last-child{border-bottom:0}
+.set-row .lbl{font-size:13.5px;font-weight:600}
+.set-row .desc{font-size:11px;color:var(--mut);margin-top:2px}
+/* THEME PICKER */
+.theme-picker{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.theme-picker button{width:44px;height:44px;border-radius:12px;border:3px solid transparent;transition:.15s;padding:0}
+.theme-picker button.sel{border-color:var(--tx);transform:scale(1.08)}
+/* RESPONSIVE */
+@media(max-width:400px){
+  main{padding:12px 12px 100px}
+  .hero{padding:16px}
+  .hero h1{font-size:18px}
+  .quiz-num{font-size:60px}
+  .quiz-num span{font-size:26px}
+  .tabs button span{font-size:18px}
+  .tabs button{font-size:9.5px;padding:7px 1px}
+}
 </style>
 </head>
 <body>
+
 <main id="app"></main>
+
 <div id="toast" class="toast"></div>
-<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
-  <div class="mbox"><button class="mclose" onclick="closeModal()">✕</button><div id="modalContent"></div></div>
+
+<div id="modal" class="modal">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal()">X</button>
+    <div id="modalContent"></div>
+  </div>
 </div>
-<div id="overlay" class="overlay" onclick="if(event.target===this)closeOverlay()">
+
+<div id="overlay" class="overlay">
   <div class="overlay-box" id="overlayContent"></div>
 </div>
 
 <script>
-/* ===== KONFIG ===== */
-const AI_ENDPOINT='/api/chat';
-const AUTH_ENDPOINT='/api/auth';
-const LB_ENDPOINT='/api/leaderboard';
+/* ============================================================
+   RAJIN BELAJAR JADI PINTAR - v10
+   Author: Pandana
+   ============================================================ */
 
-/* ===== STATE ===== */
-let S={nama:'',password:'',avatar:'🦊',xp:0,coins:20,streak:0,soal:0,benar:0,menitFokus:0,riwayat:[],chatHistory:[],myRating:0,comments:[],tab:'belajar',lastActive:'',notes:'',planner:[],moods:[],theme:'dark',color:'indigo',sound:true};
-function loadS(){try{const r=localStorage.getItem('rbjp_v7');if(r)Object.assign(S,JSON.parse(r))}catch(e){}}
-function saveS(){try{localStorage.setItem('rbjp_v7',JSON.stringify(S))}catch(e){}}
-loadS();
+/* ==== KONFIG ==== */
+var AI_ENDPOINT = '/api/chat';
+var AUTH_ENDPOINT = '/api/auth';
+var LB_ENDPOINT = '/api/leaderboard';
+var STORAGE_KEY = 'rbjp_v10';
 
-const $=id=>document.getElementById(id);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const today=()=>new Date().toISOString().slice(0,10);
-const lvlOf=xp=>Math.floor(xp/100)+1;
-const xpIn=xp=>xp%100;
+/* ==== STATE ==== */
+var S = {
+  nama: '',
+  password: '',
+  avatar: 'A',
+  xp: 0,
+  coins: 20,
+  streak: 0,
+  soal: 0,
+  benar: 0,
+  menitFokus: 0,
+  riwayat: [],
+  chatHistory: [],
+  myRating: 0,
+  comments: [],
+  tab: 'belajar',
+  notes: '',
+  planner: [],
+  moods: [],
+  badges: [],
+  theme: 'dark',
+  color: 'indigo',
+  sound: true,
+  tts: true,
+  lastActive: ''
+};
 
-function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2400)}
-function openModal(h){$('modalContent').innerHTML=h;$('modal').classList.add('show')}
-function closeModal(){$('modal').classList.remove('show')}
-function openOverlay(h){$('overlayContent').innerHTML=h;$('overlay').classList.add('show')}
-function closeOverlay(){$('overlay').classList.remove('show')}
-
-/* ===== SUARA (SFX) ===== */
-let sfxCtx=null;
-function sfx(type){
-  if(!S.sound)return;
-  try{
-    sfxCtx=sfxCtx||new(window.AudioContext||window.webkitAudioContext)();
-    const C=sfxCtx;
-    if(type==='benar'){
-      // Nada naik ceria: C-E-G-C
-      [523.25,659.25,783.99,1046.5].forEach((f,i)=>{
-        const o=C.createOscillator(),g=C.createGain();
-        o.connect(g);g.connect(C.destination);
-        o.type='sine';o.frequency.value=f;
-        const t=C.currentTime+i*0.08;
-        g.gain.setValueAtTime(0,t);
-        g.gain.linearRampToValueAtTime(.12,t+.01);
-        g.gain.exponentialRampToValueAtTime(.001,t+.35);
-        o.start(t);o.stop(t+.4);
-      });
-    }else if(type==='salah'){
-      // Nada turun
-      [400,300,200].forEach((f,i)=>{
-        const o=C.createOscillator(),g=C.createGain();
-        o.connect(g);g.connect(C.destination);
-        o.type='sawtooth';o.frequency.value=f;
-        const t=C.currentTime+i*0.1;
-        g.gain.setValueAtTime(0,t);
-        g.gain.linearRampToValueAtTime(.08,t+.01);
-        g.gain.exponentialRampToValueAtTime(.001,t+.25);
-        o.start(t);o.stop(t+.3);
-      });
-    }else if(type==='klik'){
-      const o=C.createOscillator(),g=C.createGain();
-      o.connect(g);g.connect(C.destination);
-      o.type='sine';o.frequency.value=520;
-      g.gain.setValueAtTime(.06,C.currentTime);
-      g.gain.exponentialRampToValueAtTime(.001,C.currentTime+.08);
-      o.start();o.stop(C.currentTime+.1);
-    }else if(type==='naik'){
-      [659.25,880,1108.73].forEach((f,i)=>{
-        const o=C.createOscillator(),g=C.createGain();
-        o.connect(g);g.connect(C.destination);
-        o.type='triangle';o.frequency.value=f;
-        const t=C.currentTime+i*0.12;
-        g.gain.setValueAtTime(0,t);
-        g.gain.linearRampToValueAtTime(.1,t+.02);
-        g.gain.exponentialRampToValueAtTime(.001,t+.5);
-        o.start(t);o.stop(t+.55);
-      });
+/* Load dari localStorage */
+(function(){
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      var saved = JSON.parse(raw);
+      for (var key in saved) {
+        if (saved.hasOwnProperty(key)) S[key] = saved[key];
+      }
     }
-  }catch(e){}
+  } catch(e) {}
+})();
+
+function saveS() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(S));
+  } catch(e) {}
 }
 
-/* ===== THEME ===== */
-const COLORS={indigo:{p:'#6366f1',p2:'#8b5cf6'},blue:{p:'#2563eb',p2:'#3b82f6'},green:{p:'#16a34a',p2:'#22c55e'},orange:{p:'#f97316',p2:'#fb923c'},red:{p:'#dc2626',p2:'#f43f5e'},pink:{p:'#db2777',p2:'#ec4899'},teal:{p:'#0891b2',p2:'#06b6d4'},purple:{p:'#7c3aed',p2:'#a855f7'}};
-function applyTheme(){const c=COLORS[S.color]||COLORS.indigo;document.documentElement.style.setProperty('--pr',c.p);document.documentElement.style.setProperty('--pr2',c.p2);document.documentElement.setAttribute('data-theme',S.theme)}
+/* ==== UTILITAS ==== */
+function $id(id) { return document.getElementById(id); }
+
+function esc(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/[&<>"']/g, function(c) {
+    var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    return map[c];
+  });
+}
+
+function today() {
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function lvlOf(xp) { return Math.floor(xp / 100) + 1; }
+function xpIn(xp) { return xp % 100; }
+function fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+
+function toast(msg) {
+  var t = $id('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function() {
+    t.classList.remove('show');
+  }, 2400);
+}
+
+function openModal(html) {
+  $id('modalContent').innerHTML = html;
+  $id('modal').classList.add('show');
+}
+
+function closeModal() {
+  $id('modal').classList.remove('show');
+}
+
+function openOverlay(html) {
+  $id('overlayContent').innerHTML = html;
+  $id('overlay').classList.add('show');
+}
+
+function closeOverlay() {
+  $id('overlay').classList.remove('show');
+}
+
+/* ==== SOUND EFFECTS ==== */
+var audioCtx = null;
+function sfx(type) {
+  if (!S.sound) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    var C = audioCtx;
+    var notes, wave, dur;
+    if (type === 'benar') { notes = [523.25, 659.25, 783.99, 1046.5]; wave = 'sine'; dur = 0.35; }
+    else if (type === 'salah') { notes = [400, 300, 200]; wave = 'sawtooth'; dur = 0.25; }
+    else if (type === 'naik') { notes = [659.25, 880, 1108.73, 1318.51]; wave = 'triangle'; dur = 0.5; }
+    else if (type === 'klik') { notes = [520]; wave = 'sine'; dur = 0.08; }
+    else if (type === 'koin') { notes = [1046.5, 1318.51]; wave = 'square'; dur = 0.15; }
+    else if (type === 'salah-besar') { notes = [300, 250, 200, 150]; wave = 'sawtooth'; dur = 0.4; }
+    else { notes = [500]; wave = 'sine'; dur = 0.1; }
+
+    for (var i = 0; i < notes.length; i++) {
+      (function(freq, idx) {
+        var o = C.createOscillator();
+        var g = C.createGain();
+        o.connect(g);
+        g.connect(C.destination);
+        o.type = wave;
+        o.frequency.value = freq;
+        var t = C.currentTime + idx * 0.08;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.15, t + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        o.start(t);
+        o.stop(t + dur + 0.05);
+      })(notes[i], i);
+    }
+  } catch(e) {}
+}
+
+/* ==== THEME ==== */
+var COLORS = {
+  indigo: { p: '#6366f1', p2: '#8b5cf6' },
+  blue: { p: '#2563eb', p2: '#3b82f6' },
+  green: { p: '#16a34a', p2: '#22c55e' },
+  orange: { p: '#f97316', p2: '#fb923c' },
+  red: { p: '#dc2626', p2: '#f43f5e' },
+  pink: { p: '#db2777', p2: '#ec4899' },
+  teal: { p: '#0891b2', p2: '#06b6d4' },
+  purple: { p: '#7c3aed', p2: '#a855f7' }
+};
+
+function applyTheme() {
+  var c = COLORS[S.color] || COLORS.indigo;
+  document.documentElement.style.setProperty('--pr', c.p);
+  document.documentElement.style.setProperty('--pr2', c.p2);
+  document.documentElement.setAttribute('data-theme', S.theme);
+}
+
 applyTheme();
 
-/* ===== API ===== */
-async function apiAuth(action,payload){
-  const r=await fetch(AUTH_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...payload})});
-  const d=await r.json();if(!r.ok)throw new Error(d.error||'Gagal');return d;
-}
-async function apiLB(){const r=await fetch(LB_ENDPOINT);const d=await r.json();if(!r.ok)throw new Error(d.error||'Gagal');return d.rows||[]}
-async function syncUser(){if(!S.nama||!S.password)return;try{await apiAuth('update',{nama:S.nama,password:S.password,stats:{xp:S.xp,coins:S.coins,streak:S.streak,soal:S.soal,benar:S.benar,menitFokus:S.menitFokus,avatar:S.avatar,lastActive:S.lastActive}})}catch(e){console.warn(e.message)}}
-let syncT;function scheduleSync(){clearTimeout(syncT);syncT=setTimeout(syncUser,1500)}
-
-async function callAI(messages){
-  const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages})});
-  const d=await r.json();if(!r.ok)throw new Error(d.error||'AI error');
-  const text=d.choices?.[0]?.message?.content||d.text||'';if(!text)throw new Error('AI tidak merespons');return text;
-}
-async function callAIJSON(prompt,system){
-  const msgs=[];if(system)msgs.push({role:'system',content:system});msgs.push({role:'user',content:prompt});
-  const text=await callAI(msgs);const a=text.indexOf('{'),b=text.lastIndexOf('}');
-  if(a<0||b<a)throw new Error('AI tidak mengembalikan JSON valid');return JSON.parse(text.slice(a,b+1));
+/* ==== API ==== */
+function apiAuth(action, payload) {
+  var body = { action: action };
+  for (var k in payload) {
+    if (payload.hasOwnProperty(k)) body[k] = payload[k];
+  }
+  return fetch(AUTH_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }).then(function(r) {
+    return r.json().then(function(d) {
+      if (!r.ok) throw new Error(d.error || 'Gagal');
+      return d;
+    });
+  });
 }
 
-/* ===== AUTH ===== */
-let authMode='login';
-const AVATARS=['🦊','🐼','🐯','🐰','🐨','🐸','🐺','🐱','🦁','🐵','🦉','🐧','🐢','🦄','🐲','🚀','👑','⭐','🎓','🧠','🐻','🦅'];
-let pickedAvatar='🦊';
-
-function pAuth(){
-  return `<div class="hero"><h1>📚 Rajin Belajar</h1><p>Belajar seru, naik level tiap hari</p></div>
-  <div class="card">
-    <div class="auth-tabs">
-      <button class="${authMode==='login'?'on':''}" onclick="authMode='login';render()">Masuk</button>
-      <button class="${authMode==='register'?'on':''}" onclick="authMode='register';render()">Daftar Baru</button>
-    </div>
-    <div class="err" id="authErr"></div>
-    <label style="margin-top:0">Nama</label>
-    <input id="inNama" placeholder="Nama atau panggilan" maxlength="20">
-    <label>Password</label>
-    <input id="inPw" type="password" placeholder="Minimal 4 karakter">
-    ${authMode==='register'?`<label>Konfirmasi Password</label><input id="inPw2" type="password" placeholder="Ulangi password">
-      <label>Pilih Avatar</label><div class="avatar-grid">${AVATARS.map(a=>`<button class="${a===pickedAvatar?'sel':''}" onclick="pickedAvatar='${a}';render()">${a}</button>`).join('')}</div>`:''}
-    <button class="go" id="authBtn" onclick="submitAuth()">${authMode==='login'?'🔓 Masuk':'✨ Daftar'}</button>
-    <p style="color:var(--mut);font-size:11px;text-align:center;margin-top:10px">Password di-hash. Nama muncul di peringkat.</p>
-  </div>
-  <div class="credit">Dibuat dengan ❤️ by <b>Pandana</b></div>`;
-}
-async function submitAuth(){
-  const nama=$('inNama').value.trim(),pw=$('inPw').value;
-  const pw2=authMode==='register'?$('inPw2').value:pw;
-  const err=$('authErr');function showErr(m){err.textContent=m;err.style.display='block'}err.style.display='none';
-  if(nama.length<3)return showErr('Nama minimal 3 karakter');
-  if(pw.length<4)return showErr('Password minimal 4 karakter');
-  if(authMode==='register'&&pw!==pw2)return showErr('Konfirmasi password tidak sama');
-  const btn=$('authBtn');btn.disabled=true;btn.textContent='⏳ Tunggu...';
-  try{
-    const res=await apiAuth(authMode,{nama,password:pw,avatar:authMode==='register'?pickedAvatar:undefined});
-    Object.assign(S,res.user,{password:pw,tab:'belajar',chatHistory:[]});saveS();
-    toast(authMode==='login'?'👋 Halo, '+S.nama+'!':'🎉 Selamat datang, '+S.nama+'!');sfx('naik');render();
-  }catch(e){showErr(e.message);btn.disabled=false;btn.textContent=authMode==='login'?'🔓 Masuk':'✨ Daftar'}
-}
-function logout(){if(!confirm('Keluar dari akun?'))return;S.nama='';S.password='';S.chatHistory=[];saveS();authMode='login';render();toast('👋 Sampai jumpa!')}
-
-/* ===== NAVIGASI ===== */
-function go(t){S.tab=t;saveS();render()}
-
-function render(){
-  if(!S.nama||!S.password)return $('app').innerHTML=pAuth();
-  const t=S.tab||'belajar';
-  const pages={belajar:pBelajar,khusus:pKhusus,speaking:pSpeaking,musik:pMusik,alat:pAlat,nilai:pNilai};
-  $('app').innerHTML=`
-    <div class="hero">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-        <div style="flex:1"><h1>${S.avatar} Halo, ${esc(S.nama)}!</h1>
-          <p>Level ${lvlOf(S.xp)} • ${S.xp} XP • 🔥 ${S.streak} • 🪙 ${S.coins}</p></div>
-        <button onclick="logout()" style="background:rgba(255,255,255,.2);border:0;color:#fff;padding:7px 11px;border-radius:9px;font-size:11px;font-weight:700">Keluar</button>
-      </div>
-    </div>
-    <div class="tabs">
-      <button class="${t==='belajar'?'on':''}" onclick="go('belajar')"><span>🎓</span>Belajar</button>
-      <button class="${t==='khusus'?'on':''}" onclick="go('khusus')"><span>🏅</span>Khusus</button>
-      <button class="${t==='speaking'?'on':''}" onclick="go('speaking')"><span>🗣️</span>Speaking</button>
-      <button class="${t==='musik'?'on':''}" onclick="go('musik')"><span>🎵</span>Musik</button>
-      <button class="${t==='alat'?'on':''}" onclick="go('alat')"><span>🛠️</span>Alat</button>
-      <button class="${t==='nilai'?'on':''}" onclick="go('nilai')"><span>📊</span>Nilai</button>
-    </div>
-    ${pages[t]()}
-    <div class="credit">Dibuat dengan ❤️ by <b>Pandana</b> • v7.0</div>`;
-  if(t==='nilai')setTimeout(loadLB,50);
-  if(t==='belajar')setTimeout(updateKelas,50);
-  if(t==='musik')setTimeout(musicInitUI,50);
-  if(t==='alat')setTimeout(alatInit,50);
+function apiLB() {
+  return fetch(LB_ENDPOINT).then(function(r) {
+    return r.json();
+  }).then(function(d) {
+    if (!d.ok) throw new Error(d.error || 'Gagal');
+    return d.rows || [];
+  });
 }
 
-/* ===== MAPEL LIST ===== */
-const MAPEL_UMUM=[['Matematika','🔢'],['IPA','🔬'],['IPS','🌏'],['Bahasa Indonesia','📖'],['Bahasa Inggris','🔤'],['Informatika','💻'],['PPKn','🇮🇩'],['Seni Budaya','🎨'],['Agama','🕌'],['Penjaskes','⚽']];
-const MAPEL_MULOK=[['Bahasa Sasak','🏝️'],['Bahasa Jawa','🏯'],['Bahasa Sunda','🎋'],['Bahasa Bali','🌺'],['Bahasa Madura','🐂'],['Bahasa Minangkabau','🏠'],['Bahasa Bugis','⛵'],['Bahasa Banjar','🛶'],['Bahasa Aceh','🕌'],['Bahasa Batak','🌋']];
-const MODE_KHUSUS=[
-  {id:'tka-mat',nama:'TKA Matematika',emo:'🧮',color:'#ef4444',mapel:'Matematika',req:'Soal bergaya TKA (Tes Kemampuan Akademik): numerasi, penalaran, dan pemecahan masalah kontekstual. Tingkat kesulitan standar TKA.'},
-  {id:'tka-ind',nama:'TKA Bahasa Indonesia',emo:'📘',color:'#ec4899',mapel:'Bahasa Indonesia',req:'Soal TKA: literasi, pemahaman teks bacaan, kaidah kebahasaan.'},
-  {id:'tka-ing',nama:'TKA Bahasa Inggris',emo:'🌐',color:'#8b5cf6',mapel:'Bahasa Inggris',req:'Soal TKA: reading comprehension, vocabulary, grammar in context.'},
-  {id:'osn-mat',nama:'OSN Matematika',emo:'🏅',color:'#dc2626',mapel:'Matematika',req:'Soal olimpiade matematika (OSN): tingkat sulit, logika, teori bilangan, kombinatorika, geometri.'},
-  {id:'osn-ipa',nama:'OSN IPA',emo:'🧪',color:'#10b981',mapel:'IPA',req:'Soal OSN IPA: konsep mendalam, analisis data dan eksperimen, tingkat sulit.'},
-  {id:'osn-ips',nama:'OSN IPS',emo:'🗺️',color:'#f59e0b',mapel:'IPS',req:'Soal OSN IPS: analisis peristiwa, peta, ekonomi dan sosial, tingkat sulit.'},
-  {id:'osn-inf',nama:'OSN Informatika',emo:'🤖',color:'#3b6cf6',mapel:'Informatika',req:'Soal olimpiade informatika: berpikir komputasional, pola, logika algoritma, pseudocode.'},
-  {id:'toefl',nama:'TOEFL / English Test',emo:'📝',color:'#6366f1',mapel:'Bahasa Inggris',req:'Gaya TOEFL: structure, vocabulary, reading comprehension. Soal berbahasa Inggris.'},
-  {id:'hsk',nama:'HSK Mandarin',emo:'🀄',color:'#e11d48',mapel:'Bahasa Mandarin',req:'Gaya ujian HSK: kosakata hanzi dengan pinyin dan arti, pola kalimat, membaca singkat.'}
+function syncUser() {
+  if (!S.nama || !S.password) return;
+  apiAuth('update', {
+    nama: S.nama,
+    password: S.password,
+    stats: {
+      xp: S.xp,
+      coins: S.coins,
+      streak: S.streak,
+      soal: S.soal,
+      benar: S.benar,
+      menitFokus: S.menitFokus,
+      avatar: S.avatar,
+      lastActive: S.lastActive
+    }
+  }).catch(function(){});
+}
+
+var syncTimer;
+function scheduleSync() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncUser, 1500);
+}
+
+function callAI(messages) {
+  return fetch(AI_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: messages })
+  }).then(function(r) {
+    return r.json().then(function(d) {
+      if (!r.ok) throw new Error(d.error || 'AI error');
+      var text = '';
+      if (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content) {
+        text = d.choices[0].message.content;
+      } else if (d.text) {
+        text = d.text;
+      }
+      if (!text) throw new Error('AI tidak merespons');
+      return text;
+    });
+  });
+}
+
+function callAIJSON(prompt, system) {
+  var msgs = [];
+  if (system) msgs.push({ role: 'system', content: system });
+  msgs.push({ role: 'user', content: prompt });
+  return callAI(msgs).then(function(text) {
+    var a = text.indexOf('{');
+    var b = text.lastIndexOf('}');
+    if (a < 0 || b < a) throw new Error('AI tidak mengembalikan JSON valid');
+    return JSON.parse(text.slice(a, b + 1));
+  });
+}
+
+/* ==== TTS ==== */
+function speakText(text, lang) {
+  if (!S.tts) return;
+  if (!('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(String(text).replace(/[^\w\s\.\,\?\!]/g, ''));
+    u.lang = lang || 'id-ID';
+    u.rate = 0.95;
+    u.pitch = 1;
+    speechSynthesis.speak(u);
+  } catch(e) {}
+}
+
+function stopSpeak() {
+  try { speechSynthesis.cancel(); } catch(e) {}
+}
+
+/* ==== AUTH ==== */
+var authMode = 'login';
+var AVATAR_EMOJIS = [
+  '\uD83E\uDD8A', '\uD83D\uDC3C', '\uD83D\uDC2F', '\uD83D\uDC30',
+  '\uD83D\uDC28', '\uD83D\uDC38', '\uD83D\uDC3A', '\uD83D\uDC31',
+  '\uD83E\uDD81', '\uD83D\uDC35', '\uD83E\uDD89', '\uD83D\uDC27',
+  '\uD83D\uDC22', '\uD83E\uDD84', '\uD83D\uDC32', '\uD83D\uDE80',
+  '\uD83D\uDC51', '\u2B50', '\uD83C\uDF93', '\uD83E\uDDE0',
+  '\uD83D\uDC3B', '\uD83E\uDD85', '\uD83D\uDC35', '\uD83D\uDC08'
+];
+var pickedAvatar = AVATAR_EMOJIS[0];
+
+function setAuthMode(m) { authMode = m; render(); }
+
+function pAuth() {
+  var html = '';
+  html += '<div class="hero"><div class="hero-content">';
+  html += '<h1>\uD83D\uDCDA Rajin Belajar</h1>';
+  html += '<p>Belajar seru, naik level tiap hari</p>';
+  html += '</div></div>';
+
+  html += '<div class="card">';
+  html += '<div class="auth-tabs">';
+  html += '<button class="' + (authMode === 'login' ? 'on' : '') + '" onclick="setAuthMode(\'login\')">Masuk</button>';
+  html += '<button class="' + (authMode === 'register' ? 'on' : '') + '" onclick="setAuthMode(\'register\')">Daftar Baru</button>';
+  html += '</div>';
+
+  html += '<div class="err" id="authErr"></div>';
+
+  html += '<label style="margin-top:0">Nama</label>';
+  html += '<input id="inNama" placeholder="Nama atau panggilan" maxlength="20" autocomplete="username">';
+
+  html += '<label>Password</label>';
+  html += '<input id="inPw" type="password" placeholder="Minimal 4 karakter" autocomplete="current-password">';
+
+  if (authMode === 'register') {
+    html += '<label>Konfirmasi Password</label>';
+    html += '<input id="inPw2" type="password" placeholder="Ulangi password">';
+    html += '<label>Pilih Avatar</label>';
+    html += '<div class="avatar-grid">';
+    for (var i = 0; i < AVATAR_EMOJIS.length; i++) {
+      var a = AVATAR_EMOJIS[i];
+      html += '<button class="' + (a === pickedAvatar ? 'sel' : '') + '" onclick="pickAv(\'' + a + '\')">' + a + '</button>';
+    }
+    html += '</div>';
+  }
+
+  html += '<button class="btn btn-primary btn-block btn-lg" id="authBtn" onclick="submitAuth()" style="margin-top:16px">';
+  html += (authMode === 'login' ? '\uD83D\uDD13 Masuk' : '\u2728 Daftar Sekarang');
+  html += '</button>';
+
+  html += '<p style="color:var(--mut);font-size:11px;text-align:center;margin-top:14px;line-height:1.6">';
+  html += 'Password di-hash dengan aman.<br>Nama kamu akan muncul di peringkat.';
+  html += '</p>';
+  html += '</div>';
+
+  html += '<div class="credit">Dibuat dengan \u2764\uFE0F by <b>Pandana</b></div>';
+  return html;
+}
+
+function pickAv(a) {
+  pickedAvatar = a;
+  render();
+}
+
+function submitAuth() {
+  var nama = $id('inNama').value.trim();
+  var pw = $id('inPw').value;
+  var pw2 = authMode === 'register' ? $id('inPw2').value : pw;
+  var errEl = $id('authErr');
+
+  function showErr(m) {
+    errEl.textContent = m;
+    errEl.style.display = 'block';
+  }
+
+  errEl.style.display = 'none';
+
+  if (nama.length < 3) return showErr('Nama minimal 3 karakter');
+  if (pw.length < 4) return showErr('Password minimal 4 karakter');
+  if (authMode === 'register' && pw !== pw2) return showErr('Konfirmasi password tidak sama');
+
+  var btn = $id('authBtn');
+  btn.disabled = true;
+  btn.textContent = 'Tunggu...';
+
+  var payload = { nama: nama, password: pw };
+  if (authMode === 'register') payload.avatar = pickedAvatar;
+
+  apiAuth(authMode, payload)
+    .then(function(res) {
+      for (var k in res.user) {
+        if (res.user.hasOwnProperty(k)) S[k] = res.user[k];
+      }
+      S.password = pw;
+      S.tab = 'belajar';
+      S.chatHistory = [];
+      S.lastActive = today();
+      saveS();
+      toast(authMode === 'login' ? '\uD83D\uDC4B Halo, ' + S.nama + '!' : '\uD83C\uDF89 Selamat datang, ' + S.nama + '!');
+      sfx('naik');
+      render();
+    })
+    .catch(function(e) {
+      showErr(e.message);
+      btn.disabled = false;
+      btn.textContent = authMode === 'login' ? 'Masuk' : 'Daftar';
+    });
+}
+
+function logout() {
+  if (!confirm('Keluar dari akun?')) return;
+  S.nama = '';
+  S.password = '';
+  S.chatHistory = [];
+  saveS();
+  authMode = 'login';
+  render();
+  toast('Sampai jumpa!');
+}
+
+/* ==== DATA ==== */
+var MAPEL_UMUM = [
+  { nama: 'Matematika', emo: '\uD83D\uDD22' },
+  { nama: 'IPA', emo: '\uD83D\uDD2C' },
+  { nama: 'IPS', emo: '\uD83C\uDF0F' },
+  { nama: 'B. Indonesia', emo: '\uD83D\uDCD6' },
+  { nama: 'B. Inggris', emo: '\uD83D\uDD24' },
+  { nama: 'Informatika', emo: '\uD83D\uDCBB' },
+  { nama: 'PPKn', emo: '\uD83C\uDDEE\uD83C\uDDE9' },
+  { nama: 'Seni Budaya', emo: '\uD83C\uDFA8' },
+  { nama: 'Agama', emo: '\uD83D\uDD4C' },
+  { nama: 'Penjaskes', emo: '\u26BD' }
 ];
 
-/* ===== BELAJAR ===== */
-let setup={mapel:'Matematika',jenjang:'SMP',kelas:8,tipe:'pg',n:5,kkm:70,kisi:''};
+var MAPEL_MULOK = [
+  { nama: 'B. Sasak', emo: '\uD83C\uDFDD\uFE0F' },
+  { nama: 'B. Jawa', emo: '\uD83C\uDFEF' },
+  { nama: 'B. Sunda', emo: '\uD83C\uDF8B' },
+  { nama: 'B. Bali', emo: '\uD83C\uDF3A' },
+  { nama: 'B. Madura', emo: '\uD83D\uDC02' },
+  { nama: 'B. Minangkabau', emo: '\uD83C\uDFE0' },
+  { nama: 'B. Bugis', emo: '\u26F5' },
+  { nama: 'B. Banjar', emo: '\uD83D\uDEF6' },
+  { nama: 'B. Aceh', emo: '\uD83D\uDD4C' },
+  { nama: 'B. Batak', emo: '\uD83C\uDF0B' }
+];
 
-function pBelajar(){
-  return `<div class="card">
-    <label style="margin-top:0">📚 Mata pelajaran umum</label>
-    <div class="grid">${MAPEL_UMUM.map(([m,e])=>`<button class="${setup.mapel===m?'sel':''}" onclick="setup.mapel='${m}';setup.jenjang='SMP';render()"><span style="font-size:16px">${e}</span> ${m}</button>`).join('')}</div>
-    <label style="margin-top:16px">🏝️ Muatan lokal (bahasa daerah)</label>
-    <div class="grid">${MAPEL_MULOK.map(([m,e])=>`<button class="${setup.mapel===m?'sel':''}" onclick="setup.mapel='${m}';setup.jenjang='SMP';render()"><span style="font-size:16px">${e}</span> ${m}</button>`).join('')}</div>
-    <label>⭐ Jenjang & Kelas</label>
-    <div style="display:flex;gap:6px">
-      <select onchange="setup.jenjang=this.value;updateKelas()" style="flex:1">
-        <option ${setup.jenjang==='SD'?'selected':''}>SD</option>
-        <option ${setup.jenjang==='SMP'?'selected':''}>SMP</option>
-        <option ${setup.jenjang==='SMA'?'selected':''}>SMA</option>
-      </select>
-      <select id="selKelas" onchange="setup.kelas=+this.value" style="flex:1"></select>
-    </div>
-    <label>📝 Jenis soal</label>
-    <div class="g3 grid">
-      <button class="${setup.tipe==='pg'?'sel':''}" onclick="setup.tipe='pg';render()">PG</button>
-      <button class="${setup.tipe==='uraian'?'sel':''}" onclick="setup.tipe='uraian';render()">Uraian</button>
-      <button class="${setup.tipe==='campur'?'sel':''}" onclick="setup.tipe='campur';render()">Campur</button>
-    </div>
-    <label>🔢 Jumlah soal</label>
-    <div class="g4 grid">${[5,10,15,20].map(n=>`<button class="${setup.n===n?'sel':''}" onclick="setup.n=${n};render()">${n}</button>`).join('')}</div>
-    <label>🎯 KKM</label>
-    <input type="number" value="${setup.kkm}" oninput="setup.kkm=Math.max(0,Math.min(100,+this.value||0))">
-    <label>📋 Kisi-kisi (opsional)</label>
-    <textarea placeholder="Contoh: Bab Aljabar, SPLDV" oninput="setup.kisi=this.value">${esc(setup.kisi)}</textarea>
-    <button class="go" onclick="mulaiKuis(false)">🚀 Mulai Kuis</button>
-  </div>
-  <div class="ket">💡 Soal dibuat AI setiap kali. Selalu baru & bervariasi. Kalkulator & sketsa tersedia otomatis untuk Matematika dan IPA.</div>`;
-}
-function updateKelas(){
-  const map={SD:[1,2,3,4,5,6],SMP:[7,8,9],SMA:[10,11,12]};
-  const arr=map[setup.jenjang]||[7,8,9];
-  if(!arr.includes(setup.kelas))setup.kelas=arr[0];
-  const sel=$('selKelas');if(sel)sel.innerHTML=arr.map(k=>`<option ${k===setup.kelas?'selected':''}>${k}</option>`).join('');
-}
+var MODE_KHUSUS = [
+  { id: 'tka-mat', nama: 'TKA Matematika', emo: '\uD83E\uDDEE', mapel: 'Matematika', req: 'Soal bergaya TKA (Tes Kemampuan Akademik): numerasi, penalaran, dan pemecahan masalah kontekstual. Tingkat kesulitan standar TKA.' },
+  { id: 'tka-ind', nama: 'TKA B. Indonesia', emo: '\uD83D\uDCD8', mapel: 'B. Indonesia', req: 'Soal TKA: literasi, pemahaman teks bacaan, kaidah kebahasaan.' },
+  { id: 'tka-ing', nama: 'TKA B. Inggris', emo: '\uD83C\uDF10', mapel: 'B. Inggris', req: 'Soal TKA: reading comprehension, vocabulary, grammar in context.' },
+  { id: 'osn-mat', nama: 'OSN Matematika', emo: '\uD83C\uDFC5', mapel: 'Matematika', req: 'Soal olimpiade matematika (OSN): tingkat sulit, logika, teori bilangan, kombinatorika, geometri.' },
+  { id: 'osn-ipa', nama: 'OSN IPA', emo: '\uD83E\uDDEA', mapel: 'IPA', req: 'Soal OSN IPA: konsep mendalam, analisis data dan eksperimen, tingkat sulit.' },
+  { id: 'osn-ips', nama: 'OSN IPS', emo: '\uD83D\uDDFA\uFE0F', mapel: 'IPS', req: 'Soal OSN IPS: analisis peristiwa, peta, ekonomi dan sosial, tingkat sulit.' },
+  { id: 'osn-inf', nama: 'OSN Informatika', emo: '\uD83E\uDD16', mapel: 'Informatika', req: 'Soal olimpiade informatika: berpikir komputasional, pola, logika algoritma, pseudocode.' },
+  { id: 'toefl', nama: 'TOEFL Test', emo: '\uD83D\uDCDD', mapel: 'B. Inggris', req: 'Gaya TOEFL: structure, vocabulary, reading comprehension. Soal berbahasa Inggris.' },
+  { id: 'hsk', nama: 'HSK Mandarin', emo: '\uD83C\uDFB4', mapel: 'B. Mandarin', req: 'Gaya ujian HSK: kosakata hanzi dengan pinyin dan arti, pola kalimat.' }
+];
 
-/* ===== MODE KHUSUS ===== */
-function pKhusus(){
-  return `<div class="card">
-    <b style="font-size:15px">🏅 Mode Khusus</b>
-    <p style="color:var(--mut);font-size:12px;margin:6px 0 12px">Latihan TKA, OSN, TOEFL, HSK. Soal lebih menantang.</p>
-    <div class="grid">
-      ${MODE_KHUSUS.map(m=>`<button onclick="mulaiKhusus('${m.id}')" style="border-left:4px solid ${m.color};text-align:left"><span style="font-size:20px">${m.emo}</span> <b style="font-size:12.5px">${m.nama}</b></button>`).join('')}
-    </div>
-  </div>
-  <div class="ket">💡 Mode khusus pakai soal tingkat lanjut. Kalkulator & sketsa otomatis aktif untuk Matematika, IPA, dan Informatika.</div>`;
-}
-function mulaiKhusus(id){
-  const m=MODE_KHUSUS.find(x=>x.id===id);
-  if(!m)return;
-  setup.mapel=m.mapel;setup.kisi=m.req;setup.tipe='pg';setup.n=10;
-  mulaiKuis(true,m);
+var BADGES = [
+  { id: 'first', nama: 'Langkah Pertama', emo: '\uD83C\uDF1F', desc: 'Selesaikan 1 kuis', cek: function(p) { return p.soal >= 1; } },
+  { id: 'lulus1', nama: 'Tuntas Perdana', emo: '\uD83E\uDD47', desc: 'Lulus 1 kali', cek: function(p) { return p.benar >= 5; } },
+  { id: 'soal10', nama: 'Rajin', emo: '\uD83D\uDCDA', desc: '10 soal', cek: function(p) { return p.soal >= 10; } },
+  { id: 'soal50', nama: 'Otak Encer', emo: '\uD83E\uDDE0', desc: '50 soal', cek: function(p) { return p.soal >= 50; } },
+  { id: 'soal100', nama: 'Sultan Belajar', emo: '\uD83D\uDC51', desc: '100 soal', cek: function(p) { return p.soal >= 100; } },
+  { id: 'akurasi90', nama: 'Akurasi 90%', emo: '\uD83D\uDC8E', desc: 'Akurasi tinggi', cek: function(p) { return p.soal >= 20 && p.benar / p.soal >= 0.9; } },
+  { id: 'xp100', nama: 'XP 100', emo: '\u26A1', desc: '100 XP', cek: function(p) { return p.xp >= 100; } },
+  { id: 'xp500', nama: 'XP 500', emo: '\uD83D\uDE80', desc: '500 XP', cek: function(p) { return p.xp >= 500; } },
+  { id: 'xp1000', nama: 'Legenda', emo: '\uD83C\uDFC6', desc: '1000 XP', cek: function(p) { return p.xp >= 1000; } },
+  { id: 'fokus30', nama: 'Fokus 30', emo: '\u23F1\uFE0F', desc: '30 menit fokus', cek: function(p) { return p.menitFokus >= 30; } },
+  { id: 'fokus60', nama: 'Fokus 60', emo: '\uD83C\uDFAF', desc: '60 menit fokus', cek: function(p) { return p.menitFokus >= 60; } },
+  { id: 'streak3', nama: 'Streak 3 Hari', emo: '\uD83D\uDD25', desc: '3 hari berturut', cek: function(p) { return p.streak >= 3; } },
+  { id: 'streak7', nama: 'Streak 7 Hari', emo: '\uD83D\uDD25', desc: '7 hari berturut', cek: function(p) { return p.streak >= 7; } },
+  { id: 'kaya', nama: 'Sultan Koin', emo: '\uD83E\uDE99', desc: '500 koin', cek: function(p) { return p.coins >= 500; } },
+  { id: 'rating5', nama: 'Pemberi Rating', emo: '\u2B50', desc: 'Beri rating 5', cek: function(p) { return p.myRating === 5; } }
+];
+
+/* ==== NAVIGASI ==== */
+function go(t) {
+  S.tab = t;
+  saveS();
+  render();
 }
 
-/* ===== RUANG KUIS ===== */
-let quiz={soal:[],idx:0,jawab:[],skor:0,khusus:null};
-let calcOpen=false,sketchOpen=false;
+/* ==== INIT ==== */
+function render() {
+  if (!S.nama || !S.password) {
+    $id('app').innerHTML = pAuth();
+    return;
+  }
 
-async function mulaiKuis(isKhusus,special){
-  const jumlah=setup.n,pg=Math.ceil(jumlah*0.6);
-  const jenis=setup.tipe==='pg'?`${jumlah} soal pilihan ganda`:setup.tipe==='uraian'?`${jumlah} soal uraian`:`${jumlah} soal campuran (${pg} PG, ${jumlah-pg} uraian)`;
-  const mapel=setup.mapel;
-  const prompt=`Buatkan ${jenis} ${mapel} untuk siswa ${setup.jenjang} kelas ${setup.kelas} Indonesia (Kurikulum Merdeka). Bahasa Indonesia.${setup.kisi?` Fokus: ${setup.kisi}.`:''}
+  var t = S.tab || 'belajar';
+  var pages = {
+    belajar: pBelajar,
+    khusus: pKhusus,
+    speaking: pSpeaking,
+    musik: pMusik,
+    alat: pAlat,
+    nilai: pNilai
+  };
 
-Balas HANYA JSON valid tanpa markdown:
-{"soal":[{"tipe":"pg","q":"pertanyaan","opsi":["a","b","c","d"],"jawab":0,"bahas":"penjelasan lengkap 3-5 kalimat: konsep + langkah + kenapa jawaban benar + kenapa opsi lain salah"},{"tipe":"uraian","q":"pertanyaan","kunci":"jawaban model","bahas":"penjelasan lengkap"}]}
+  var content = pages[t] ? pages[t]() : pBelajar();
 
-Aturan: PG opsi 4 tanpa awalan huruf, "jawab"=indeks 0-3. Soal bervariasi dan spesifik.`;
+  var html = '';
+  html += '<div class="hero"><div class="hero-content">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">';
+  html += '<div style="flex:1">';
+  html += '<h1>' + S.avatar + ' Halo, ' + esc(S.nama) + '!</h1>';
+  html += '<p>Level ' + lvlOf(S.xp) + ' \u2022 ' + fmt(S.xp) + ' XP \u2022 \uD83D\uDD25 ' + S.streak + ' \u2022 \uD83E\uDE99 ' + fmt(S.coins) + '</p>';
+  html += '</div>';
+  html += '<button onclick="logout()" style="background:rgba(255,255,255,.2);border:0;color:#fff;padding:8px 12px;border-radius:10px;font-size:11px;font-weight:700">Keluar</button>';
+  html += '</div>';
+  html += '</div></div>';
 
-  quiz={soal:[],idx:0,jawab:[],skor:0,khusus:isKhusus?special:null};
-  // Tampilkan loading di ruang kuis
-  showQuizRoom(`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;padding:20px">
-    <div style="font-size:64px;animation:float 2s infinite">🤖</div>
-    <h2 style="margin:16px 0 6px">AI sedang membuat soal...</h2>
-    <p style="color:var(--mut);font-size:13px">Soal khusus untuk ${esc(mapel)}${isKhusus?' • '+esc(special.nama):''}</p>
-    <div style="margin-top:24px;width:80%">
-      <div class="sk" style="width:100%;height:10px"></div>
-      <div class="sk" style="width:70%;height:10px;margin:8px auto"></div>
-      <div class="sk" style="width:85%;height:10px"></div>
-    </div>
-    <button class="go ghost" style="background:var(--card);color:var(--tx);border:1px solid var(--bd);margin-top:30px;max-width:200px" onclick="closeQuizRoom()">✕ Batal</button>
-  </div>`);
+  html += '<div class="tabs tabs-6">';
+  html += '<button class="' + (t === 'belajar' ? 'on' : '') + '" onclick="go(\'belajar\')"><span>\uD83C\uDF93</span>Belajar</button>';
+  html += '<button class="' + (t === 'khusus' ? 'on' : '') + '" onclick="go(\'khusus\')"><span>\uD83C\uDFC5</span>Khusus</button>';
+  html += '<button class="' + (t === 'speaking' ? 'on' : '') + '" onclick="go(\'speaking\')"><span>\uD83D\uDDE3\uFE0F</span>Bicara</button>';
+  html += '<button class="' + (t === 'musik' ? 'on' : '') + '" onclick="go(\'musik\')"><span>\uD83C\uDFB5</span>Musik</button>';
+  html += '<button class="' + (t === 'alat' ? 'on' : '') + '" onclick="go(\'alat\')"><span>\uD83D\uDEE0\uFE0F</span>Alat</button>';
+  html += '<button class="' + (t === 'nilai' ? 'on' : '') + '" onclick="go(\'nilai\')"><span>\uD83D\uDCCA</span>Nilai</button>';
+  html += '</div>';
 
-  try{
-    const data=await callAIJSON(prompt,'Kamu pembuat soal pelajar Indonesia. Selalu balas JSON valid.');
-    const list=(data.soal||[]).filter(s=>s.q&&(s.tipe==='uraian'?s.kunci:(Array.isArray(s.opsi)&&s.opsi.length===4&&typeof s.jawab==='number'))).map(s=>({...s,tipe:s.tipe||'pg',opsi:s.opsi?s.opsi.map(o=>String(o).replace(/^\s*[a-dA-D][\.\)]\s+/,'')):undefined}));
-    if(!list.length)throw new Error('AI tidak menghasilkan soal valid');
-    quiz.soal=list;
-    renderQuizRoom();
-  }catch(e){
-    showQuizRoom(`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;padding:20px">
-      <div style="font-size:64px">😅</div>
-      <h2 style="margin:16px 0 6px">AI belum bisa membuat soal</h2>
-      <p style="color:var(--mut);font-size:13px;max-width:400px">${esc(e.message)}</p>
-      <div class="ket" style="text-align:left;margin-top:14px;max-width:440px">
-        <b>💡 Coba:</b><br>1. Cek <code>/api/chat</code> di browser<br>2. Pastikan <code>GROQ_API_KEY</code> di Vercel<br>3. Tunggu 1-2 menit lalu coba lagi
-      </div>
-      <button class="go" style="max-width:200px" onclick="closeQuizRoom()">← Kembali</button>
-    </div>`);
+  html += content;
+
+  html += '<div class="credit">';
+  html += 'Dibuat dengan \u2764\uFE0F by <b>Pandana</b><br>';
+  html += '<span style="font-size:10px">v10.0 \u2022 ' + new Date().getFullYear() + '</span>';
+  html += '</div>';
+
+  $id('app').innerHTML = html;
+
+  if (t === 'tutor') renderChat();
+  if (t === 'nilai') setTimeout(loadLB, 60);
+  if (t === 'belajar') setTimeout(updateKelas, 60);
+  if (t === 'alat') setTimeout(alatInit, 60);
+  if (t === 'musik') setTimeout(musicInitUI, 60);
+}
+
+function updateKelas() {
+  var map = { SD: [1,2,3,4,5,6], SMP: [7,8,9], SMA: [10,11,12] };
+  var arr = map[setup.jenjang] || [7,8,9];
+  if (arr.indexOf(setup.kelas) < 0) setup.kelas = arr[0];
+  var sel = $id('selKelas');
+  if (sel) {
+    var opts = '';
+    for (var i = 0; i < arr.length; i++) {
+      opts += '<option ' + (arr[i] === setup.kelas ? 'selected' : '') + '>' + arr[i] + '</option>';
+    }
+    sel.innerHTML = opts;
   }
 }
 
-function showQuizRoom(html){
-  const div=document.createElement('div');
-  div.className='quiz-room';
-  div.id='quizRoom';
-  div.innerHTML=html;
+/* ==== BELAJAR ==== */
+var setup = {
+  mapel: 'Matematika',
+  jenjang: 'SMP',
+  kelas: 8,
+  tipe: 'pg',
+  n: 5,
+  kkm: 70,
+  kisi: ''
+};
+
+function setMapel(m) {
+  setup.mapel = m;
+  setup.kisi = '';
+  render();
+}
+
+function pBelajar() {
+  var html = '';
+  html += '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83C\uDFAF Atur Kuis</h3></div>';
+
+  html += '<label style="margin-top:0">\uD83D\uDCDA Mata Pelajaran Umum</label>';
+  html += '<div class="grid grid-2">';
+  for (var i = 0; i < MAPEL_UMUM.length; i++) {
+    var m = MAPEL_UMUM[i];
+    html += '<button class="btn btn-secondary btn-sm ' + (setup.mapel === m.nama ? 'sel' : '') + '" onclick="setMapel(\'' + m.nama + '\')" style="text-align:left;justify-content:flex-start;padding:10px 12px">';
+    html += m.emo + ' ' + m.nama;
+    html += '</button>';
+  }
+  html += '</div>';
+
+  html += '<label style="margin-top:16px">\uD83C\uDFDD\uFE0F Muatan Lokal (Bahasa Daerah)</label>';
+  html += '<div class="grid grid-2">';
+  for (var j = 0; j < MAPEL_MULOK.length; j++) {
+    var ml = MAPEL_MULOK[j];
+    html += '<button class="btn btn-secondary btn-sm ' + (setup.mapel === ml.nama ? 'sel' : '') + '" onclick="setMapel(\'' + ml.nama + '\')" style="text-align:left;justify-content:flex-start;padding:10px 12px">';
+    html += ml.emo + ' ' + ml.nama;
+    html += '</button>';
+  }
+  html += '</div>';
+
+  html += '<label style="margin-top:16px">\u2B50 Jenjang & Kelas</label>';
+  html += '<div style="display:flex;gap:8px">';
+  html += '<select onchange="setup.jenjang=this.value;updateKelas()" style="flex:1">';
+  html += '<option ' + (setup.jenjang === 'SD' ? 'selected' : '') + '>SD</option>';
+  html += '<option ' + (setup.jenjang === 'SMP' ? 'selected' : '') + '>SMP</option>';
+  html += '<option ' + (setup.jenjang === 'SMA' ? 'selected' : '') + '>SMA</option>';
+  html += '</select>';
+  html += '<select id="selKelas" onchange="setup.kelas=+this.value" style="flex:1"></select>';
+  html += '</div>';
+
+  html += '<label>\uD83D\uDCDD Jenis Soal</label>';
+  html += '<div class="grid grid-3">';
+  html += '<button class="btn btn-secondary btn-sm ' + (setup.tipe === 'pg' ? 'sel' : '') + '" onclick="setup.tipe=\'pg\';render()">Pilihan Ganda</button>';
+  html += '<button class="btn btn-secondary btn-sm ' + (setup.tipe === 'uraian' ? 'sel' : '') + '" onclick="setup.tipe=\'uraian\';render()">Uraian</button>';
+  html += '<button class="btn btn-secondary btn-sm ' + (setup.tipe === 'campur' ? 'sel' : '') + '" onclick="setup.tipe=\'campur\';render()">Campuran</button>';
+  html += '</div>';
+
+  html += '<label>\uD83D\uDD22 Jumlah Soal</label>';
+  html += '<div class="grid grid-4">';
+  var nums = [5, 10, 15, 20];
+  for (var k = 0; k < nums.length; k++) {
+    html += '<button class="btn btn-secondary btn-sm ' + (setup.n === nums[k] ? 'sel' : '') + '" onclick="setup.n=' + nums[k] + ';render()">' + nums[k] + '</button>';
+  }
+  html += '</div>';
+
+  html += '<label>\uD83C\uDFAF KKM (Nilai Minimal Tuntas)</label>';
+  html += '<input type="number" id="inKKM" value="' + setup.kkm + '" min="0" max="100" oninput="setup.kkm=Math.max(0,Math.min(100,+this.value||0))">';
+
+  html += '<label>\uD83D\uDCCB Kisi-kisi (Opsional)</label>';
+  html += '<textarea placeholder="Contoh: Bab Aljabar, SPLDV, persamaan linear" oninput="setup.kisi=this.value">' + esc(setup.kisi) + '</textarea>';
+
+  html += '<button class="btn btn-primary btn-block btn-lg" style="margin-top:16px" onclick="mulaiKuis(false)">';
+  html += '\uD83D\uDE80 Mulai Kuis dengan AI';
+  html += '</button>';
+
+  html += '</div>';
+
+  html += '<div class="ket">';
+  html += '\uD83D\uDCA1 <b>Tips:</b> Soal dibuat langsung oleh AI setiap kali kamu mulai kuis. Jadi soal selalu baru dan bervariasi. Kalkulator & sketsa otomatis tersedia untuk Matematika dan IPA.';
+  html += '</div>';
+
+  return html;
+}
+
+/* ==== MODE KHUSUS ==== */
+function pKhusus() {
+  var html = '';
+  html += '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83C\uDFC5 Mode Khusus</h3></div>';
+  html += '<p style="color:var(--mut);font-size:12px;margin-bottom:12px">Latihan TKA, OSN, TOEFL, HSK. Soal lebih menantang dan mendalam.</p>';
+  html += '<div class="grid grid-2">';
+  for (var i = 0; i < MODE_KHUSUS.length; i++) {
+    var m = MODE_KHUSUS[i];
+    html += '<button class="btn btn-secondary btn-sm" onclick="mulaiKhusus(\'' + m.id + '\')" style="text-align:left;justify-content:flex-start;padding:12px;border-left:4px solid var(--pr)">';
+    html += '<span style="font-size:20px">' + m.emo + '</span>';
+    html += '<div style="margin-left:8px"><b style="font-size:11.5px;display:block">' + m.nama + '</b>';
+    html += '<span style="font-size:10px;color:var(--mut)">' + m.mapel + '</span></div>';
+    html += '</button>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="ket">';
+  html += '\uD83D\uDCA1 <b>Info:</b> Mode khusus memakai soal tingkat lanjut. Kalkulator & sketsa otomatis aktif untuk Matematika, IPA, dan Informatika. Speaking Test juga cocok untuk latihan TOEFL & HSK.';
+  html += '</div>';
+
+  return html;
+}
+
+function mulaiKhusus(id) {
+  var m = null;
+  for (var i = 0; i < MODE_KHUSUS.length; i++) {
+    if (MODE_KHUSUS[i].id === id) { m = MODE_KHUSUS[i]; break; }
+  }
+  if (!m) return;
+  setup.mapel = m.mapel;
+  setup.kisi = m.req;
+  setup.tipe = 'pg';
+  setup.n = 10;
+  mulaiKuis(true, m);
+}
+
+/* ==== QUIZ ==== */
+var quiz = { soal: [], idx: 0, jawab: [], skor: 0, khusus: null };
+var calcExpr = '';
+
+function mulaiKuis(isKhusus, special) {
+  var jumlah = setup.n;
+  var pg = Math.ceil(jumlah * 0.6);
+  var jenis = '';
+  if (setup.tipe === 'pg') jenis = jumlah + ' soal pilihan ganda';
+  else if (setup.tipe === 'uraian') jenis = jumlah + ' soal uraian';
+  else jenis = jumlah + ' soal campuran (' + pg + ' pilihan ganda, ' + (jumlah - pg) + ' uraian)';
+
+  var prompt = 'Buatkan ' + jenis + ' mata pelajaran ' + setup.mapel + ' untuk siswa ' + setup.jenjang + ' kelas ' + setup.kelas + ' di Indonesia (Kurikulum Merdeka). Bahasa Indonesia.';
+  if (setup.kisi) prompt += ' Fokus pada materi: ' + setup.kisi + '.';
+  prompt += '\n\nBalas HANYA JSON valid tanpa markdown, format:\n';
+  prompt += '{"soal":[\n';
+  prompt += '  {"tipe":"pg","q":"pertanyaan","opsi":["a","b","c","d"],"jawab":0,"bahas":"penjelasan lengkap 3-5 kalimat: konsep + langkah jawaban + kenapa benar"},\n';
+  prompt += '  {"tipe":"uraian","q":"pertanyaan","kunci":"jawaban model ringkas","bahas":"penjelasan lengkap"}\n';
+  prompt += ']}\n\n';
+  prompt += 'Aturan penting:\n';
+  prompt += '- PG: opsi tepat 4, TANPA awalan huruf, "jawab" = indeks 0-3 jawaban benar, acak posisinya\n';
+  prompt += '- Uraian: wajib ada field "kunci"\n';
+  prompt += '- "bahas" wajib rinci dan jelas\n';
+  prompt += '- Soal bervariasi dan spesifik';
+
+  quiz = { soal: [], idx: 0, jawab: [], skor: 0, khusus: isKhusus ? special : null };
+
+  showQuizRoom(buildLoadingHTML());
+
+  callAIJSON(prompt, 'Kamu pembuat soal profesional untuk pelajar Indonesia. Selalu balas dengan JSON valid.')
+    .then(function(data) {
+      var list = [];
+      var raw = data.soal || [];
+      for (var i = 0; i < raw.length; i++) {
+        var s = raw[i];
+        if (!s.q) continue;
+        var tipe = s.tipe || 'pg';
+        if (tipe === 'uraian') {
+          if (!s.kunci) continue;
+          list.push({ tipe: 'uraian', q: s.q, kunci: s.kunci, bahas: s.bahas || '' });
+        } else {
+          if (!Array.isArray(s.opsi) || s.opsi.length !== 4) continue;
+          if (typeof s.jawab !== 'number') continue;
+          var cleanOpsi = [];
+          for (var j = 0; j < 4; j++) {
+            cleanOpsi.push(String(s.opsi[j]).replace(/^\s*[a-dA-D][\.\)]\s+/, ''));
+          }
+          list.push({ tipe: 'pg', q: s.q, opsi: cleanOpsi, jawab: s.jawab, bahas: s.bahas || '' });
+        }
+      }
+      if (list.length === 0) throw new Error('AI tidak menghasilkan soal valid');
+      quiz.soal = list;
+      renderQuizRoom();
+    })
+    .catch(function(e) {
+      showQuizRoom(buildErrorHTML(e.message));
+    });
+}
+
+function buildLoadingHTML() {
+  var html = '';
+  html += '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:75vh;text-align:center;padding:24px">';
+  html += '<div style="font-size:72px;animation:pop 1.5s infinite">\uD83E\uDD16</div>';
+  html += '<h2 style="margin:18px 0 8px;font-size:19px">AI sedang membuat soal...</h2>';
+  html += '<p style="color:var(--mut);font-size:13px">Soal khusus untuk ' + esc(setup.mapel) + '</p>';
+  html += '<div style="margin-top:28px;width:85%;max-width:400px">';
+  html += '<div class="sk" style="width:100%;height:12px"></div>';
+  html += '<div class="sk" style="width:75%;height:12px;margin:10px auto"></div>';
+  html += '<div class="sk" style="width:88%;height:12px"></div>';
+  html += '</div>';
+  html += '<button class="btn btn-secondary" style="margin-top:36px;max-width:220px" onclick="closeQuizRoom()">\u2715 Batal</button>';
+  html += '</div>';
+  return html;
+}
+
+function buildErrorHTML(msg) {
+  var html = '';
+  html += '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:75vh;text-align:center;padding:24px">';
+  html += '<div style="font-size:72px">\uD83D\uDE05</div>';
+  html += '<h2 style="margin:18px 0 8px;font-size:19px">AI belum bisa membuat soal</h2>';
+  html += '<p style="color:var(--mut);font-size:13px;max-width:400px;line-height:1.6">' + esc(msg) + '</p>';
+  html += '<div class="ket" style="text-align:left;margin-top:16px;max-width:440px">';
+  html += '<b>\uD83D\uDCA1 Yang bisa dicoba:</b><br>';
+  html += '1. Buka <code>/api/chat</code> di browser, cek statusnya<br>';
+  html += '2. Pastikan <code>GROQ_API_KEY</code> sudah ada di Vercel<br>';
+  html += '3. Tunggu 1-2 menit lalu coba lagi';
+  html += '</div>';
+  html += '<button class="btn btn-primary" style="margin-top:20px;max-width:220px" onclick="closeQuizRoom()">\u2190 Kembali ke Menu</button>';
+  html += '</div>';
+  return html;
+}
+
+function showQuizRoom(html) {
+  var old = $id('quizRoom');
+  if (old) old.parentNode.removeChild(old);
+  var div = document.createElement('div');
+  div.className = 'quiz-room';
+  div.id = 'quizRoom';
+  div.innerHTML = html;
   document.body.appendChild(div);
-  document.body.style.overflow='hidden';
-}
-function closeQuizRoom(){
-  const r=$('quizRoom');
-  if(r)r.remove();
-  document.body.style.overflow='';
-  calcOpen=false;sketchOpen=false;
-  const ov=$('overlay');if(ov)ov.classList.remove('show');
+  document.body.style.overflow = 'hidden';
 }
 
-function renderQuizRoom(){
-  if(quiz.idx>=quiz.soal.length)return renderHasilRoom();
-  const s=quiz.soal[quiz.idx],r=quiz.jawab[quiz.idx],done=!!r;
-  const mapel=setup.mapel;
-  const butuhKalk=/(Matematika|IPA|Fisika|Kimia|Informatika)/i.test(mapel);
-  const butuhSketsa=/(Matematika|IPA|Fisika|Seni)/i.test(mapel);
-  const persen=(quiz.idx+(done?1:0))/quiz.soal.length*100;
+function closeQuizRoom() {
+  var r = $id('quizRoom');
+  if (r) r.parentNode.removeChild(r);
+  document.body.style.overflow = '';
+  closeOverlay();
+  stopSpeak();
+}
 
-  let body='';
-  if(s.tipe==='pg'){
-    body=s.opsi.map((o,i)=>{
-      let cls='opt';
-      if(done){if(i===s.jawab)cls+=' ok';else if(i===r.jwb)cls+=' no'}
-      return `<button class="${cls}" ${done?'disabled':''} onclick="jwbPG(${i})">
-        <b>${String.fromCharCode(65+i)}.</b> ${esc(o)}
-        ${done&&i===s.jawab?'<span class="badge-ok">✓</span>':''}
-      </button>`;
-    }).join('');
-    if(done){
-      body+=`<div class="bahas ${r.benar?'bahas-ok':'bahas-no'}">
-        <div class="bahas-title">${r.benar?'✅ <span style="color:var(--ok2)">Jawaban Benar!</span>':'❌ <span style="color:var(--no)">Belum Tepat</span>'}</div>
-        ${!r.benar?`<div style="margin-bottom:10px;padding:8px 10px;background:rgba(22,163,74,.15);border-radius:8px;font-size:13px">💡 Jawaban benar: <b>${String.fromCharCode(65+s.jawab)}. ${esc(s.opsi[s.jawab])}</b></div>`:''}
-        <div><b>📖 Penjelasan:</b></div>
-        <div style="margin-top:6px">${esc(s.bahas||'')}</div>
-      </div>`;
+function renderQuizRoom() {
+  if (quiz.idx >= quiz.soal.length) {
+    renderHasilRoom();
+    return;
+  }
+  var s = quiz.soal[quiz.idx];
+  var r = quiz.jawab[quiz.idx];
+  var done = !!r;
+  var mapel = setup.mapel;
+  var butuhKalk = /Matematika|IPA|Fisika|Kimia|Informatika/i.test(mapel);
+  var butuhSketsa = /Matematika|IPA|Fisika|Seni/i.test(mapel);
+  var persen = (quiz.idx + (done ? 1 : 0)) / quiz.soal.length * 100;
+
+  var body = '';
+  if (s.tipe === 'pg') {
+    for (var i = 0; i < s.opsi.length; i++) {
+      var cls = 'opt';
+      if (done) {
+        if (i === s.jawab) cls += ' ok';
+        else if (i === r.jwb) cls += ' no';
+      }
+      body += '<button class="' + cls + '" ' + (done ? 'disabled' : '') + ' onclick="jwbPG(' + i + ')">';
+      body += '<b>' + String.fromCharCode(65 + i) + '.</b> ' + esc(s.opsi[i]);
+      if (done && i === s.jawab) body += '<span class="tick">\u2713</span>';
+      body += '</button>';
     }
-  }else{
-    if(!done){
-      body=`<textarea id="ansUraian" placeholder="Tulis jawabanmu di sini..." style="min-height:120px"></textarea>
-        <button class="go" onclick="jwbUraian()">✓ Periksa Jawaban</button>`;
-    }else{
-      body=`<div class="bahas bahas-ok">
-        <div class="bahas-title">✅ <span style="color:var(--ok2)">Jawabanmu</span></div>
-        <div style="margin-bottom:10px">${esc(r.jwb)}</div>
-        <div style="padding:10px;background:rgba(99,102,241,.1);border-radius:8px;margin-bottom:10px;font-size:12.5px"><b>🔑 Kunci:</b> ${esc(s.kunci)}</div>
-        <div><b>📖 Penjelasan:</b></div>
-        <div style="margin-top:6px">${esc(s.bahas||'')}</div>
-      </div>`;
+    if (done) {
+      body += '<div class="bahas ' + (r.benar ? 'bahas-ok' : 'bahas-no') + '">';
+      body += '<div class="bahas-title">' + (r.benar ? '\u2705 <span style="color:#4ade80">Jawaban Benar!</span>' : '\u274C <span style="color:#fca5a5">Belum Tepat</span>') + '</div>';
+      if (!r.benar) {
+        body += '<div style="margin-bottom:10px;padding:9px 11px;background:rgba(22,163,74,.15);border-radius:9px;font-size:13px">';
+        body += '\uD83D\uDC49 Jawaban benar: <b>' + String.fromCharCode(65 + s.jawab) + '. ' + esc(s.opsi[s.jawab]) + '</b>';
+        body += '</div>';
+      }
+      body += '<div><b>\uD83D\uDCD6 Penjelasan:</b></div>';
+      body += '<div style="margin-top:6px">' + esc(s.bahas) + '</div>';
+      body += '</div>';
+    }
+  } else {
+    if (!done) {
+      body += '<textarea id="ansUraian" placeholder="Tulis jawabanmu di sini..." style="min-height:130px"></textarea>';
+      body += '<button class="btn btn-ok btn-block btn-lg" style="margin-top:10px" onclick="jwbUraian()">\u2713 Periksa Jawaban</button>';
+    } else {
+      body += '<div class="bahas bahas-ok">';
+      body += '<div class="bahas-title">\u2705 <span style="color:#4ade80">Jawabanmu</span></div>';
+      body += '<div style="margin-bottom:10px">' + esc(r.jwb) + '</div>';
+      body += '<div style="padding:10px;background:rgba(99,102,241,.1);border-radius:9px;margin-bottom:10px;font-size:12.5px">';
+      body += '<b>\uD83D\uDD11 Kunci:</b> ' + esc(s.kunci);
+      body += '</div>';
+      body += '<div><b>\uD83D\uDCD6 Penjelasan:</b></div>';
+      body += '<div style="margin-top:6px">' + esc(s.bahas) + '</div>';
+      body += '</div>';
     }
   }
 
-  const html=`
-    <div class="quiz-header">
-      <div class="quiz-top">
-        <div class="info">
-          <span class="chip">${quiz.khusus?quiz.khusus.emo+' '+quiz.khusus.nama:esc(mapel)}</span>
-          <span class="chip">Kelas ${setup.kelas}</span>
-        </div>
-        <button class="close-btn" onclick="closeQuizRoom()">✕ Keluar</button>
-      </div>
-      <div class="quiz-prog-big"><i style="width:${persen}%"></i></div>
-    </div>
-    <div class="quiz-body">
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:6px">
-        <div>
-          <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:1px">SOAL</div>
-          <div class="quiz-num-big">${quiz.idx+1}<span style="font-size:32px;color:var(--mut);-webkit-text-fill-color:var(--mut)">/${quiz.soal.length}</span></div>
-        </div>
-        <div style="text-align:right;font-size:11.5px;color:var(--mut)">
-          <div>Skor: <b style="color:var(--ok2);font-size:14px">${quiz.skor}</b></div>
-          <div>${s.tipe==='pg'?'Pilihan Ganda':'Uraian'}</div>
-        </div>
-      </div>
-      <div class="quiz-q-card">
-        <div class="quiz-q-text">${esc(s.q)}</div>
-        ${body}
-        ${(butuhKalk||butuhSketsa)?`
-          <div class="quiz-tools">
-            ${butuhKalk?`<button onclick="openCalc()">🧮 Kalkulator</button>`:''}
-            ${butuhSketsa?`<button onclick="openSketch()">✏️ Sketsa</button>`:''}
-            <button onclick="bacakanSoal()">🔊 Bacakan Soal</button>
-          </div>`:''}
-      </div>
-    </div>
-    <div class="quiz-nav">
-      <div class="inner">
-        ${done?`<button class="next" onclick="lanjutSoal()">${quiz.idx+1===quiz.soal.length?'🏁 Lihat Nilai':'Soal Berikutnya →'}</button>`:''}
-      </div>
-    </div>`;
-  const r_=$('quizRoom');
-  if(r_)r_.innerHTML=html;
+  var html = '';
+  html += '<div class="quiz-header">';
+  html += '<div class="quiz-top">';
+  html += '<div class="quiz-chips">';
+  html += '<span class="chip">' + esc(mapel) + '</span>';
+  html += '<span class="chip">Kelas ' + setup.kelas + '</span>';
+  html += (quiz.khusus ? '<span class="chip chip-yl">' + quiz.khusus.emo + ' ' + esc(quiz.khusus.nama) + '</span>' : '');
+  html += '</div>';
+  html += '<button class="quiz-close" onclick="closeQuizRoom()">\u2715</button>';
+  html += '</div>';
+  html += '<div class="quiz-prog"><i style="width:' + persen + '%"></i></div>';
+  html += '</div>';
+
+  html += '<div class="quiz-body">';
+  html += '<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:6px">';
+  html += '<div>';
+  html += '<div style="font-size:11px;color:var(--mut);font-weight:800;letter-spacing:1.5px">SOAL</div>';
+  html += '<div class="quiz-num">' + (quiz.idx + 1) + '<span>/' + quiz.soal.length + '</span></div>';
+  html += '</div>';
+  html += '<div style="text-align:right;font-size:11.5px;color:var(--mut)">';
+  html += '<div>Skor: <b style="color:#4ade80;font-size:15px">' + quiz.skor + '</b></div>';
+  html += '<div>' + (s.tipe === 'pg' ? 'Pilihan Ganda' : 'Uraian') + '</div>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="quiz-q-card">';
+  html += '<div class="quiz-q-text">' + esc(s.q) + '</div>';
+  html += body;
+  html += '<div class="quiz-tools">';
+  if (butuhKalk) html += '<button onclick="openCalc()">\uD83E\uDDEE Kalkulator</button>';
+  if (butuhSketsa) html += '<button onclick="openSketch()">\u270F\uFE0F Sketsa</button>';
+  html += '<button onclick="bacakanSoal()">\uD83D\uDD0A Bacakan Soal</button>';
+  html += '<button onclick="stopSpeak()">\uD83D\uDD07 Stop</button>';
+  html += '</div>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="quiz-nav"><div class="quiz-nav-inner">';
+  if (done) {
+    html += '<button onclick="lanjutSoal()">';
+    html += (quiz.idx + 1 === quiz.soal.length ? '\uD83C\uDFC1 Lihat Nilai' : '\u2192 Soal Berikutnya');
+    html += '</button>';
+  }
+  html += '</div></div>';
+
+  var r_ = $id('quizRoom');
+  if (r_) r_.innerHTML = html;
 }
 
-function jwbPG(i){
-  const s=quiz.soal[quiz.idx],benar=i===s.jawab;
-  quiz.jawab[quiz.idx]={jwb:i,benar};
-  if(benar){quiz.skor++;S.benar++;sfx('benar')}else sfx('salah');
-  S.soal++;saveS();scheduleSync();
-  if(benar)toast('🎉 Benar! +20 XP');
+function jwbPG(i) {
+  var s = quiz.soal[quiz.idx];
+  var benar = i === s.jawab;
+  quiz.jawab[quiz.idx] = { jwb: i, benar: benar };
+  if (benar) {
+    quiz.skor++;
+    S.benar++;
+    S.xp += 20;
+    sfx('benar');
+    toast('\uD83C\uDF89 Benar! +20 XP');
+  } else {
+    sfx('salah');
+  }
+  S.soal++;
+  saveS();
+  scheduleSync();
   renderQuizRoom();
-  // Scroll ke pembahasan
-  setTimeout(()=>{const b=document.querySelector('.bahas');if(b)b.scrollIntoView({behavior:'smooth',block:'center'})},100);
-  if(benar){S.xp+=20;saveS();scheduleSync()}
+  setTimeout(function() {
+    var b = document.querySelector('.bahas');
+    if (b) b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 120);
 }
-function jwbUraian(){
-  const t=$('ansUraian')?.value.trim();
-  if(!t)return toast('Tulis jawaban dulu');
-  quiz.jawab[quiz.idx]={jwb:t,benar:true};
-  S.soal++;S.xp+=15;saveS();scheduleSync();
+
+function jwbUraian() {
+  var el = $id('ansUraian');
+  var t = el ? el.value.trim() : '';
+  if (!t) return toast('Tulis jawaban dulu');
+  quiz.jawab[quiz.idx] = { jwb: t, benar: true };
+  S.soal++;
+  S.xp += 15;
+  saveS();
+  scheduleSync();
   sfx('benar');
   renderQuizRoom();
 }
-function lanjutSoal(){quiz.idx++;if(quiz.idx>=quiz.soal.length)renderHasilRoom();else renderQuizRoom();window.scrollTo(0,0)}
-function bacakanSoal(){
-  const s=quiz.soal[quiz.idx];
-  if(!('speechSynthesis' in window))return toast('Browser tidak mendukung suara');
-  speechSynthesis.cancel();
-  let teks=s.q;
-  if(s.tipe==='pg')teks+='. '+s.opsi.map((o,i)=>String.fromCharCode(65+i)+'. '+o).join('. ');
-  const u=new SpeechSynthesisUtterance(teks);
-  u.lang='id-ID';u.rate=.95;
-  speechSynthesis.speak(u);
-  toast('🔊 Membacakan soal...');
-}
 
-function renderHasilRoom(){
-  const total=quiz.soal.length,nilai=Math.round((quiz.skor/total)*100);
-  const lulus=nilai>=setup.kkm,xpDapat=quiz.skor*20+(lulus?50:0);
-  S.riwayat.unshift({tgl:today(),mapel:setup.mapel,nilai,benar:quiz.skor,total});
-  S.riwayat=S.riwayat.slice(0,30);S.xp+=xpDapat;S.coins+=(lulus?10:3);
-  saveS();scheduleSync();
-  const reaksi=lulus?['🎉','🏆','🔥','⭐']:['💪','🌱','🤗'];
-  const r_=$('quizRoom');
-  if(r_){
-    r_.innerHTML=`
-    <div class="quiz-header"><div class="quiz-top"><div class="info"><span class="chip">Hasil Kuis</span></div><button class="close-btn" onclick="closeQuizRoom()">✕ Tutup</button></div></div>
-    <div class="quiz-body" style="padding-bottom:40px">
-      <div class="quiz-q-card" style="text-align:center;${lulus?'background:linear-gradient(160deg,rgba(22,163,74,.15),rgba(99,102,241,.1));border-color:rgba(22,163,74,.4)':''}">
-        <div style="font-size:72px">${nilai>=90?'🏆':lulus?'🥇':'🌱'}</div>
-        <div class="reaction">${reaksi.slice(0,3).map((e,i)=>`<span style="animation-delay:${i*.2}s">${e}</span>`).join('')}</div>
-        <h2 style="margin:8px 0 4px;font-size:22px">${lulus?'Selamat, Tuntas! 🎉':'Belum tuntas, tapi keren!'}</h2>
-        <div class="score">${nilai}</div>
-        <p style="color:var(--mut);font-size:13px;margin:6px 0">Benar ${quiz.skor} dari ${total}</p>
-        <p style="font-size:16px;margin-top:12px">⭐ <b style="color:var(--ok2)">+${xpDapat} XP</b> • 🪙 +${lulus?10:3}</p>
-      </div>
-      <div class="card" style="margin-top:14px">
-        <b style="font-size:14px">🔑 Kunci Jawaban & Pembahasan</b>
-        ${quiz.soal.map((s,i)=>{const r=quiz.jawab[i];
-          if(s.tipe==='pg')return `<div style="padding:11px 0;border-bottom:1px solid var(--bd)">
-            <div style="font-size:13px;font-weight:700">${i+1}. ${r?.benar?'<span style="color:var(--ok2)">✅ Benar</span>':'<span style="color:var(--no)">❌ Salah</span>'} • Jawaban: <b>${String.fromCharCode(65+s.jawab)}</b>${!r?.benar?` (kamu pilih ${String.fromCharCode(65+r.jwb)})`:''}</div>
-            <div style="font-size:11.5px;color:var(--mut);margin-top:3px">${esc(s.q)}</div>
-          </div>`;
-          return `<div style="padding:11px 0;border-bottom:1px solid var(--bd)"><div style="font-size:13px;font-weight:700">${i+1}. Uraian</div><div style="font-size:11.5px;color:var(--mut);margin-top:3px">Kunci: ${esc(s.kunci)}</div></div>`;
-        }).join('')}
-      </div>
-      <button class="go" onclick="closeQuizRoom();mulaiKuis(false)">🔄 Buat Soal Baru</button>
-      <button class="go ghost" style="background:var(--card);color:var(--tx);border:1px solid var(--bd)" onclick="closeQuizRoom()">🏠 Kembali ke Menu</button>
-    </div>`;
+function lanjutSoal() {
+  quiz.idx++;
+  if (quiz.idx >= quiz.soal.length) {
+    renderHasilRoom();
+  } else {
+    renderQuizRoom();
+    window.scrollTo(0, 0);
   }
 }
 
-/* ===== OVERLAY KALKULATOR ===== */
-let calcExpr='';
-const CALC_KEYS=['C','⌫','(',')','7','8','9','÷','4','5','6','×','1','2','3','-','0','.','^','+','√('];
-function openCalc(){
-  openOverlay(`
-    <div class="overlay-header"><h3>🧮 Kalkulator</h3><button onclick="closeOverlay()">✕</button></div>
-    <div class="calc-display" id="cd">${esc(calcExpr)||'0'}</div>
-    <div class="calc-grid">
-      ${CALC_KEYS.map(k=>{const isOp=['÷','×','-','+','^','√('].includes(k);return `<button class="${isOp?'op':''}" onclick="ckey('${k}')">${k}</button>`}).join('')}
-      <button class="eq" onclick="ckey('=')">=</button>
-    </div>`);
-}
-function ckey(k){
-  if(calcExpr==='Error')calcExpr='';
-  if(k==='C')calcExpr='';
-  else if(k==='⌫')calcExpr=calcExpr.slice(0,-1);
-  else if(k==='='){try{calcExpr=String(Math.round(evalCalc(calcExpr)*1e9)/1e9)}catch(e){calcExpr='Error'}}
-  else calcExpr+=k;
-  const d=$('cd');if(d)d.textContent=calcExpr||'0';
-}
-function evalCalc(s){
-  let i=0;
-  const ex=()=>{let v=tm();while(s[i]==='+'||s[i]==='-'){const o=s[i++],y=tm();v=o==='+'?v+y:v-y}return v};
-  const tm=()=>{let v=pw();while(s[i]==='×'||s[i]==='÷'){const o=s[i++],y=pw();v=o==='×'?v*y:v/y}return v};
-  const pw=()=>{const b=un();if(s[i]==='^'){i++;return Math.pow(b,pw())}return b};
-  const un=()=>{if(s[i]==='-'){i++;return -un()}if(s[i]==='√'){i++;return Math.sqrt(un())}return at()};
-  const at=()=>{if(s[i]==='('){i++;const v=ex();if(s[i]!==')')throw 0;i++;return v}const m=/^\d*\.?\d+/.exec(s.slice(i));if(!m)throw 0;i+=m[0].length;return parseFloat(m[0])};
-  const v=ex();if(i<s.length||!isFinite(v))throw 0;return v;
+function bacakanSoal() {
+  var s = quiz.soal[quiz.idx];
+  var teks = s.q;
+  if (s.tipe === 'pg') {
+    for (var i = 0; i < s.opsi.length; i++) {
+      teks += '. ' + String.fromCharCode(65 + i) + '. ' + s.opsi[i];
+    }
+  }
+  speakText(teks, 'id-ID');
+  toast('\uD83D\uDD0A Membacakan soal...');
 }
 
-/* ===== OVERLAY SKETSA ===== */
-let sketchState={color:'#111',size:3,drawing:false,lastX:0,lastY:0};
-function openSketch(){
-  openOverlay(`
-    <div class="overlay-header"><h3>✏️ Sketsa</h3><button onclick="closeOverlay()">✕</button></div>
-    <canvas id="sketchCanvas" class="sketch" width="700" height="400"></canvas>
-    <div class="sketch-tools">
-      <button onclick="setSkColor('#111')" class="sel" data-color="#111">⚫</button>
-      <button onclick="setSkColor('#dc2626')" data-color="#dc2626">🔴</button>
-      <button onclick="setSkColor('#2563eb')" data-color="#2563eb">🔵</button>
-      <button onclick="setSkColor('#16a34a')" data-color="#16a34a">🟢</button>
-      <button onclick="setSkColor('#f59e0b')" data-color="#f59e0b">🟡</button>
-      <button onclick="setSkColor('#ec4899')" data-color="#ec4899">🟣</button>
-      <button onclick="setSkColor('#fff')" data-color="#fff">🧽</button>
-      <button onclick="sketchClear()">🗑️</button>
-    </div>
-    <div class="g4 grid" style="margin-top:8px">
-      ${[2,4,6,10].map(s=>`<button onclick="sketchState.size=${s};renderSkTools()" class="${sketchState.size===s?'sel':''}" data-size="${s}">Tebal ${s}</button>`).join('')}
-    </div>`);
-  setTimeout(sketchInit,50);
-}
-function renderSkTools(){
-  document.querySelectorAll('.sketch-tools button').forEach(b=>{if(b.dataset.color)b.classList.toggle('sel',b.dataset.color===sketchState.color)});
-}
-function setSkColor(c){sketchState.color=c;renderSkTools()}
-function sketchInit(){
-  const c=$('sketchCanvas');if(!c)return;
-  const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.lineCap='round';ctx.lineJoin='round';
-  const getPos=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*c.width/r.width,y:(t.clientY-r.top)*c.height/r.height}};
-  const start=e=>{e.preventDefault();sketchState.drawing=true;const p=getPos(e);sketchState.lastX=p.x;sketchState.lastY=p.y};
-  const move=e=>{if(!sketchState.drawing)return;e.preventDefault();const p=getPos(e);ctx.strokeStyle=sketchState.color;ctx.lineWidth=sketchState.size;ctx.beginPath();ctx.moveTo(sketchState.lastX,sketchState.lastY);ctx.lineTo(p.x,p.y);ctx.stroke();sketchState.lastX=p.x;sketchState.lastY=p.y};
-  const end=()=>{sketchState.drawing=false};
-  c.addEventListener('mousedown',start);c.addEventListener('mousemove',move);c.addEventListener('mouseup',end);c.addEventListener('mouseleave',end);
-  c.addEventListener('touchstart',start,{passive:false});c.addEventListener('touchmove',move,{passive:false});c.addEventListener('touchend',end);
-}
-function sketchClear(){const c=$('sketchCanvas');if(!c)return;const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);toast('🗑️ Dibersihkan')}
+function renderHasilRoom() {
+  var total = quiz.soal.length;
+  var nilai = Math.round(quiz.skor / total * 100);
+  var lulus = nilai >= setup.kkm;
+  var xpDapat = quiz.skor * 20 + (lulus ? 50 : 0);
 
-/* ===== SPEAKING TEST ===== */
-let speak={rec:null,recording:false,transcript:'',target:'',lang:'en-US',sentences:[],idx:0};
+  S.riwayat.unshift({
+    tgl: today(),
+    mapel: setup.mapel,
+    nilai: nilai,
+    benar: quiz.skor,
+    total: total
+  });
+  S.riwayat = S.riwayat.slice(0, 30);
+  S.xp += xpDapat;
+  S.coins += (lulus ? 10 : 3);
+  saveS();
+  scheduleSync();
 
-const SPEAK_SENTENCES={
-  'Bahasa Inggris':[
-    {q:'Good morning! How are you today?',id:'Selamat pagi! Apa kabarmu hari ini?'},
-    {q:'I like to read books in the library.',id:'Saya suka membaca buku di perpustakaan.'},
-    {q:'The weather is very nice today.',id:'Cuaca hari ini sangat bagus.'},
-    {q:'Can you help me with my homework?',id:'Bisakah kamu membantuku dengan PR?'},
-    {q:'My favorite subject is Mathematics.',id:'Mata pelajaran favoritku adalah Matematika.'},
-    {q:'I want to be a doctor when I grow up.',id:'Saya ingin jadi dokter kalau sudah besar.'},
-    {q:'Thank you for your help, I really appreciate it.',id:'Terima kasih atas bantuanmu, saya sangat menghargainya.'},
-    {q:'Learning English is fun and useful.',id:'Belajar bahasa Inggris itu menyenangkan dan berguna.'}
+  var reaksi = lulus
+    ? ['\uD83C\uDF89', '\uD83C\uDFC6', '\uD83D\uDD25', '\u2B50']
+    : ['\uD83D\uDCAA', '\uD83C\uDF31', '\uD83E\uDD17'];
+
+  var html = '';
+  html += '<div class="quiz-header">';
+  html += '<div class="quiz-top">';
+  html += '<span class="chip">\uD83C\uDFC1 Hasil Kuis</span>';
+  html += '<button class="quiz-close" onclick="closeQuizRoom()">\u2715 Tutup</button>';
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="quiz-body" style="padding-bottom:40px">';
+
+  html += '<div class="quiz-q-card" style="text-align:center;' + (lulus ? 'background:linear-gradient(160deg,rgba(22,163,74,.15),rgba(99,102,241,.1));border-color:rgba(22,163,74,.4)' : '') + '">';
+  html += '<div style="font-size:76px">' + (nilai >= 90 ? '\uD83C\uDFC6' : lulus ? '\uD83E\uDD47' : '\uD83C\uDF31') + '</div>';
+  html += '<div class="reaction">';
+  for (var ri = 0; ri < Math.min(3, reaksi.length); ri++) {
+    html += '<span style="animation-delay:' + (ri * 0.2) + 's">' + reaksi[ri] + '</span>';
+  }
+  html += '</div>';
+  html += '<h2 style="margin:8px 0 4px;font-size:22px">' + (lulus ? 'Selamat, Tuntas! \uD83C\uDF89' : 'Belum tuntas, tapi keren!') + '</h2>';
+  html += '<div class="score">' + nilai + '</div>';
+  html += '<p style="color:var(--mut);font-size:13px;margin:10px 0">Benar ' + quiz.skor + ' dari ' + total + '</p>';
+  html += '<p style="font-size:16px;margin-top:12px">\u2B50 <b style="color:#4ade80">+' + xpDapat + ' XP</b> \u2022 \uD83E\uDE99 +' + (lulus ? 10 : 3) + '</p>';
+  html += '</div>';
+
+  html += '<div class="card" style="margin-top:14px">';
+  html += '<b style="font-size:14px">\uD83D\uDD11 Kunci Jawaban</b>';
+  for (var i = 0; i < quiz.soal.length; i++) {
+    var s = quiz.soal[i];
+    var rr = quiz.jawab[i];
+    if (s.tipe === 'pg') {
+      html += '<div style="padding:11px 0;border-bottom:1px solid var(--bd)">';
+      html += '<div style="font-size:13px;font-weight:700">';
+      html += (i + 1) + '. ';
+      html += (rr && rr.benar ? '<span style="color:#4ade80">\u2705 Benar</span>' : '<span style="color:#fca5a5">\u274C Salah</span>');
+      html += ' \u2022 Jawaban: <b>' + String.fromCharCode(65 + s.jawab) + '</b>';
+      if (rr && !rr.benar && typeof rr.jwb === 'number') {
+        html += ' <span style="color:var(--mut);font-weight:400">(kamu pilih ' + String.fromCharCode(65 + rr.jwb) + ')</span>';
+      }
+      html += '</div>';
+      html += '<div style="font-size:11.5px;color:var(--mut);margin-top:3px;line-height:1.5">' + esc(s.q) + '</div>';
+      html += '</div>';
+    } else {
+      html += '<div style="padding:11px 0;border-bottom:1px solid var(--bd)">';
+      html += '<div style="font-size:13px;font-weight:700">' + (i + 1) + '. Uraian</div>';
+      html += '<div style="font-size:11.5px;color:var(--mut);margin-top:3px">Kunci: ' + esc(s.kunci) + '</div>';
+      html += '</div>';
+    }
+  }
+  html += '</div>';
+
+  html += '<button class="btn btn-primary btn-block btn-lg" style="margin-top:12px" onclick="closeQuizRoom();mulaiKuis(false)">\uD83D\uDD04 Buat Soal Baru</button>';
+  html += '<button class="btn btn-secondary btn-block" style="margin-top:8px" onclick="closeQuizRoom()">\uD83C\uDFE0 Kembali ke Menu</button>';
+
+  html += '</div>';
+
+  var r_ = $id('quizRoom');
+  if (r_) r_.innerHTML = html;
+}
+
+/* ==== KALKULATOR ==== */
+var CALC_KEYS = ['C', 'DEL', '(', ')', '7', '8', '9', '/', '4', '5', '6', 'x', '1', '2', '3', '-', '0', '.', '^', '+', 'sqrt('];
+
+function openCalc() {
+  var html = '';
+  html += '<div class="overlay-header">';
+  html += '<h3>\uD83E\uDDEE Kalkulator</h3>';
+  html += '<button class="overlay-close" onclick="closeOverlay()">\u2715</button>';
+  html += '</div>';
+  html += '<div class="calc-display" id="cd">' + (calcExpr || '0') + '</div>';
+  html += '<div class="calc-grid">';
+  for (var i = 0; i < CALC_KEYS.length; i++) {
+    var k = CALC_KEYS[i];
+    var isOp = ['/', 'x', '-', '+', '^', 'sqrt('].indexOf(k) >= 0;
+    var disp = k === 'DEL' ? '\u232B' : (k === 'sqrt(' ? '\u221A' : k);
+    html += '<button class="' + (isOp ? 'op' : '') + '" onclick="ckey(\'' + k + '\')">' + disp + '</button>';
+  }
+  html += '<button class="eq" onclick="ckey(\'=\')">=</button>';
+  html += '</div>';
+  openOverlay(html);
+}
+
+function ckey(k) {
+  if (calcExpr === 'Error') calcExpr = '';
+  if (k === 'C') calcExpr = '';
+  else if (k === 'DEL') calcExpr = calcExpr.slice(0, -1);
+  else if (k === '=') {
+    try { calcExpr = String(Math.round(evalCalc(calcExpr) * 1e9) / 1e9); }
+    catch(e) { calcExpr = 'Error'; }
+  }
+  else if (k === 'sqrt(') calcExpr += 'sqrt(';
+  else calcExpr += k;
+
+  var d = $id('cd');
+  if (d) d.textContent = calcExpr || '0';
+}
+
+function evalCalc(s) {
+  s = s.replace(/x/g, '*').replace(/sqrt\(/g, 'Math.sqrt(').replace(/\^/g, '**');
+  var i = 0;
+
+  function ex() {
+    var v = tm();
+    while (s[i] === '+' || s[i] === '-') {
+      var o = s[i++];
+      var y = tm();
+      v = o === '+' ? v + y : v - y;
+    }
+    return v;
+  }
+  function tm() {
+    var v = pw();
+    while (s[i] === '*' || s[i] === '/') {
+      var o = s[i++];
+      var y = pw();
+      v = o === '*' ? v * y : v / y;
+    }
+    return v;
+  }
+  function pw() {
+    var b = un();
+    if (s[i] === '*' && s[i+1] === '*') {
+      i += 2;
+      return Math.pow(b, pw());
+    }
+    return b;
+  }
+  function un() {
+    if (s[i] === '-') { i++; return -un(); }
+    return at();
+  }
+  function at() {
+    if (s[i] === '(') {
+      i++;
+      var v = ex();
+      if (s[i] !== ')') throw new Error('Syntax');
+      i++;
+      return v;
+    }
+    if (s.slice(i).indexOf('Math.sqrt(') === 0) {
+      i += 10;
+      var v2 = ex();
+      if (s[i] !== ')') throw new Error('Syntax');
+      i++;
+      return Math.sqrt(v2);
+    }
+    var m = /^\d*\.?\d+/.exec(s.slice(i));
+    if (!m) throw new Error('Syntax');
+    i += m[0].length;
+    return parseFloat(m[0]);
+  }
+
+  var v = ex();
+  if (i < s.length || !isFinite(v)) throw new Error('Syntax');
+  return v;
+}
+
+/* ==== SKETSA ==== */
+var sketchState = { color: '#111', size: 3, drawing: false, lastX: 0, lastY: 0 };
+
+function openSketch() {
+  var html = '';
+  html += '<div class="overlay-header">';
+  html += '<h3>\u270F\uFE0F Sketsa</h3>';
+  html += '<button class="overlay-close" onclick="closeOverlay()">\u2715</button>';
+  html += '</div>';
+  html += '<canvas id="sketchCanvas" class="sketch" width="700" height="400"></canvas>';
+  html += '<div class="sketch-tools">';
+  var colors = ['#111', '#dc2626', '#2563eb', '#16a34a', '#f59e0b', '#ec4899', '#fff'];
+  for (var i = 0; i < colors.length; i++) {
+    var c = colors[i];
+    html += '<button onclick="setSkColor(\'' + c + '\')" data-color="' + c + '" class="' + (sketchState.color === c ? 'sel' : '') + '">' + (c === '#fff' ? '\uD83E\uDDF9' : '\u25CF') + '</button>';
+  }
+  html += '<button onclick="sketchClear()">\uD83D\uDDD1\uFE0F</button>';
+  html += '</div>';
+  html += '<div class="grid grid-4" style="margin-top:8px">';
+  var sizes = [2, 4, 6, 10];
+  for (var j = 0; j < sizes.length; j++) {
+    html += '<button class="btn btn-secondary btn-sm ' + (sketchState.size === sizes[j] ? 'sel' : '') + '" onclick="sketchState.size=' + sizes[j] + ';openSketch()">Tebal ' + sizes[j] + '</button>';
+  }
+  html += '</div>';
+  openOverlay(html);
+  setTimeout(sketchInit, 60);
+}
+
+function setSkColor(c) {
+  sketchState.color = c;
+  var btns = document.querySelectorAll('.sketch-tools button');
+  for (var i = 0; i < btns.length; i++) {
+    var b = btns[i];
+    if (b.getAttribute('data-color')) {
+      b.classList.toggle('sel', b.getAttribute('data-color') === c);
+    }
+  }
+}
+
+function sketchInit() {
+  var c = $id('sketchCanvas');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  function getPos(e) {
+    var r = c.getBoundingClientRect();
+    var t = e.touches ? e.touches[0] : e;
+    return {
+      x: (t.clientX - r.left) * c.width / r.width,
+      y: (t.clientY - r.top) * c.height / r.height
+    };
+  }
+
+  function start(e) {
+    e.preventDefault();
+    sketchState.drawing = true;
+    var p = getPos(e);
+    sketchState.lastX = p.x;
+    sketchState.lastY = p.y;
+  }
+
+  function move(e) {
+    if (!sketchState.drawing) return;
+    e.preventDefault();
+    var p = getPos(e);
+    ctx.strokeStyle = sketchState.color;
+    ctx.lineWidth = sketchState.size;
+    ctx.beginPath();
+    ctx.moveTo(sketchState.lastX, sketchState.lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    sketchState.lastX = p.x;
+    sketchState.lastY = p.y;
+  }
+
+  function end() { sketchState.drawing = false; }
+
+  c.addEventListener('mousedown', start);
+  c.addEventListener('mousemove', move);
+  c.addEventListener('mouseup', end);
+  c.addEventListener('mouseleave', end);
+  c.addEventListener('touchstart', start, { passive: false });
+  c.addEventListener('touchmove', move, { passive: false });
+  c.addEventListener('touchend', end);
+}
+
+function sketchClear() {
+  var c = $id('sketchCanvas');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, c.width, c.height);
+  toast('\uD83D\uDDD1\uFE0F Sketsa dibersihkan');
+}
+
+/* ==== TUTOR ==== */
+function pTutor() {
+  var html = '';
+  html += '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83E\uDD16 Tutor AI</h3></div>';
+  html += '<p style="color:var(--mut);font-size:12px;margin-bottom:12px">Tanya materi apa saja. AI akan menjelaskan langkah demi langkah.</p>';
+  html += '<div class="chat" id="chatBox"></div>';
+  html += '<div style="display:flex;gap:8px;margin-top:10px">';
+  html += '<input id="chatIn" placeholder="Tanya apa saja..." onkeydown="if(event.key===\'Enter\')sendChat()" style="flex:1">';
+  html += '<button class="btn btn-primary" style="padding:11px 18px" onclick="sendChat()">Kirim</button>';
+  html += '</div>';
+  html += '<div class="pill-row">';
+  html += '<button onclick="quickAsk(\'Jelaskan SPLDV dengan bahasa sederhana\')">SPLDV</button>';
+  html += '<button onclick="quickAsk(\'Apa itu fotosintesis?\')">Fotosintesis</button>';
+  html += '<button onclick="quickAsk(\'Cara menghitung pecahan\')">Pecahan</button>';
+  html += '<button onclick="quickAsk(\'Ringkasan proklamasi kemerdekaan\')">Proklamasi</button>';
+  html += '<button onclick="quickAsk(\'Buat 3 soal latihan tentang aljabar\')">Soal Aljabar</button>';
+  html += '<button onclick="clearChat()">\uD83D\uDDD1\uFE0F Bersihkan</button>';
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+function renderChat() {
+  var b = $id('chatBox');
+  if (!b) return;
+  if (!S.chatHistory.length) {
+    S.chatHistory.push({
+      r: 'bot',
+      t: 'Halo ' + S.nama + '! \uD83D\uDC4B\n\nAku Tutor AI. Tanya apa saja tentang pelajaran, nanti aku jelaskan.\n\nContoh:\n\u2022 "Jelaskan SPLDV"\n\u2022 "Apa itu fotosintesis?"\n\u2022 "Cara menghitung pecahan"'
+    });
+    saveS();
+  }
+  var html = '';
+  for (var i = 0; i < S.chatHistory.length; i++) {
+    var m = S.chatHistory[i];
+    html += '<div class="bub ' + m.r + '">' + esc(m.t) + '</div>';
+  }
+  b.innerHTML = html;
+  b.scrollTop = b.scrollHeight;
+}
+
+function quickAsk(t) {
+  var i = $id('chatIn');
+  if (i) i.value = t;
+  sendChat();
+}
+
+function sendChat() {
+  var i = $id('chatIn');
+  var v = i ? i.value.trim() : '';
+  if (!v) return;
+  i.value = '';
+  S.chatHistory.push({ r: 'user', t: v });
+  saveS();
+  renderChat();
+  sfx('klik');
+
+  var b = $id('chatBox');
+  var typ = document.createElement('div');
+  typ.className = 'typing';
+  typ.innerHTML = '<i></i><i></i><i></i>';
+  b.appendChild(typ);
+  b.scrollTop = b.scrollHeight;
+
+  var msgs = [{ role: 'system', content: 'Kamu Tutor AI ramah untuk pelajar Indonesia. Jawab singkat, bahasa sederhana, tanpa markdown.' }];
+  var start = Math.max(0, S.chatHistory.length - 8);
+  for (var k = start; k < S.chatHistory.length; k++) {
+    var m = S.chatHistory[k];
+    msgs.push({ role: m.r === 'bot' ? 'assistant' : 'user', content: m.t });
+  }
+
+  callAI(msgs)
+    .then(function(text) {
+      if (typ.parentNode) typ.parentNode.removeChild(typ);
+      S.chatHistory.push({ r: 'bot', t: text });
+      S.xp += 2;
+      saveS();
+      scheduleSync();
+      renderChat();
+    })
+    .catch(function(e) {
+      if (typ.parentNode) typ.parentNode.removeChild(typ);
+      S.chatHistory.push({ r: 'bot', t: 'Maaf, AI error.\n\n' + e.message + '\n\nCek /api/chat di browser.' });
+      saveS();
+      renderChat();
+    });
+}
+
+function clearChat() {
+  S.chatHistory = [];
+  saveS();
+  renderChat();
+  toast('Chat dibersihkan');
+}
+
+/* ==== FLASHCARD ==== */
+var flash = { deck: [], idx: 0 };
+
+function loadFlash(topik) {
+  var el = $id('flashArea');
+  if (el) {
+    el.innerHTML = '<div class="card" style="text-align:center;padding:24px"><div style="font-size:44px">\uD83E\uDD16</div><p style="color:var(--mut);font-size:12.5px;margin-top:8px">AI membuat kartu tentang ' + esc(topik) + '...</p></div>';
+  }
+  callAIJSON(
+    'Buat 8 kartu flashcard tentang "' + topik + '" untuk pelajar SMP/SMA Indonesia. Bahasa Indonesia.\n\nBalas HANYA JSON: {"kartu":[{"q":"pertanyaan","a":"jawaban singkat 1-3 kalimat"}]}',
+    'Selalu balas JSON valid.'
+  ).then(function(data) {
+    flash.deck = (data.kartu || []).filter(function(k) { return k.q && k.a; });
+    if (!flash.deck.length) throw new Error('Tidak ada kartu');
+    flash.idx = 0;
+    renderFlash();
+  }).catch(function(e) {
+    if (el) el.innerHTML = '<div class="ket">Gagal: ' + esc(e.message) + '</div>';
+  });
+}
+
+function renderFlash() {
+  var k = flash.deck[flash.idx];
+  if (!k) return;
+  var el = $id('flashArea');
+  if (!el) return;
+  var html = '';
+  html += '<div class="card" style="min-height:200px;text-align:center;padding:28px 20px;position:relative">';
+  html += '<div style="font-size:11px;color:var(--mut);position:absolute;top:12px;left:16px">' + (flash.idx + 1) + ' / ' + flash.deck.length + '</div>';
+  html += '<div id="flashContent" style="display:flex;flex-direction:column;justify-content:center;min-height:160px">';
+  html += '<div style="font-size:16.5px;font-weight:800;line-height:1.45">' + esc(k.q) + '</div>';
+  html += '<button class="btn btn-primary" style="margin-top:22px" onclick="flipFlash()">\uD83D\uDC41\uFE0F Lihat Jawaban</button>';
+  html += '</div>';
+  html += '</div>';
+  html += '<div style="display:flex;gap:8px">';
+  html += '<button class="btn btn-secondary btn-block" onclick="flashPrev()">\u2190 Sebelumnya</button>';
+  html += '<button class="btn btn-primary btn-block" onclick="flashNext()">Berikutnya \u2192</button>';
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function flipFlash() {
+  var k = flash.deck[flash.idx];
+  var c = $id('flashContent');
+  if (!c) return;
+  c.innerHTML = '<div style="font-size:16.5px;font-weight:800;line-height:1.45;color:var(--pr)">' + esc(k.a) + '</div>'
+    + '<div style="font-size:11.5px;color:var(--mut);margin-top:12px;line-height:1.55">' + esc(k.q) + '</div>';
+  S.xp += 1;
+  saveS();
+  scheduleSync();
+}
+
+function flashNext() { flash.idx = (flash.idx + 1) % flash.deck.length; renderFlash(); }
+function flashPrev() { flash.idx = (flash.idx - 1 + flash.deck.length) % flash.deck.length; renderFlash(); }
+
+/* ==== SPEAKING TEST ==== */
+var speak = {
+  lang: 'en-US',
+  mapel: 'B. Inggris',
+  idx: 0,
+  sentences: [],
+  recording: false,
+  rec: null,
+  transcript: '',
+  result: null
+};
+
+var SPEAK_DATA = {
+  'B. Inggris': [
+    { q: 'Good morning! How are you today?', id: 'Selamat pagi! Apa kabarmu hari ini?' },
+    { q: 'I like to read books in the library.', id: 'Saya suka membaca buku di perpustakaan.' },
+    { q: 'The weather is very nice today.', id: 'Cuaca hari ini sangat bagus.' },
+    { q: 'Can you help me with my homework?', id: 'Bisakah kamu membantuku dengan PR?' },
+    { q: 'My favorite subject is Mathematics.', id: 'Mata pelajaran favoritku adalah Matematika.' },
+    { q: 'I want to be a doctor when I grow up.', id: 'Saya ingin jadi dokter kalau sudah besar.' },
+    { q: 'Thank you for your help, I really appreciate it.', id: 'Terima kasih atas bantuanmu.' },
+    { q: 'Learning English is fun and useful.', id: 'Belajar bahasa Inggris itu menyenangkan.' }
   ],
-  'Bahasa Indonesia':[
-    {q:'Selamat pagi, apa kabar hari ini?',id:''},
-    {q:'Saya suka belajar bahasa Indonesia.',id:''},
-    {q:'Buku adalah jendela dunia.',id:''},
-    {q:'Rajin belajar pangkal pandai.',id:''}
+  'B. Indonesia': [
+    { q: 'Selamat pagi, apa kabar hari ini?' },
+    { q: 'Saya suka belajar bahasa Indonesia.' },
+    { q: 'Rajin belajar pangkal pandai.' },
+    { q: 'Buku adalah jendela dunia.' }
   ],
-  'Bahasa Jawa':[
-    {q:'Sugeng enjing, pripun kabaripun?',id:'Selamat pagi, bagaimana kabarnya?'},
-    {q:'Kula badhe sinau basa Jawi.',id:'Saya mau belajar bahasa Jawa.'},
-    {q:'Matur nuwun sanget.',id:'Terima kasih banyak.'}
+  'B. Jawa': [
+    { q: 'Sugeng enjing, pripun kabaripun?', id: 'Selamat pagi, bagaimana kabarnya?' },
+    { q: 'Kula badhe sinau basa Jawi.', id: 'Saya mau belajar bahasa Jawa.' },
+    { q: 'Matur nuwun sanget.', id: 'Terima kasih banyak.' }
   ],
-  'Bahasa Sunda':[
-    {q:'Wilujeng enjing, kumaha damang?',id:'Selamat pagi, bagaimana kabarnya?'},
-    {q:'Abdi hoyong diajar basa Sunda.',id:'Saya ingin belajar bahasa Sunda.'},
-    {q:'Hatur nuhun pisan.',id:'Terima kasih banyak.'}
+  'B. Sunda': [
+    { q: 'Wilujeng enjing, kumaha damang?', id: 'Selamat pagi, bagaimana kabarnya?' },
+    { q: 'Abdi hoyong diajar basa Sunda.', id: 'Saya ingin belajar bahasa Sunda.' },
+    { q: 'Hatur nuhun pisan.', id: 'Terima kasih banyak.' }
   ],
-  'Bahasa Sasak':[
-    {q:'Selamat bejelo, berembe kabar?',id:'Selamat pagi, bagaimana kabarnya?'},
-    {q:'Aku léq belajar basa Sasak.',id:'Saya mau belajar bahasa Sasak.'},
-    {q:'Matur tampiasih.',id:'Terima kasih banyak.'}
+  'B. Sasak': [
+    { q: 'Selamat bejelo, berembe kabar?', id: 'Selamat pagi, bagaimana kabarnya?' },
+    { q: 'Aku leq belajar basa Sasak.', id: 'Saya mau belajar bahasa Sasak.' },
+    { q: 'Matur tampiasih.', id: 'Terima kasih banyak.' }
   ],
-  'Bahasa Bali':[
-    {q:'Rahajeng semeng, kenken kabare?',id:'Selamat pagi, bagaimana kabarnya?'},
-    {q:'Tiang jagi melajah basa Bali.',id:'Saya mau belajar bahasa Bali.'},
-    {q:'Matur suksma.',id:'Terima kasih banyak.'}
+  'B. Bali': [
+    { q: 'Rahajeng semeng, kenken kabare?', id: 'Selamat pagi, bagaimana kabarnya?' },
+    { q: 'Tiang jagi melajah basa Bali.', id: 'Saya mau belajar bahasa Bali.' },
+    { q: 'Matur suksma.', id: 'Terima kasih banyak.' }
   ],
-  'Bahasa Madura':[
-    {q:'Salamet pagi, kamma kabarra?',id:'Selamat pagi, bagaimana kabarnya?'},
-    {q:'Sengko\', terro ajher basa Madura.',id:'Saya mau belajar bahasa Madura.'},
-    {q:'Mator sakalangkong.',id:'Terima kasih banyak.'}
+  'B. Madura': [
+    { q: 'Salamet pagi, kamma kabarra?', id: 'Selamat pagi, bagaimana kabarnya?' },
+    { q: 'Sengko terro ajher basa Madura.', id: 'Saya mau belajar bahasa Madura.' },
+    { q: 'Mator sakalangkong.', id: 'Terima kasih banyak.' }
   ],
-  'Bahasa Mandarin':[
-    {q:'早上好，你好吗？',id:'Zǎoshang hǎo, nǐ hǎo ma? (Selamat pagi, apa kabar?)'},
-    {q:'我喜欢学习汉语。',id:'Wǒ xǐhuān xuéxí Hànyǔ. (Saya suka belajar bahasa Mandarin)'},
-    {q:'谢谢你。',id:'Xièxiè nǐ. (Terima kasih.)'}
+  'B. Mandarin': [
+    { q: 'Zǎoshang hǎo, nǐ hǎo ma?', id: 'Selamat pagi, apa kabar?' },
+    { q: 'Wǒ xǐhuān xuéxí Hànyǔ.', id: 'Saya suka belajar bahasa Mandarin.' },
+    { q: 'Xièxiè nǐ.', id: 'Terima kasih.' }
   ]
 };
 
-function pSpeaking(){
-  const lang=(speak&&speak.lang)||'en-US';
-  const langMap={
-    'en-US':'Bahasa Inggris','id-ID':'Bahasa Indonesia','jv-ID':'Bahasa Jawa','su-ID':'Bahasa Sunda',
-    'ban-ID':'Bahasa Bali','mad-ID':'Bahasa Madura','zh-CN':'Bahasa Mandarin','sas-ID':'Bahasa Sasak'
-  };
-  const mapel=(speak&&speak.mapel)||'Bahasa Inggris';
-  return `<div class="card">
-    <b style="font-size:15px">🗣️ Speaking Test</b>
-    <p style="color:var(--mut);font-size:12px;margin:6px 0 12px">Rekam suaramu, AI dengar dan nilai pengucapanmu.</p>
-    <label style="margin-top:0">Pilih bahasa</label>
-    <div class="grid">${Object.keys(SPEAK_SENTENCES).map(m=>`<button class="${mapel===m?'sel':''}" onclick="pilihSpeakMapel('${m}')">${m}</button>`).join('')}</div>
-  </div>
-  <div id="speakArea"></div>`;
+var SPEAK_LANG_MAP = {
+  'B. Inggris': 'en-US',
+  'B. Indonesia': 'id-ID',
+  'B. Jawa': 'jv-ID',
+  'B. Sunda': 'su-ID',
+  'B. Sasak': 'id-ID',
+  'B. Bali': 'ban-ID',
+  'B. Madura': 'mad-ID',
+  'B. Mandarin': 'zh-CN'
+};
+
+function pSpeaking() {
+  var html = '';
+  html += '<div class="card">';
+  html += '<div class="card-header"><h3>\uD83D\uDDE3\uFE0F Speaking Test</h3></div>';
+  html += '<p style="color:var(--mut);font-size:12px;margin-bottom:12px">Rekam suaramu, AI akan mendengar dan menilai pengucapanmu.</p>';
+  html += '<label style="margin-top:0">Pilih bahasa</label>';
+  html += '<div class="grid grid-2">';
+  var keys = Object.keys(SPEAK_DATA);
+  for (var i = 0; i < keys.length; i++) {
+    var m = keys[i];
+    html += '<button class="btn btn-secondary btn-sm ' + (speak.mapel === m ? 'sel' : '') + '" onclick="pilihSpeakLang(\'' + m + '\')">' + m + '</button>';
+  }
+  html += '</div>';
+  html += '</div>';
+  html += '<div id="speakArea"></div>';
+  return html;
 }
-function pilihSpeakMapel(m){
-  speak.mapel=m;
-  const map={'Bahasa Inggris':'en-US','Bahasa Indonesia':'id-ID','Bahasa Jawa':'jv-ID','Bahasa Sunda':'su-ID','Bahasa Sasak':'id-ID','Bahasa Bali':'ban-ID','Bahasa Madura':'mad-ID','Bahasa Mandarin':'zh-CN'};
-  speak.lang=map[m]||'en-US';
-  speak.sentences=[...SPEAK_SENTENCES[m]].sort(()=>Math.random()-.5).slice(0,5);
-  speak.idx=0;
+
+function pilihSpeakLang(m) {
+  speak.mapel = m;
+  speak.lang = SPEAK_LANG_MAP[m] || 'en-US';
+  var arr = SPEAK_DATA[m].slice();
+  // Shuffle
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+  }
+  speak.sentences = arr.slice(0, 5);
+  speak.idx = 0;
+  speak.transcript = '';
+  speak.result = null;
   render();
-  setTimeout(renderSpeakArea,50);
+  setTimeout(renderSpeakArea, 60);
 }
-function renderSpeakArea(){
-  const el=$('speakArea');if(!el)return;
-  if(!speak.sentences||!speak.sentences.length){
-    el.innerHTML=`<div class="card" style="text-align:center;padding:24px"><div style="font-size:44px">🗣️</div><p style="color:var(--mut);font-size:13px;margin-top:8px">Pilih bahasa di atas untuk mulai</p></div>`;
+
+function renderSpeakArea() {
+  var el = $id('speakArea');
+  if (!el) return;
+
+  if (!speak.sentences.length) {
+    el.innerHTML = '<div class="card" style="text-align:center;padding:28px"><div style="font-size:48px">\uD83D\uDDE3\uFE0F</div><p style="color:var(--mut);font-size:13px;margin-top:10px">Pilih bahasa di atas untuk mulai latihan</p></div>';
     return;
   }
-  if(speak.idx>=speak.sentences.length){
-    return el.innerHTML=`<div class="card" style="text-align:center;padding:24px">
-      <div style="font-size:64px">🎉</div>
-      <h2>Latihan Selesai!</h2>
-      <p style="color:var(--mut);font-size:13px">Bagus banget! Coba lagi dengan kalimat baru.</p>
-      <button class="go" onclick="pilihSpeakMapel('${speak.mapel}')">🔄 Latihan Baru</button>
-    </div>`;
+
+  if (speak.idx >= speak.sentences.length) {
+    el.innerHTML = '<div class="card" style="text-align:center;padding:28px">'
+      + '<div style="font-size:68px">\uD83C\uDF89</div>'
+      + '<h2 style="margin:10px 0">Latihan Selesai!</h2>'
+      + '<p style="color:var(--mut);font-size:13px">Bagus banget! Coba lagi dengan kalimat baru.</p>'
+      + '<button class="btn btn-primary btn-block btn-lg" style="margin-top:16px" onclick="pilihSpeakLang(\'' + speak.mapel + '\')">\uD83D\uDD04 Latihan Baru</button>'
+      + '</div>';
+    return;
   }
-  const s=speak.sentences[speak.idx];
-  el.innerHTML=`
-    <div class="card" style="text-align:center">
-      <div style="font-size:11px;color:var(--mut);font-weight:700">KALIMAT ${speak.idx+1} / ${speak.sentences.length}</div>
-      <div class="bar" style="margin:10px 0"><i style="width:${(speak.idx/speak.sentences.length)*100}%"></i></div>
-      <div style="font-size:19px;font-weight:800;line-height:1.5;margin:18px 0;padding:16px;background:var(--bg);border-radius:12px">${esc(s.q)}</div>
-      ${s.id?`<p style="color:var(--mut);font-size:12.5px;font-style:italic;margin:0">"${esc(s.id)}"</p>`:''}
-      <button class="ghost" style="margin-top:14px;padding:9px 14px;font-size:12.5px" onclick="bacakanTarget()">🔊 Dengar Contoh</button>
-      <button class="speak-btn ${speak.recording?'rec':''}" id="speakBtn" onclick="toggleSpeakRec()">${speak.recording?'⏹️':'🎤'}</button>
-      <p style="color:var(--mut);font-size:12px;margin-top:6px">${speak.recording?'🔴 Sedang merekam... ketuk untuk stop':'Ketuk mikrofon untuk mulai merekam'}</p>
-      ${speak.transcript?`<div style="margin-top:14px;text-align:left;background:var(--bg);border-radius:12px;padding:12px">
-        <b style="font-size:12.5px">📝 Yang AI dengar:</b>
-        <p style="font-size:13px;margin:6px 0 0">${esc(speak.transcript)}</p>
-      </div>`:''}
-      ${speak.result?`<div id="speakResult">${renderSpeakResult()}</div>`:''}
-    </div>`;
+
+  var s = speak.sentences[speak.idx];
+  var html = '';
+  html += '<div class="card" style="text-align:center">';
+  html += '<div style="font-size:11px;color:var(--mut);font-weight:800;letter-spacing:1.5px">KALIMAT ' + (speak.idx + 1) + ' / ' + speak.sentences.length + '</div>';
+  html += '<div class="bar" style="margin:12px 0"><i style="width:' + ((speak.idx / speak.sentences.length) * 100) + '%"></i></div>';
+
+  html += '<div style="font-size:19px;font-weight:800;line-height:1.5;margin:18px 0;padding:18px;background:var(--bg);border-radius:14px">' + esc(s.q) + '</div>';
+  if (s.id) {
+    html += '<p style="color:var(--mut);font-size:12.5px;font-style:italic;margin:0">"' + esc(s.id) + '"</p>';
+  }
+
+  html += '<button class="btn btn-ghost" style="margin-top:14px" onclick="bacakanTarget()">\uD83D\uDD0A Dengar Contoh</button>';
+
+  html += '<button class="speak-btn ' + (speak.recording ? 'rec' : '') + '" onclick="toggleSpeakRec()">' + (speak.recording ? '\u23F9' : '\uD83C\uDFA4') + '</button>';
+
+  html += '<p style="color:var(--mut);font-size:12.5px;margin-top:6px">' + (speak.recording ? '\uD83D\uDD34 Sedang merekam... ketuk untuk stop' : 'Ketuk mikrofon untuk mulai merekam') + '</p>';
+
+  if (speak.transcript) {
+    html += '<div style="margin-top:16px;text-align:left;background:var(--bg);border-radius:12px;padding:12px">';
+    html += '<b style="font-size:12.5px">\uD83D\uDCDD Yang AI dengar:</b>';
+    html += '<p style="font-size:13px;margin:6px 0 0">' + esc(speak.transcript) + '</p>';
+    html += '</div>';
+  }
+
+  if (speak.result) {
+    html += renderSpeakResult();
+  }
+
+  html += '</div>';
+  el.innerHTML = html;
 }
-function bacakanTarget(){
-  const s=speak.sentences[speak.idx];
-  if(!('speechSynthesis' in window))return toast('Browser tidak mendukung suara');
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(s.q);
-  u.lang=speak.lang;u.rate=.9;
-  speechSynthesis.speak(u);
+
+function bacakanTarget() {
+  var s = speak.sentences[speak.idx];
+  speakText(s.q, speak.lang);
 }
-function toggleSpeakRec(){
-  if(speak.recording){stopSpeakRec();return}
-  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){
+
+function toggleSpeakRec() {
+  if (speak.recording) {
+    stopSpeakRec();
+    return;
+  }
+  var Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Rec) {
     return toast('Browser tidak mendukung. Coba Chrome/Edge.');
   }
-  const Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
-  const rec=new Rec();
-  rec.lang=speak.lang;rec.interimResults=false;rec.continuous=false;
-  rec.onresult=(e)=>{
-    const t=e.results[0][0].transcript;
-    speak.transcript=t;
+
+  var rec = new Rec();
+  rec.lang = speak.lang;
+  rec.interimResults = false;
+  rec.continuous = false;
+
+  rec.onresult = function(e) {
+    var t = e.results[0][0].transcript;
+    speak.transcript = t;
     stopSpeakRec();
     nilaiSpeak(t);
   };
-  rec.onerror=(e)=>{toast('Error
+
+  rec.onerror = function(e) {
+    toast('Error: ' + e.error);
+    stopSpeakRec();
+  };
+
+  rec.onend = function() {
+    if (speak.recording) stopSpeakRec();
+  };
+
+  try {
+    rec.start();
+    speak.rec = rec;
+    speak.recording = true;
+    speak.transcript = '';
+    speak.result = null;
+    renderSpeakArea();
+  } catch(e) {
+    toast('Gagal mulai: ' + e.message);
+  }
+}
+
+function stopSpeakRec() {
+  speak.recording = false;
+  try { if (speak.rec) speak.rec.stop(); } catch(e) {}
+  renderSpeakArea();
+}
+
+function nilaiSpeak(hasil) {
+  var s = speak.sentences[speak.idx];
+  var target = s.q.toLowerCase().replace(/[^\w\s]/g, '');
+  var got = hasil.toLowerCase().replace(/[^\w\s]/g, '');
+  var tWords = target.split(/\s+/).filter(function(x) { return x; });
+  var gWords = got.split(/\s+/).filter(function(x) { return x; });
+  var match = 0;
+  for (var i = 0; i < tWords.length; i++) {
+    if (gWords.indexOf(tWords[i]) >= 0) match++;
+  }
+  var simple = Math.round((match / tWords.length) * 100);
+
+  callAIJSON(
+    'Kamu guru bahasa yang ramah. Nilai pengucapan siswa.\n\n'
+    + 'Kalimat target: "' + s.q + '"\n'
+    + 'Yang didengar AI: "' + hasil + '"\n'
+    + 'Skor kemiripan kata: ' + simple + '%\n\n'
+    + 'Berikan penilaian dalam Bahasa Indonesia yang ramah dan membangun.\n'
+    + 'Balas HANYA JSON: {"skor":0-100,"kesalahan":["kata salah 1"],"saran":"saran perbaikan 1-2 kalimat","apresiasi":"kata penyemangat singkat"}',
+    'Kamu penilai speaking ramah. JSON valid.'
+  ).then(function(data) {
+    speak.result = data;
+    sfx(speak.result.skor >= 70 ? 'benar' : 'salah');
+    S.xp += Math.round(speak.result.skor / 10);
+    saveS();
+    scheduleSync();
+    renderSpeakArea();
+  }).catch(function() {
+    speak.result = { skor: simple, kesalahan: [], saran: '', apresiasi: 'Bagus, terus berlatih!' };
+    renderSpeakArea();
+  });
+}
+
+function renderSpeakResult() {
+  var r = speak.result;
+  if (!r) return '';
+  var skor = r.skor || 0;
+  var cls = skor >= 80 ? 'score-good' : (skor >= 60 ? 'score-mid' : 'score-bad');
+  var emoji = skor >= 80 ? '\uD83C\uDF1F' : (skor >= 60 ? '\uD83D\uDC4D' : '\uD83D\uDCAA');
+  var label = skor >= 80 ? 'Sangat Baik' : (skor >= 60 ? 'Baik' : 'Perlu Latihan');
+
+  var html = '';
+  html += '<div style="text-align:left;margin-top:16px;background:var(--bg);border-radius:12px;padding:14px;border:1px solid var(--bd)">';
+  html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">';
+  html += '<div style="font-size:34px">' + emoji + '</div>';
+  html += '<div style="flex:1">';
+  html += '<div style="font-size:14px;font-weight:800">Skor Pengucapan</div>';
+  html += '<div style="font-size:28px;font-weight:900;color:var(--pr)">' + skor + '<span style="font-size:14px;color:var(--mut)">/100</span></div>';
+  html += '</div>';
+  html += '<div class="score-badge ' + cls + '">' + label + '</div>';
+  html += '</div>';
+
+  if (r.kesalahan && r.kesalahan.length) {
+    html += '<div style="margin-top:10px"><b style="font-size:12.5px">\u26A0\uFE0F Perhatikan:</b>';
+    html += '<ul style="margin:6px 0 0 20px;padding:0;font-size:12.5px">';
+    for (var i = 0; i < r.kesalahan.length; i++) {
+      html += '<li>' + esc(r.kesalahan[i]) + '</li>';
+    }
+    html += '</ul></div>';
+  }
+
+  if (r.saran) {
+    html += '<div style="margin-top:10px;padding:10px;background:rgba(99,102,241,.1);border-radius:9px;font-size:12.5px">';
+    html += '<b>\uD83D\uDCA1 Saran:</b> ' + esc(r.saran);
+    html += '</div>';
+  }
+
+  html += '<div style="margin-top:12px;font-size:13px;text-align:center;font-weight:700;color:#4ade80">' + esc(r.apresiasi || '') + '</div>';
+  html += '<button class="btn btn-primary btn-block" style="margin-top:12px" onclick="nextSpeak()">Kalimat Berikutnya \u2192</button>';
+  html += '</div>';
+  return html;
+}
+
+function nextSpeak() {
+  speak.idx++;
+  speak.transcript = '';
+  speak.result = null;
+  renderSpeakArea();
+}
+
+/* ==== MUSIK ==== */
+var SOUNDS = [
+  { id: 'rain', name: 'Hujan', emo: '\uD83C\uDF27\uFE0F' },
+  { id: 'waves', name: 'Ombak', emo: '\uD83C\uDF0A' },
+  { id: 'forest', name: 'Hutan', emo: '\uD83C\uDF32' },
+  { id: 'fire', name: 'Api Unggun', emo: '\uD83D\uDD25' },
+  { id: 'white', name: 'White Noise', emo: '\u2B1C' },
+  { id: 'brown', name: 'Brown Noise', emo: '\uD83D\uDFEB' },
+  { id: 'piano', name: 'Piano Fokus', emo: '\uD83C\uDFB9' },
+  { id: 'chimes', name: 'Chimes', emo: '\uD83C\uDF90' },
+  { id: 'zen', name: 'Zen', emo: '\uD83E\uDDD8' }
+];
+
+var MOODS = [
+  { id: 'santai', name: 'Santai', emo: '\uD83D\uDE0C', prompt: 'lagu santai akustik indie' },
+  { id: 'fokus', name: 'Fokus', emo: '\uD83C\uDFAF', prompt: 'musik instrumental fokus belajar' },
+  { id: 'semangat', name: 'Semangat', emo: '\uD83D\uDD25', prompt: 'lagu semangat motivasi belajar' },
+  { id: 'sedih', name: 'Sedih', emo: '\uD83D\uDE22', prompt: 'lagu sedih galau' },
+  { id: 'bahagia', name: 'Bahagia', emo: '\uD83D\uDE0A', prompt: 'lagu ceria bahagia' },
+  { id: 'tidur', name: 'Tidur', emo: '\uD83D\uDE34', prompt: 'lagu tidur relaksasi' }
+];
+
+var music = {
+  current: null,
+  ctx: null,
+  nodes: [],
+  volume: 0.4,
+  playing: false,
+  masterGain: null
+};
+
+function musicInitUI() {
+  updateNowPlaying();
+}
+
+function updateNowPlaying() {
+  var el = $id('nowPlaying');
+  if (!el) return;
+  if (music.current) {
+    var found = null;
+    for (var i = 0; i < SOUNDS.length; i++) {
+      if (SOUNDS[i].id === music.current) { found = SOUNDS[i]; break; }
+    }
+    el.textContent = (found ? found.emo + ' ' + found.name : music.current) + (music.playing ? ' \u2022 memutar' : '');
+  } else {
+    el.textContent = 'Tidak ada musik';
+  }
+}
+
+function musicSetVol() {
+  if (music.masterGain) {
+    try { music.masterGain.gain.value = music.volume; } catch(e) {}
+  }
+}
+
+function stopSound() {
+  try {
+    for (var i = 0; i < music.nodes.length; i++) {
+      try { music.nodes[i].stop(); } catch(e) {}
+    }
+    if (music.ctx) try { music.ctx.close(); } catch(e) {}
+  } catch(e) {}
+  music.nodes = [];
+  music.ctx = null;
+  music.current = null;
+  music.playing = false;
+  updateNowPlaying();
+}
+
+function playSound(id) {
+  if (music.current === id && music.playing) {
+    stopSound();
+    return;
+  }
+  stopSound();
+
+  try {
+    var C = new (window.AudioContext || window.webkitAudioContext)();
+    music.ctx = C;
+    music.masterGain = C.createGain();
+    music.masterGain.gain.value = music.volume;
+    music.masterGain.connect(C.destination);
+    music.current = id;
+    music.playing = true;
+
+    if (id === 'rain') makeRain(C);
+    else if (id === 'waves') makeWaves(C);
+    else if (id === 'forest') makeForest(C);
+    else if (id === 'fire') makeFire(C);
+    else if (id === 'white') makeNoise(C, 'white');
+    else if (id === 'brown') makeNoise(C, 'brown');
+    else if (id === 'piano') makePiano(C);
+    else if (id === 'chimes') makeChimes(C);
+    else if (id === 'zen') makeZen(C);
+
+    updateNowPlaying();
+    toast('\uD83C\uDFB5 Memutar: ' + id);
+  } catch(e) {
+    toast('Audio gagal dimulai');
+  }
+}
+
+function makeNoiseBuffer(ctx, type) {
+  var bs = ctx.sampleRate * 2;
+  var buf = ctx.createBuffer(1, bs, ctx.sampleRate);
+  var d = buf.getChannelData(0);
+  var last = 0;
+  for (var i = 0; i < bs; i++) {
+    var w = Math.random() * 2 - 1;
+    if (type === 'white') d[i] = w * 0.5;
+    else { last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; }
+  }
+  return buf;
+}
+
+function makeNoise(ctx, type) {
+  var src = ctx.createBufferSource();
+  src.buffer = makeNoiseBuffer(ctx, type);
+  src.loop = true;
+  var f = ctx.createBiquadFilter();
+  f.type = 'lowpass';
+  f.frequency.value = type === 'brown' ? 500 : 2000;
+  var g = ctx.createGain();
+  g.gain.value = 0.4;
+  src.connect(f);
+  f.connect(g);
+  g.connect(music.masterGain);
+  src.start();
+  music.nodes.push(src);
+}
+
+function makeRain(ctx) {
+  var src = ctx.createBufferSource();
+  src.buffer = makeNoiseBuffer(ctx, 'brown');
+  src.loop = true;
+  var hp = ctx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 400;
+  var lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 4000;
+  var g = ctx.createGain();
+  g.gain.value = 0.5;
+  src.connect(hp);
+  hp.connect(lp);
+  lp.connect(g);
+  g.connect(music.masterGain);
+  src.start();
+  music.nodes.push(src);
+
+  var drop = function() {
+    if (!music.playing) return;
+    try {
+      var o = ctx.createOscillator(), gg = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = 1200 + Math.random() * 800;
+      gg.gain.setValueAtTime(0.08, ctx.currentTime);
+      gg.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      o.connect(gg);
+      gg.connect(music.masterGain);
+      o.start();
+      o.stop(ctx.currentTime + 0.15);
+    } catch(e) {}
+    setTimeout(drop, 80 + Math.random() * 200);
+  };
+  drop();
+}
+
+function makeWaves(ctx) {
+  var src = ctx.createBufferSource();
+  src.buffer = makeNoiseBuffer(ctx, 'brown');
+  src.loop = true;
+  var lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 800;
+  var g = ctx.createGain();
+  g.gain.value = 0.3;
+  src.connect(lp);
+  lp.connect(g);
+  g.connect(music.masterGain);
+  var lfo = ctx.createOscillator();
+  lfo.frequency.value = 0.15;
+  var lg = ctx.createGain();
+  lg.gain.value = 0.2;
+  lfo.connect(lg);
+  lg.connect(g.gain);
+  lfo.start();
+  src.start();
+  music.nodes.push(src, lfo);
+}
+
+function makeForest(ctx) {
+  makeNoise(ctx, 'white');
+  var chirp = function() {
+    if (!music.playing) return;
+    try {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine';
+      var base = 1800 + Math.random() * 1500;
+      o.frequency.setValueAtTime(base, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(base * 1.5, ctx.currentTime + 0.08);
+      o.frequency.exponentialRampToValueAtTime(base, ctx.currentTime + 0.16);
+      g.gain.setValueAtTime(0.05, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      o.connect(g);
+      g.connect(music.masterGain);
+      o.start();
+      o.stop(ctx.currentTime + 0.25);
+    } catch(e) {}
+    setTimeout(chirp, 1500 + Math.random() * 3500);
+  };
+  chirp();
+}
+
+function makeFire(ctx) {
+  var src = ctx.createBufferSource();
+  src.buffer = makeNoiseBuffer(ctx, 'brown');
+  src.loop = true;
+  var lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 1000;
+  var g = ctx.createGain();
+  g.gain.value = 0.35;
+  src.connect(lp);
+  lp.connect(g);
+  g.connect(music.masterGain);
+  src.start();
+  music.nodes.push(src);
+
+  var crackle = function() {
+    if (!music.playing) return;
+    try {
+      if (Math.random() < 0.7) {
+        var o = ctx.createOscillator(), gg = ctx.createGain();
+        o.type = 'square';
+        o.frequency.value = 200 + Math.random() * 1800;
+        gg.gain.setValueAtTime(0.04, ctx.currentTime);
+        gg.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+        o.connect(gg);
+        gg.connect(music.masterGain);
+        o.start();
+        o.stop(ctx.currentTime + 0.05);
+      }
+    } catch(e) {}
+    setTimeout(crackle, 30 + Math.random() * 150);
+  };
+  crackle();
+}
+
+function makePiano(ctx) {
+  var notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
+  var idx = 0;
+  var play = function() {
+    if (!music.playing) return;
+    try {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'triangle';
+      o.frequency.value = notes[idx % notes.length];
+      var t = ctx.currentTime;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.12, t + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 1.8);
+      o.connect(g);
+      g.connect(music.masterGain);
+      o.start(t);
+      o.stop(t + 2);
+      idx++;
+    } catch(e) {}
+    setTimeout(play, 700 + Math.random() * 800);
+  };
+  play();
+}
+
+function makeChimes(ctx) {
+  var notes = [523.25, 659.25, 783.99, 1046.5];
+  var play = function() {
+    if (!music.playing) return;
+    try {
+      var o = ctx.createO
