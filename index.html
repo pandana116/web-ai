@@ -915,7 +915,7 @@ function tutorReply(v,forceMode){
 }
 function askOnline(){
   var msgs=[{role:'system',content:'Kamu adalah tutor yang sabar dan ramah untuk pelajar Indonesia (jenjang '+(S.lvl||'SMP')+'). Jawab dalam bahasa Indonesia, jelas, bertahap, beri contoh, dan ringkas (sekitar 200 kata kecuali diminta lebih). Semua mata pelajaran boleh ditanyakan.'}].concat(TUT.h.slice(-8));
-  return fetch(S.ai.url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.ai.key},body:JSON.stringify({model:S.ai.model||'llama-3.3-70b-versatile',messages:msgs,temperature:.4,max_tokens:700})})
+  return fetch(S.ai.url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.ai.key},body:JSON.stringify({model:S.ai.model||'llama-3.1-8b-instant',messages:msgs,temperature:.4,max_tokens:700})})
   .then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error('HTTP '+r.status+' '+t.slice(0,90))});return r.json()})
   .then(function(j){return j.choices[0].message.content});
 }
@@ -1536,7 +1536,7 @@ async function genAI(mapel,n){
   }
   if(aiOn()){
     var prompt='Buat '+n+' soal pilihan ganda mapel '+mapel+' untuk siswa kelas '+userClass()+' di Indonesia. Balas HANYA JSON array tanpa teks lain. Format: [{"q":"pertanyaan","o":["A","B","C","D"],"a":0,"e":"pembahasan singkat"}] dengan a = indeks jawaban benar (0 sampai 3).';
-    var r=await fetch(S.ai.url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.ai.key},body:JSON.stringify({model:S.ai.model||'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:.6,max_tokens:2000})});
+    var r=await fetch(S.ai.url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.ai.key},body:JSON.stringify({model:S.ai.model||'llama-3.1-8b-instant',messages:[{role:'user',content:prompt}],temperature:.6,max_tokens:2000})});
     if(!r.ok)throw new Error('API pribadi: HTTP '+r.status);
     var j=await r.json(),txt=j.choices[0].message.content,m=txt.match(/\[[\s\S]*\]/);
     if(!m)throw new Error('Jawaban AI tidak berbentuk JSON');
@@ -1792,7 +1792,7 @@ var A={
   },
   aiset:aiUI,
   aipre:function(v){
-    var p={groq:['https://api.groq.com/openai/v1/chat/completions','llama-3.3-70b-versatile'],openai:['https://api.openai.com/v1/chat/completions','gpt-4o-mini']}[v];
+    var p={groq:['https://api.groq.com/openai/v1/chat/completions','llama-3.1-8b-instant'],openai:['https://api.openai.com/v1/chat/completions','gpt-4o-mini']}[v];
     $('aiu').value=p[0];$('aim').value=p[1];
   },
   aisave:function(){
@@ -1928,4 +1928,4 @@ window.addEventListener('beforeunload',function(){save()});
 })();
 </script>
 </body>
-</html>
+                                      </html>
