@@ -1,7 +1,7 @@
 import {
   getJSON, setJSON, getAllUsers, saveAllUsers,
   findByUsername, findByToken, str, num, ID_RE
-} from './db.js';
+} from '../lib/db.js';
 
 /* ============ PASSWORD (Web Crypto, edge-friendly) ============ */
 async function hashPw(pw, salt) {
