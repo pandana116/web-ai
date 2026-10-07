@@ -28,7 +28,7 @@ module.exports = async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant', // <--- MODEL BARU YANG VALID
+        model: 'openai/gpt-oss-120b', // <--- MODEL TERBARU YANG VALID',
         messages: [
           { role: 'system', content: 'Anda adalah asisten AI pembuat soal yang selalu merespon dengan format JSON valid.' },
           { role: 'user', content: prompt }
