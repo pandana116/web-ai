@@ -1,4 +1,4 @@
-import { pushList, getJSON, setJSON, findByToken, num, str } from './db.js';
+import { pushList, getJSON, setJSON, findByToken, num, str } from '../lib/db.js';
 
 function bearer(req) {
   return (req.headers.authorization || '').replace(/^Bearer\s+/i, '').trim();
